@@ -1,6 +1,9 @@
 HELP.md
 AGENTS.md
+context
+context/*
 target/
+src/test/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

@@ -1,4 +1,4 @@
-package ort.da.obligatorio339182.model.domain.services;
+package ort.da.obligatorio339182.services;
 
 import org.springframework.stereotype.Service;
 import ort.da.obligatorio339182.model.domain.Categoria;
@@ -9,20 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SistemaVehiculos {
+class SistemaVehiculos {
 	private static int s_idCategoria;
 	private static int s_idVehiculo;
 	private List<Categoria> categorias;
 	private List<Vehiculo> vehiculos;
 
-	public SistemaVehiculos() {
+	SistemaVehiculos() {
 		s_idCategoria = 0;
 		s_idVehiculo = 0;
 		this.categorias = new ArrayList<Categoria>();
 		this.vehiculos = new ArrayList<Vehiculo>();
 	}
 
-	public void crearCategoria(String nombre) {
+	void crearCategoria(String nombre) {
 
 	}
 
@@ -34,7 +34,7 @@ public class SistemaVehiculos {
 		return false;
 	}
 
-	public void crearVehiculo(Matricula matricula, String modelo, String color, Categoria categoria) {
+	void crearVehiculo(Matricula matricula, String modelo, String color, Categoria categoria) {
 
 	}
 
@@ -50,7 +50,7 @@ public class SistemaVehiculos {
 	 * Usuario usuario = fachada.getUsuarioPorCedula(cedula)
 	 * return usuario.vehiculos
 	 */
-	public List<Vehiculo> getVehiculosDelUsuario(Cedula cedula) {
+	List<Vehiculo> getVehiculosDelUsuario(Cedula cedula) {
 		return null;
 	}
 

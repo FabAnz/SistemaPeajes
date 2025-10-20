@@ -8,19 +8,19 @@ public abstract class Estado {
 	private static final Estado penalizado = new Penalizado();
 
 	// Métodos para obtener las instancias únicas
-	public static Estado getHabilitado() {
+	public static Estado habilitado() {
 		return habilitado;
 	}
 
-	public static Estado getDeshabilitado() {
+	public static Estado deshabilitado() {
 		return deshabilitado;
 	}
 
-	public static Estado getSuspendido() {
+	public static Estado suspendido() {
 		return suspendido;
 	}
 
-	public static Estado getPenalizado() {
+	public static Estado penalizado() {
 		return penalizado;
 	}
 

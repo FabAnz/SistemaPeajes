@@ -2,43 +2,82 @@ package ort.da.obligatorio339182.model.domain.usuarios;
 
 import java.util.Set;
 import java.util.List;
+import java.util.ArrayList;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
 import ort.da.obligatorio339182.model.domain.estados.Estado;
 import ort.da.obligatorio339182.model.domain.Notificacion;
 import ort.da.obligatorio339182.model.domain.Transito;
-import ort.da.obligatorio339182.model.domain.Permiso;
 import ort.da.obligatorio339182.model.valueObjects.Contrasenia;
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import lombok.Getter;
 import lombok.Setter;
+import ort.da.obligatorio339182.exceptions.AppException;
 
 @Getter
 @Setter
 public class Propietario extends Usuario {
 
-	private static final Set<Permiso> permisoPropietario = Set.of();
+	private static final Set<Permiso> permisoPropietario = Set.of(
+		Permiso.PROPIETARIO_DASHBOARD
+	);
 
 	private int saldo;
 	private int saldoMinimo;
 	private List<Transito> transitos;
-	private List<Vehiculo> vehiculo;
+	private List<Vehiculo> vehiculos;
 	private Estado estado;
-	private List<Notificacion> notificacion;
+	private List<Notificacion> notificaciones;
 
-	public Propietario(int id, String nombreCompleto, Contrasenia contrasenia, Cedula cedula, int saldo,
-			int saldoMinimo, List<Transito> transitos, List<Vehiculo> vehiculo,
-			List<Notificacion> notificacion) {
-		super(id, nombreCompleto, contrasenia, cedula);
-		this.saldo = saldo;
-		this.saldoMinimo = saldoMinimo;
-		this.transitos = transitos;
-		this.vehiculo = vehiculo;
-		this.estado = Estado.getHabilitado();
-		this.notificacion = notificacion;
+	public Propietario(String nombreCompleto, Contrasenia contrasenia, Cedula cedula) {
+		super(nombreCompleto, contrasenia, cedula);
+		this.saldo = 0;
+		this.saldoMinimo = 100;
+		this.transitos = new ArrayList<>();
+		this.vehiculos = new ArrayList<>();
+		this.estado = Estado.habilitado();
+		this.notificaciones = new ArrayList<>();
 	}
 
 	@Override
-	public void validar() {
+	public void validar() throws AppException {
+		// Validar campos heredados de Usuario
+		if (getId() <= 0) {
+			throw new AppException("El id debe ser mayor a 0");
+		}
+		if (getNombreCompleto() == null || getNombreCompleto().isBlank()) {
+			throw new AppException("El nombre completo no puede estar vacío");
+		}
+		if (getContrasenia() == null) {
+			throw new AppException("La contraseña no puede ser null");
+		}
+		if (getCedula() == null) {
+			throw new AppException("La cédula no puede ser null");
+		}
+		
+		// Validar campos propios del Propietario
+		if (saldoMinimo < 0) {
+			throw new AppException("El saldo mínimo no puede ser negativo");
+		}
+		if (transitos == null) {
+			throw new AppException("La lista de tránsitos no puede ser null");
+		}
+		if (vehiculos == null) {
+			throw new AppException("La lista de vehículos no puede ser null");
+		}
+		if (estado == null) {
+			throw new AppException("El estado no puede ser null");
+		}
+		if (notificaciones == null) {
+			throw new AppException("La lista de notificaciones no puede ser null");
+		}
+	}
+
+	@Override
+	public boolean accesoPermitido(String contrasenia) throws AppException {
+		if(!this.estado.puedeIngresarAlSistema()) {
+			throw new AppException("Usuario deshabilitado, no puede ingresar al sistema");
+		}
+		return super.accesoPermitido(contrasenia);
 	}
 
 	@Override

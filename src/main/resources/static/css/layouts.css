@@ -1,0 +1,159 @@
+/* ========================================
+   SISTEMA DE GESTIÓN DE PEAJES
+   Layouts CSS - Estructuras de Página
+   ======================================== */
+
+/* ========================================
+   LAYOUT CENTRADO (para login, redirección)
+   ======================================== */
+.layout-centered {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-lg);
+    background: var(--bg-gradient);
+}
+
+/* ========================================
+   CONTAINERS
+   ======================================== */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+.container-sm {
+    max-width: 600px;
+}
+
+.container-md {
+    max-width: 900px;
+}
+
+.container-lg {
+    max-width: 1400px;
+}
+
+.container-fluid {
+    width: 100%;
+    padding: 0 var(--spacing-lg);
+}
+
+/* ========================================
+   PÁGINA DE REDIRECCIÓN
+   ======================================== */
+.redirect-page {
+    text-align: center;
+    color: white;
+}
+
+.redirect-message {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: var(--spacing-xxl);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow-lg);
+}
+
+.redirect-message h1 {
+    color: white;
+    margin-bottom: var(--spacing-md);
+}
+
+.redirect-message p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: var(--spacing-sm);
+}
+
+.redirect-message a {
+    color: white;
+    text-decoration: underline;
+}
+
+/* ========================================
+   GRID SYSTEM
+   ======================================== */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 calc(var(--spacing-md) * -1);
+}
+
+.col {
+    flex: 1;
+    padding: 0 var(--spacing-md);
+}
+
+.col-2 { width: 50%; padding: 0 var(--spacing-md); }
+.col-3 { width: 33.333%; padding: 0 var(--spacing-md); }
+.col-4 { width: 25%; padding: 0 var(--spacing-md); }
+
+/* ========================================
+   FLEX UTILITIES
+   ======================================== */
+.d-flex {
+    display: flex;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.gap-sm { gap: var(--spacing-sm); }
+.gap-md { gap: var(--spacing-md); }
+.gap-lg { gap: var(--spacing-lg); }
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 var(--spacing-md);
+    }
+    
+    .row {
+        margin: 0;
+    }
+    
+    .col-2,
+    .col-3,
+    .col-4 {
+        width: 100%;
+        padding: 0;
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .layout-centered {
+        padding: var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 var(--spacing-sm);
+    }
+    
+    .layout-centered {
+        padding: var(--spacing-sm);
+    }
+}
+

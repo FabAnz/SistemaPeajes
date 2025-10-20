@@ -1,4 +1,4 @@
-package ort.da.obligatorio339182.model.domain.services;
+package ort.da.obligatorio339182.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +8,11 @@ import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import ort.da.obligatorio339182.model.valueObjects.Matricula;
 
 @Service
-public class SistemaTransitos {
+class SistemaTransitos {
 	private static int s_idTransito;
 	private List<Transito> transitos;
 
-	public SistemaTransitos() {
+	SistemaTransitos() {
 		s_idTransito = 0;
 		this.transitos = new ArrayList<Transito>();
 	}
@@ -33,7 +33,7 @@ public class SistemaTransitos {
 	 * 
 	 * return transitos.size();
 	 */
-	public int cantidadTransitosPorCedulaYMatricula(Cedula cedula, Matricula matricula) {
+	int cantidadTransitosPorCedulaYMatricula(Cedula cedula, Matricula matricula) {
 		return 0;
 	}
 
@@ -46,7 +46,7 @@ public class SistemaTransitos {
 	 * 
 	 * return total;
 	 */
-	public int gastoEnTransitos(Cedula cedula, Matricula matricula) {
+	int gastoEnTransitos(Cedula cedula, Matricula matricula) {
 		return 0;
 	}
 

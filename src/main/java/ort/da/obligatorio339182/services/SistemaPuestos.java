@@ -1,4 +1,4 @@
-package ort.da.obligatorio339182.model.domain.services;
+package ort.da.obligatorio339182.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
 
 @Service
-public class SistemaPuestos {
+class SistemaPuestos {
 	private static int s_idPuesto;
 	private static int s_idTarifa;
 	private static int s_idBonificacion;
@@ -20,7 +20,7 @@ public class SistemaPuestos {
 	private List<Tarifa> tarifas;
 	private List<BonificacionAsignada> bonificacionesAsignadas;
 
-	public SistemaPuestos() {
+	SistemaPuestos() {
 		s_idPuesto = 0;
 		s_idTarifa = 0;
 		s_idBonificacion = 0;
@@ -29,19 +29,19 @@ public class SistemaPuestos {
 		this.bonificacionesAsignadas = new ArrayList<BonificacionAsignada>();
 	}
 
-	public void crearPuesto(String nombre, String direccion) {
+	void crearPuesto(String nombre, String direccion) {
 
 	}
 
-	public void crearTadrifa(int monto, Categoria categoria) {
+	void crearTadrifa(int monto, Categoria categoria) {
 
 	}
 
-	public void crearBonificacion(String nombre, Puesto puesto, Propietario propietario) {
+	void crearBonificacion(String nombre, Puesto puesto, Propietario propietario) {
 
 	}
 
-	public List<Bonificacion> getBonificacionesPorUsuario(Cedula cedula) {
+	List<Bonificacion> getBonificacionesPorUsuario(Cedula cedula) {
 		return null;
 	}
 

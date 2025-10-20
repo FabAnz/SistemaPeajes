@@ -1,10 +1,5 @@
-package ort.da.obligatorio339182.model;
+package ort.da.obligatorio339182.services;
 
-import ort.da.obligatorio339182.model.domain.services.SistemaUsuarios;
-import ort.da.obligatorio339182.model.domain.services.SistemaPuestos;
-import ort.da.obligatorio339182.model.domain.services.SistemaVehiculos;
-import ort.da.obligatorio339182.model.domain.services.SistemaTransitos;
-import ort.da.obligatorio339182.dtos.LoginDTO;
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import java.util.List;
 import ort.da.obligatorio339182.model.domain.bonifiaciones.Bonificacion;
@@ -12,7 +7,7 @@ import ort.da.obligatorio339182.model.domain.Vehiculo;
 import ort.da.obligatorio339182.model.domain.usuarios.Usuario;
 import ort.da.obligatorio339182.model.valueObjects.Matricula;
 import org.springframework.stereotype.Service;
-
+import ort.da.obligatorio339182.exceptions.AppException;
 @Service
 public class Fachada {
 
@@ -29,11 +24,17 @@ public class Fachada {
 	}
 
 	public void iniciarSistema() {
-
+		// TODO: Agregar aquí lógica de inicialización del sistema
+		// Por ejemplo: configuraciones, validaciones, etc.
+		// Los datos precargados ya fueron cargados por DatosPrecargados
 	}
 
-	public void login(LoginDTO usuario) {
+	public Usuario login(String cedula, String contrasenia) throws AppException {
+		return su.login(cedula, contrasenia);
+	}
 
+	public void agregarUsuario(Usuario usuario) throws AppException{
+		su.agregarUsuario(usuario);
 	}
 
 	/**

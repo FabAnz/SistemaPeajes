@@ -1,4 +1,4 @@
-package ort.da.obligatorio339182.dtos;
+package ort.da.obligatorio339182.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
