@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Propietario - Sistema de Peajes</title>
+    
+    <!-- CSS Compartido -->
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/layouts.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body class="layout-centered">
+    <div class="container-lg">
+        <div class="card">
+            <h1 class="text-center">🚗 Panel de Propietario</h1>
+            
+            <!-- HU 2.1: Información Personal -->
+            <section id="seccion-info-personal">
+                <h2>Mi Información Personal</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Nombre Completo:</label>
+                        <span id="nombre" class="info-value">Cargando...</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Estado:</label>
+                        <span id="estado" class="info-value badge">Cargando...</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Saldo Disponible:</label>
+                        <span id="saldo" class="info-value saldo">Cargando...</span>
+                    </div>
+                </div>
+            </section>
+
+            <hr>
+
+            <!-- TODO: HU 2.2 - Bonificaciones asignadas -->
+            <section id="seccion-bonificaciones">
+                <h2>Mis Bonificaciones</h2>
+                <p class="text-muted">Esta sección estará disponible próximamente...</p>
+            </section>
+
+            <hr>
+
+            <!-- TODO: HU 2.3 - Vehículos registrados -->
+            <section id="seccion-vehiculos">
+                <h2>Mis Vehículos</h2>
+                <p class="text-muted">Esta sección estará disponible próximamente...</p>
+            </section>
+
+            <hr>
+
+            <!-- TODO: HU 2.4 - Historial de tránsitos -->
+            <section id="seccion-transitos">
+                <h2>Historial de Tránsitos</h2>
+                <p class="text-muted">Esta sección estará disponible próximamente...</p>
+            </section>
+
+            <hr>
+
+            <!-- TODO: HU 2.5 - Notificaciones -->
+            <section id="seccion-notificaciones">
+                <h2>Notificaciones</h2>
+                <p class="text-muted">Esta sección estará disponible próximamente...</p>
+            </section>
+
+            <hr>
+
+            <!-- Acciones -->
+            <div class="text-center">
+                <button onclick="cerrarSesion()" class="btn btn-secondary">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Librerías JavaScript -->
+    <script src="../../vistaWeb.js"></script>
+    <script src="../../utilesVista.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
+

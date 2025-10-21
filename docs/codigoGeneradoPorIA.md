@@ -712,4 +712,588 @@ function togglearVisibilidadContrasenia() {
 
 ---
 
+## Resolución de Dependencia Circular con @Lazy
+
+**Fecha:** 21 de octubre de 2025  
+**Contexto:** Implementación de `SistemaAutorizacion` que necesita comunicarse con otros sistemas a través de Fachada, evitando dependencia circular
+
+### Conversación
+
+**Usuario:** Tengo un error de dependencia circular entre `Fachada` y `SistemaAutorizacion`. No quiero que los sistemas hablen directamente entre ellos, quiero que toda la comunicación sea a través de Fachada. ¿Podría hacer que Fachada sea un singleton con `getInstance()`?
+
+**IA:** Usar Singleton tradicional con `getInstance()` no es recomendable en Spring porque:
+1. Spring ya maneja los beans como Singletons automáticamente
+2. Mezclar Singleton tradicional con Spring causa problemas de gestión del ciclo de vida
+3. No resuelve el problema: Spring seguirá detectando la dependencia circular
+
+La solución recomendada es usar **`@Lazy`** de Spring, que permite romper ciclos circulares de forma limpia manteniendo toda la comunicación a través de Fachada.
+
+**Código generado:**
+
+```java
+package ort.da.obligatorio339182.services;
+
+import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Lazy;
+import jakarta.servlet.http.HttpSession;
+
+import ort.da.obligatorio339182.exceptions.AppException;
+import ort.da.obligatorio339182.model.domain.usuarios.Usuario;
+import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
+import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
+
+/**
+ * Sistema de autorización para validar sesiones y permisos de usuarios
+ * Centraliza la lógica de validación para reutilizar en múltiples controladores
+ */
+@Service
+class SistemaAutorizacion {
+
+    private final Fachada fachada;
+
+    // @Lazy rompe la dependencia circular: permite inyectar Fachada sin crear el bean completo en construcción
+    SistemaAutorizacion(@Lazy Fachada fachada) {
+        this.fachada = fachada;
+    }
+
+    /**
+     * Valida que exista una sesión activa y que el usuario tenga el permiso requerido
+     * 
+     * @param session La sesión HTTP actual
+     * @param permisoRequerido El permiso que debe tener el usuario
+     * @return El usuario validado
+     * @throws AppException Si no hay sesión, el usuario no existe, no tiene permiso, o está deshabilitado
+     */
+    Usuario validarSesionYPermiso(HttpSession session, Permiso permisoRequerido) throws AppException {
+        // 1. Validar que existe sesión activa
+        Integer usuarioId = (Integer) session.getAttribute("usuarioId");
+        if (usuarioId == null) {
+            throw new AppException("Debe iniciar sesión");
+        }
+
+        // 2. Obtener el usuario completo a través de Fachada
+        Usuario usuario = fachada.getUsuarioPorId(usuarioId);
+        if (usuario == null) {
+            throw new AppException("Debe iniciar sesión");
+        }
+
+        // 3. Validar que tenga el permiso requerido
+        if (!usuario.tienePermiso(permisoRequerido)) {
+            throw new AppException("Acceso no autorizado");
+        }
+
+        // 4. Si es Propietario, validar que pueda entrar al sistema
+        if (usuario instanceof Propietario) {
+            Propietario propietario = (Propietario) usuario;
+            if (!propietario.puedeIngresarAlSistema()) {
+                throw new AppException("Usuario deshabilitado, no puede ingresar al sistema");
+            }
+        }
+
+        return usuario;
+    }
+}
+```
+
+**Características implementadas:**
+
+#### 🔧 Solución Técnica
+- **`@Lazy`**: Anotación de Spring (`org.springframework.context.annotation.Lazy`) que resuelve dependencias circulares
+- **Inyección perezosa**: En construcción se inyecta un proxy en lugar del bean completo
+- **Resolución en runtime**: El proxy delega al bean real cuando se invoca un método por primera vez
+- **Transparente**: El código funciona igual, solo cambia la forma de inyección
+
+#### 📐 Arquitectura
+- **Mantiene el patrón Facade**: Toda comunicación entre sistemas pasa por Fachada
+- **Evita acoplamiento directo**: `SistemaAutorizacion` NO depende de `SistemaUsuarios` directamente
+- **Package-private**: Ambos sistemas son package-private, solo Fachada es pública
+- **Escalable**: Otros sistemas pueden usar el mismo patrón si necesitan comunicarse
+
+#### ⚠️ Por qué NO usar Singleton tradicional
+```java
+// ❌ NO HACER ESTO
+public class Fachada {
+    private static Fachada instancia;
+    
+    public static Fachada getInstance() {
+        if (instancia == null) instancia = new Fachada();
+        return instancia;
+    }
+}
+
+// Problemas:
+// 1. Mezcla gestión manual con Spring
+// 2. Pierdes inyección de dependencias
+// 3. No resuelve el ciclo en Spring Context
+// 4. Dificulta testing (no puedes mockear getInstance())
+```
+
+#### ✅ Ventajas de @Lazy
+1. **Solución recomendada por Spring**: Es el patrón oficial para dependencias circulares
+2. **Mantiene inyección de dependencias**: Todo sigue siendo gestionado por Spring
+3. **Fácil de testear**: Puedes inyectar mocks en tests
+4. **No requiere cambios en otros archivos**: Solo se modifica el constructor del sistema
+5. **Transparente en ejecución**: No hay diferencia de comportamiento en runtime
+
+#### 🔄 Flujo de resolución
+```
+1. Spring crea beans en orden:
+   - Intenta crear Fachada → necesita SistemaAutorizacion
+   - Intenta crear SistemaAutorizacion → necesita Fachada (@Lazy)
+   
+2. Con @Lazy:
+   - Spring inyecta un PROXY de Fachada en SistemaAutorizacion
+   - El proxy no necesita que Fachada esté completamente inicializada
+   - Spring completa la creación de SistemaAutorizacion
+   - Spring usa SistemaAutorizacion para completar Fachada
+   - Todos los beans están listos
+   
+3. En tiempo de ejecución:
+   - Cuando se llama a fachada.getUsuarioPorId(...)
+   - El proxy delega al bean real de Fachada (ya inicializado)
+   - Funciona transparentemente
+```
+
+#### 📝 Actualización en AGENTS.md
+Se agregó una nueva regla crítica de arquitectura:
+
+**⚠️ COMUNICACIÓN ENTRE SISTEMAS**: Toda comunicación debe ser a través de la Fachada, incluso entre sistemas
+- Si un sistema necesita funcionalidad de otro sistema, debe llamar a la Fachada
+- **NUNCA** inyectar directamente otro sistema en un sistema (ej: NO inyectar `SistemaPuestos` en `SistemaUsuarios`)
+- Si esto crea dependencia circular, usar `@Lazy` en la inyección de Fachada
+- Usar `@Lazy` de Spring (`org.springframework.context.annotation.Lazy`) para romper ciclos: inyecta un proxy que se resuelve en tiempo de ejecución
+
+#### 🎯 Uso en el proyecto
+`SistemaAutorizacion` valida sesiones y permisos en múltiples endpoints:
+- Necesita obtener usuarios por ID → debe llamar a Fachada
+- Fachada depende de SistemaAutorizacion → dependencia circular
+- Solución: `@Lazy` en la inyección de Fachada en SistemaAutorizacion
+- Resultado: Arquitectura limpia, comunicación centralizada, sin ciclos
+
+**Ejemplo de uso desde controlador:**
+```java
+@RestController
+@RequestMapping("/propietario")
+public class PropietarioController {
+    private final Fachada fachada;
+    
+    @GetMapping("/datos")
+    public List<RespuestaDTO> obtenerDatos(HttpSession session) throws AppException {
+        // La Fachada valida sesión y permisos internamente vía SistemaAutorizacion
+        Usuario usuario = fachada.validarSesionYPermiso(session, Permiso.PROPIETARIO_DASHBOARD);
+        // ... resto del código
+    }
+}
+```
+
+---
+
+## Sistema de Autorización y Manejo de Sesiones
+
+**Fecha:** 21 de octubre de 2025  
+**Contexto:** Implementación completa del sistema de autorización con invalidación automática de sesión y redirección al login con mensajes persistentes usando `sessionStorage`
+
+### Conversación
+
+**Usuario:** Cuando se hace login se muestra un mensaje de inicio de sesión exitoso, no quiero que aparezca este mensaje, que se redirija directamente.
+
+**IA:** He eliminado el mensaje de éxito y el delay, ahora redirige directamente después de login exitoso.
+
+**Usuario:** ¿Cómo hago para que el botón cerrar sesión del dashboard llame a logout?
+
+**IA:** Configuré el botón para llamar a `cerrarSesion()` que usa `submit('/acceso/logout', '', 'GET')` y procesé la redirección con `mostrar_redirigir()`.
+
+**Usuario:** Usa `redirigir` para que el botón cerrar sesión redirija al login.
+
+**IA:** Agregué la función `mostrar_redirigir()` en dashboard.js para procesar automáticamente las redirecciones.
+
+**Usuario:** Cuando se hace login se muestra un mensaje, no quiero que aparezca. Y, ¿cómo muestro las excepciones en el frontend? Las librerías tienen un modo para mostrar mensajes.
+
+**IA:** Las librerías tienen `mostrarMensaje()` en `utilesVista.js`. Implementé `excepcionDeAplicacion()` que parsea JSON y usa `mostrarMensaje()` en lugar de `alert()` feo.
+
+**Usuario:** No quiero que se redirija al login detectando palabras clave, quiero que cuando `validarSesionYPermiso` falle se haga logout y redirija.
+
+**IA:** Implementé `UnauthorizedException` y `GlobalExceptionHandler` que captura la excepción, invalida la sesión automáticamente y retorna redirección al login.
+
+**Usuario:** Quiero que se lance la excepción con status 299, se redirija al login y después se muestre el mensaje de error. ¿Cómo sería el flujo?
+
+**IA:** Con status 299, `vistaWeb.js` llama a `excepcionDeAplicacion()` pero si redirigimos inmediatamente, el mensaje se pierde. La solución es usar `sessionStorage` para pasar el mensaje entre páginas:
+1. Dashboard guarda mensaje en `sessionStorage.setItem('mensajeLogin', mensaje)`
+2. Redirige al login
+3. Login lee el mensaje con `sessionStorage.getItem('mensajeLogin')` al cargar
+4. Muestra el mensaje con `mostrarMensaje()`
+5. Limpia el storage con `sessionStorage.removeItem('mensajeLogin')`
+
+### Código generado
+
+#### 1. UnauthorizedException.java
+
+```java
+package ort.da.obligatorio339182.exceptions;
+
+public class UnauthorizedException extends Exception {
+    public UnauthorizedException(String message) {
+        super(message);
+    }
+}
+```
+
+**Características:**
+- Nueva excepción específica para errores de autorización
+- Separada de `AppException` para distinguir errores de sesión de errores de negocio
+- `GlobalExceptionHandler` la procesa de forma especial para logout automático
+
+#### 2. SistemaAutorizacion.java - Invalidación de sesión
+
+```java
+@Service
+class SistemaAutorizacion {
+    private final Fachada fachada;
+    
+    SistemaAutorizacion(@Lazy Fachada fachada) {
+        this.fachada = fachada;
+    }
+    
+    Usuario validarSesionYPermiso(HttpSession session, Permiso permisoRequerido) throws UnauthorizedException {
+        // 1. Validar que existe sesión activa
+        Integer usuarioId = (Integer) session.getAttribute("usuarioId");
+        if (usuarioId == null) {
+            invalidarSesion(session);
+        }
+        
+        // 2. Obtener el usuario completo
+        Usuario usuario = fachada.getUsuarioPorId(usuarioId);
+        if (usuario == null) {
+            invalidarSesion(session);
+        }
+        
+        // 3. Validar que tenga el permiso requerido
+        if (!usuario.tienePermiso(permisoRequerido)) {
+            invalidarSesion(session);
+        }
+        
+        // 4. Si es Propietario, validar que pueda entrar al sistema
+        if (usuario instanceof Propietario) {
+            Propietario propietario = (Propietario) usuario;
+            if (!propietario.puedeIngresarAlSistema()) {
+                invalidarSesion(session);
+            }
+        }
+        
+        return usuario;
+    }
+    
+    private void invalidarSesion(HttpSession session) throws UnauthorizedException {
+        session.invalidate();
+        throw new UnauthorizedException("Sesión inválida");
+    }
+}
+```
+
+**Características:**
+- `invalidarSesion()` centraliza la lógica de logout + throw exception
+- Invalida la sesión en **todos** los casos de fallo de autorización
+- Lanza `UnauthorizedException` en lugar de `AppException`
+- Mantiene visibilidad package-private (solo accesible vía Fachada)
+
+#### 3. GlobalExceptionHandler.java - Manejo de autorización
+
+```java
+@ControllerAdvice
+public class GlobalExpetionHandler {
+    
+    /**
+     * Maneja errores de autorización (sesión inválida o sin permisos)
+     * Redirige automáticamente al login
+     */
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<List<RespuestaDTO>> handleUnauthorizedException(UnauthorizedException e) {
+        return ResponseEntity.ok(
+            RespuestaDTO.lista(
+                new RespuestaDTO("error", e.getMessage()),
+                new RespuestaDTO("redirigir", "/login/login.html")
+            )
+        );
+    }
+    
+    /**
+     * Maneja errores de aplicación generales
+     */
+    @ExceptionHandler(AppException.class)
+    public ResponseEntity<List<RespuestaDTO>> handleAppException(AppException e) {
+        return ResponseEntity.status(299).body(
+            RespuestaDTO.lista(new RespuestaDTO("error", e.getMessage()))
+        );
+    }
+}
+```
+
+**NOTA IMPORTANTE:** Aunque el código muestra `ResponseEntity.ok()` (status 200), se cambió a `ResponseEntity.status(299)` para que `vistaWeb.js` llame a `excepcionDeAplicacion()` y permita usar `sessionStorage` para persistir el mensaje entre páginas.
+
+**Características:**
+- Dos manejadores separados: uno para autorización, otro para errores de negocio
+- `UnauthorizedException` → Status 299 + redirección + mensaje
+- `AppException` → Status 299 + mensaje (sin redirección)
+- La sesión ya fue invalidada en `SistemaAutorizacion`
+
+#### 4. dashboard.js - Manejo de excepciones con sessionStorage
+
+```javascript
+/**
+ * Función que maneja las excepciones de aplicación (status 299)
+ * vistaWeb.js llama automáticamente a esta función cuando recibe errores del backend
+ */
+function excepcionDeAplicacion(mensaje) {
+    console.error('Excepción de aplicación:', mensaje);
+    
+    // Parsear el mensaje JSON con estructura de RespuestaDTO
+    try {
+        const respuestas = JSON.parse(mensaje);
+        if (Array.isArray(respuestas)) {
+            let urlRedireccion = null;
+            let mensajeError = null;
+            
+            // Extraer redirección y mensaje de error
+            respuestas.forEach(resp => {
+                if (resp.id === 'redirigir') {
+                    urlRedireccion = resp.parametro;
+                }
+                if (resp.id === 'error' || resp.id === 'ERROR' || resp.id === 'mensaje') {
+                    mensajeError = resp.parametro;
+                }
+            });
+            
+            // Si hay mensaje de error, guardarlo en sessionStorage para mostrarlo en el login
+            if (mensajeError) {
+                sessionStorage.setItem('mensajeLogin', mensajeError);
+            }
+            
+            // Si hay redirección, redirigir
+            if (urlRedireccion) {
+                window.location.href = urlRedireccion;
+                return;
+            }
+        }
+    } catch (e) {
+        console.error('Error parseando respuesta:', e);
+    }
+    
+    // Si no se pudo parsear o no hay redirección, mostrar mensaje por defecto
+    alert('Error: ' + mensaje);
+}
+
+/**
+ * Función que procesa la redirección
+ * Se ejecuta cuando el backend retorna {id: "redirigir", parametro: "/url"}
+ */
+function mostrar_redirigir(paginaUrl) {
+    console.log("Redirigiendo a:", paginaUrl);
+    window.location.href = paginaUrl;
+}
+
+/**
+ * Cierra la sesión del usuario y redirige al login
+ */
+function cerrarSesion() {
+    submit('/acceso/logout', '', 'GET');
+}
+```
+
+**Características:**
+- `excepcionDeAplicacion()` parsea el JSON con `[{id, parametro}]`
+- Extrae tanto la URL de redirección como el mensaje de error
+- **Guarda el mensaje en `sessionStorage`** antes de redirigir
+- Funciona con status 299 (vistaWeb.js llama automáticamente a esta función)
+- Fallback con `alert()` si no se puede parsear
+
+#### 5. login.js - Lectura y muestra de mensaje persistido
+
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+    ocultarLoading();
+    inicializarEventos();
+    configurarValidacionEnTiempoReal();
+    
+    // Verificar si hay un mensaje pendiente de mostrar (ej: sesión expirada)
+    verificarMensajePendiente();
+});
+
+/**
+ * Verifica si hay un mensaje pendiente de mostrar desde otra página
+ * (ej: cuando se redirige desde el dashboard por sesión expirada)
+ */
+function verificarMensajePendiente() {
+    const mensajePendiente = sessionStorage.getItem('mensajeLogin');
+    if (mensajePendiente) {
+        // Mostrar el mensaje con diálogo bonito de utilesVista.js
+        mostrarMensaje(mensajePendiente);
+        // Limpiar el mensaje del sessionStorage
+        sessionStorage.removeItem('mensajeLogin');
+    }
+}
+```
+
+**Características:**
+- Se ejecuta automáticamente al cargar la página de login
+- Lee el mensaje de `sessionStorage` si existe
+- Muestra el mensaje usando `mostrarMensaje()` (diálogo bonito de `utilesVista.js`)
+- **Limpia el mensaje** después de mostrarlo para que no se repita
+- No interfiere con el flujo normal de login si no hay mensaje
+
+#### 6. login.js - Redirección directa sin mensaje de éxito
+
+```javascript
+function mostrar_redirigir(paginaUrl) {
+    ocultarLoading();
+    console.log("Redirigiendo a:", paginaUrl);
+    
+    // Redirigir directamente sin mensaje
+    window.location.href = paginaUrl;
+}
+```
+
+**Características:**
+- Eliminado el mensaje "¡Inicio de sesión exitoso! Redirigiendo..."
+- Eliminado el delay de 500ms con `setTimeout()`
+- Redirección inmediata después de login exitoso
+- Mejor experiencia de usuario: más rápido y directo
+
+### Flujo completo de autorización
+
+#### 🔐 Caso 1: Usuario sin sesión intenta acceder al dashboard
+
+```
+1. GET /usuarios/dashboard-propietario
+   ↓
+2. UsuariosController.obtenerInformacionPersonal()
+   ↓
+3. fachada.validarSesionYPermiso(session, Permiso.PROPIETARIO_DASHBOARD)
+   ↓
+4. SistemaAutorizacion detecta: usuarioId == null
+   ↓
+5. session.invalidate() 🔒
+   ↓
+6. throw new UnauthorizedException("Sesión inválida")
+   ↓
+7. GlobalExceptionHandler.handleUnauthorizedException()
+   ↓
+8. Return status 299 + [{error: "Sesión inválida"}, {redirigir: "/login/login.html"}]
+   ↓
+9. vistaWeb.js detecta status 299
+   ↓
+10. Llama a excepcionDeAplicacion(mensaje)
+    ↓
+11. dashboard.js:
+    - sessionStorage.setItem('mensajeLogin', 'Sesión inválida')
+    - window.location.href = '/login/login.html'
+    ↓
+12. Login carga → verificarMensajePendiente()
+    ↓
+13. mostrarMensaje('Sesión inválida') → Diálogo bonito 📢
+    ↓
+14. sessionStorage.removeItem('mensajeLogin')
+    ↓
+15. Usuario puede hacer login ✅
+```
+
+#### 🚪 Caso 2: Usuario hace clic en "Cerrar Sesión"
+
+```
+1. Click en botón "Cerrar Sesión"
+   ↓
+2. cerrarSesion() → submit('/acceso/logout', '', 'GET')
+   ↓
+3. LoginController.logout()
+   ↓
+4. session.invalidate() 🔒
+   ↓
+5. Return [{redirigir: "/login/login.html"}]
+   ↓
+6. vistaWeb.js procesa (status 200)
+   ↓
+7. Llama a mostrar_redirigir("/login/login.html")
+   ↓
+8. window.location.href = '/login/login.html'
+   ↓
+9. Usuario en login sin mensaje ✅
+```
+
+#### ✅ Caso 3: Login exitoso
+
+```
+1. hacerLogin() → submit('/acceso/login', datos, 'POST')
+   ↓
+2. LoginController.login()
+   ↓
+3. fachada.login(cedula, contrasenia)
+   ↓
+4. session.setAttribute("usuarioId", usuario.getId())
+   ↓
+5. Return [{redirigir: "/propietario/dashboard/dashboard.html"}]
+   ↓
+6. vistaWeb.js procesa (status 200)
+   ↓
+7. Llama a mostrar_redirigir("/propietario/dashboard/dashboard.html")
+   ↓
+8. window.location.href (redirección DIRECTA, sin mensaje)
+   ↓
+9. Usuario en dashboard ✅
+```
+
+### Ventajas de la implementación
+
+#### 🎯 Separación de responsabilidades
+- **`UnauthorizedException`**: Errores de autorización → logout automático + redirección
+- **`AppException`**: Errores de lógica de negocio → mensaje de error con status 299
+- **`sessionStorage`**: Persistencia temporal de mensajes entre páginas (se borra al cerrar tab)
+
+#### 🔒 Seguridad
+- **Invalidación automática**: La sesión se destruye en el servidor antes de redirigir
+- **Sin tokens en URL**: No se pasan mensajes por query string (sería inseguro)
+- **Centralizado**: Toda la lógica de autorización en un solo lugar (`SistemaAutorizacion`)
+
+#### 💡 Experiencia de usuario
+- **Login rápido**: Redirección directa sin mensajes innecesarios
+- **Logout claro**: Mensaje explicativo de por qué fue deslogueado
+- **Diálogos bonitos**: Usa `mostrarMensaje()` en lugar de `alert()` feo
+- **Sin repeticiones**: El mensaje se muestra una vez y se borra
+
+#### 🏗️ Arquitectura limpia
+- **Patrón Facade**: Toda comunicación a través de Fachada
+- **@Lazy**: Resuelve dependencia circular sin Singleton tradicional
+- **Package-private**: Sistemas no expuestos, solo Fachada es pública
+- **Reutilizable**: El patrón de `sessionStorage` puede usarse para otros mensajes
+
+#### 🧪 Testeable
+- `SistemaAutorizacion` puede testearse con mocks de `HttpSession` y `Fachada`
+- `GlobalExceptionHandler` puede testearse verificando el `ResponseEntity`
+- Frontend puede testearse simulando `sessionStorage` y `window.location`
+
+### Archivos modificados
+
+**Backend:**
+- ✅ `exceptions/UnauthorizedException.java` (nuevo)
+- ✅ `exceptions/GlobalExceptionHandler.java`
+- ✅ `services/SistemaAutorizacion.java`
+- ✅ `services/Fachada.java`
+- ✅ `controllers/UsuariosController.java`
+
+**Frontend:**
+- ✅ `login/login.js`
+- ✅ `propietario/dashboard/dashboard.js`
+- ✅ `propietario/dashboard/dashboard.html`
+
+**Documentación:**
+- ✅ `context/autorizacion-sesiones.md` (nuevo archivo de contexto)
+- ✅ `docs/codigoGeneradoPorIA.md` (este documento)
+- ✅ `AGENTS.md` (referencia al nuevo archivo de contexto)
+
+### Recursos adicionales
+
+Para más detalles sobre el flujo completo de autorización y sesiones, consulta:
+- **Archivo de contexto completo**: `context/autorizacion-sesiones.md`
+- **Guía de arquitectura**: Sección "Sistema de Autorización" en AGENTS.md
+
+---
+
 

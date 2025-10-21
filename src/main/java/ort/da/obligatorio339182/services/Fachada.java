@@ -8,6 +8,10 @@ import ort.da.obligatorio339182.model.domain.usuarios.Usuario;
 import ort.da.obligatorio339182.model.valueObjects.Matricula;
 import org.springframework.stereotype.Service;
 import ort.da.obligatorio339182.exceptions.AppException;
+import ort.da.obligatorio339182.exceptions.UnauthorizedException;
+import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
+import jakarta.servlet.http.HttpSession;
+
 @Service
 public class Fachada {
 
@@ -15,19 +19,16 @@ public class Fachada {
 	private final SistemaPuestos sp;
 	private final SistemaVehiculos sv;
 	private final SistemaTransitos st;
+	private final SistemaAutorizacion sa;
 
-	public Fachada(SistemaUsuarios su, SistemaPuestos sp, SistemaVehiculos sv, SistemaTransitos st) {
+	public Fachada(SistemaUsuarios su, SistemaPuestos sp, SistemaVehiculos sv, SistemaTransitos st, SistemaAutorizacion sa) {
 		this.su = su;
 		this.sp = sp;
 		this.sv = sv;
 		this.st = st;
+		this.sa = sa;
 	}
 
-	public void iniciarSistema() {
-		// TODO: Agregar aquí lógica de inicialización del sistema
-		// Por ejemplo: configuraciones, validaciones, etc.
-		// Los datos precargados ya fueron cargados por DatosPrecargados
-	}
 
 	public Usuario login(String cedula, String contrasenia) throws AppException {
 		return su.login(cedula, contrasenia);
@@ -35,6 +36,10 @@ public class Fachada {
 
 	public void agregarUsuario(Usuario usuario) throws AppException{
 		su.agregarUsuario(usuario);
+	}
+
+	public Usuario validarSesionYPermiso(HttpSession session, Permiso permisoRequerido) throws UnauthorizedException {
+		return sa.validarSesionYPermiso(session, permisoRequerido);
 	}
 
 	/**
@@ -48,8 +53,17 @@ public class Fachada {
 		return null;
 	}
 
-	public Usuario getUsuarioPorCedula(Cedula cedula) {
-		return null;
+	public Usuario getUsuarioPorCedula(String cedula) {
+		return su.getUsuarioPorCedula(cedula);
+	}
+
+	/**
+	 * Obtiene un usuario por su ID
+	 * @param id El ID del usuario
+	 * @return El usuario si existe, null en caso contrario
+	 */
+	public Usuario getUsuarioPorId(int id) {
+		return su.getUsuarioPorId(id);
 	}
 
 	public int cantidadTransitosPorCedulaYMatricula(Cedula cedula, Matricula matricula) {

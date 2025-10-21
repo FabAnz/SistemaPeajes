@@ -54,4 +54,18 @@ class SistemaUsuarios {
 		return usuario;
 	}
 
+	/**
+	 * Obtiene un usuario por su ID
+	 * @param id El ID del usuario
+	 * @return El usuario si existe, null en caso contrario
+	 */
+	Usuario getUsuarioPorId(int id) {
+		for (Usuario usuario : usuarios) {
+			if (usuario.getId() == id) {
+				return usuario;
+			}
+		}
+		return null;
+	}
+
 }

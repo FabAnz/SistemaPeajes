@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     inicializarEventos();
     configurarValidacionEnTiempoReal();
+    
+    // Verificar si hay un mensaje pendiente de mostrar (ej: sesión expirada)
+    verificarMensajePendiente();
 });
 
 // ========================================
@@ -152,12 +155,8 @@ function mostrar_redirigir(paginaUrl) {
     ocultarLoading();
     console.log("Redirigiendo a:", paginaUrl);
     
-    // Mostrar mensaje de éxito y redirigir después de un breve delay
-    mostrarMensaje('¡Inicio de sesión exitoso! Redirigiendo...').then(() => {
-        setTimeout(() => {
-            window.location.href = paginaUrl;
-        }, 500);
-    });
+    // Redirigir directamente sin mensaje
+    window.location.href = paginaUrl;
 }
 
 // ========================================
@@ -260,4 +259,18 @@ function mostrarAyuda(event) {
 
 function capitalizar(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
+ * Verifica si hay un mensaje pendiente de mostrar desde otra página
+ * (ej: cuando se redirige desde el dashboard por sesión expirada)
+ */
+function verificarMensajePendiente() {
+    const mensajePendiente = sessionStorage.getItem('mensajeLogin');
+    if (mensajePendiente) {
+        // Mostrar el mensaje
+        mostrarMensaje(mensajePendiente);
+        // Limpiar el mensaje del sessionStorage
+        sessionStorage.removeItem('mensajeLogin');
+    }
 }
