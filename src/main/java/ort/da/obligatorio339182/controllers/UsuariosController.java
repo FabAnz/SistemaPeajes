@@ -26,8 +26,12 @@ private final Fachada fachada;
 	
 	@GetMapping("/dashboard-propietario")
 	public List<RespuestaDTO> obtenerInformacionPersonal(HttpSession session) throws UnauthorizedException {
+		Integer usuarioId = (Integer) session.getAttribute("usuarioId");
+		if(usuarioId == null) {
+			throw new UnauthorizedException("No hay sesión activa");
+		}
 		// Validar sesión y permisos
-		Usuario usuario = fachada.validarSesionYPermiso(session, Permiso.PROPIETARIO_DASHBOARD);
+		Usuario usuario = fachada.validarPermiso(usuarioId, Permiso.PROPIETARIO_DASHBOARD);
 		
 		// Castear a Propietario (ya sabemos que tiene el permiso PROPIETARIO_DASHBOARD)
 		Propietario propietario = (Propietario) usuario;

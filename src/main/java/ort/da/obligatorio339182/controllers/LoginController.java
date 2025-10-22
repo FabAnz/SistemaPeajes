@@ -49,6 +49,7 @@ public class LoginController {
 
     @GetMapping("/logout")
     public List<RespuestaDTO> logout(HttpSession session) {
+        session.removeAttribute("usuarioId");
         session.invalidate();
         return RespuestaDTO.lista(
             new RespuestaDTO("redirigir", "/login/login.html")

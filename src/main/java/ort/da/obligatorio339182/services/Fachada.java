@@ -19,14 +19,12 @@ public class Fachada {
 	private final SistemaPuestos sp;
 	private final SistemaVehiculos sv;
 	private final SistemaTransitos st;
-	private final SistemaAutorizacion sa;
 
-	public Fachada(SistemaUsuarios su, SistemaPuestos sp, SistemaVehiculos sv, SistemaTransitos st, SistemaAutorizacion sa) {
+	public Fachada(SistemaUsuarios su, SistemaPuestos sp, SistemaVehiculos sv, SistemaTransitos st) {
 		this.su = su;
 		this.sp = sp;
 		this.sv = sv;
 		this.st = st;
-		this.sa = sa;
 	}
 
 
@@ -38,8 +36,8 @@ public class Fachada {
 		su.agregarUsuario(usuario);
 	}
 
-	public Usuario validarSesionYPermiso(HttpSession session, Permiso permisoRequerido) throws UnauthorizedException {
-		return sa.validarSesionYPermiso(session, permisoRequerido);
+	public Usuario validarPermiso(Integer usuarioId, Permiso permisoRequerido) throws UnauthorizedException {
+		return su.validarPermiso(usuarioId, permisoRequerido);
 	}
 
 	/**

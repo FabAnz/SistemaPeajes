@@ -14,16 +14,14 @@ public class GlobalExpetionHandler {
     
     /**
      * Maneja errores de autorización (sesión inválida o sin permisos)
-     * Redirige automáticamente al login
+     * Retorna ID "logout" para que el frontend ejecute el proceso de logout
      */
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<List<RespuestaDTO>> handleUnauthorizedException(UnauthorizedException e) {
-        // La sesión ya fue invalidada en SistemaAutorizacion
-        // Retornar redirección al login
+        // El frontend ejecutará mostrar_logout() que hará fetch a /acceso/logout
         return ResponseEntity.status(299).body(
             RespuestaDTO.lista(
-                new RespuestaDTO("redirigir", "/login/login.html"),
-                new RespuestaDTO("error", e.getMessage())
+                new RespuestaDTO("logout", e.getMessage())
                 )
         );
     }

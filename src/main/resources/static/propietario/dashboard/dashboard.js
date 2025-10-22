@@ -61,21 +61,20 @@ function formatearSaldo(saldo) {
  * vistaWeb.js llama automáticamente a esta función cuando recibe errores del backend
  */
 function excepcionDeAplicacion(mensaje) {
-    console.error('Excepción de aplicación:', mensaje);
-    
     // Parsear el mensaje JSON con estructura de RespuestaDTO
     try {
         const respuestas = JSON.parse(mensaje);
         if (Array.isArray(respuestas)) {
-            let urlRedireccion = null;
+            let logout = false;
             let mensajeError = null;
             
             // Extraer redirección y mensaje de error
             respuestas.forEach(resp => {
-                if (resp.id === 'redirigir') {
-                    urlRedireccion = resp.parametro;
+                if (resp.id === 'logout') {
+                    logout = true;
+                    mensajeError = resp.parametro;
                 }
-                if (resp.id === 'error' || resp.id === 'ERROR' || resp.id === 'mensaje') {
+                if (resp.id === 'mensaje') {
                     mensajeError = resp.parametro;
                 }
             });
@@ -86,17 +85,14 @@ function excepcionDeAplicacion(mensaje) {
             }
             
             // Si hay redirección, redirigir
-            if (urlRedireccion) {
-                window.location.href = urlRedireccion;
-                return;
+            if (logout) {
+                cerrarSesion();
             }
         }
     } catch (e) {
         console.error('Error parseando respuesta:', e);
     }
     
-    // Si no se pudo parsear o no hay redirección, mostrar mensaje por defecto
-    alert('Error: ' + mensaje);
 }
 
 /**

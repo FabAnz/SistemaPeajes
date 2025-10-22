@@ -5,8 +5,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import ort.da.obligatorio339182.exceptions.AppException;
+import ort.da.obligatorio339182.exceptions.UnauthorizedException;
+import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
 import ort.da.obligatorio339182.model.domain.usuarios.Usuario;
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
+import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 
 @Service
 class SistemaUsuarios {
@@ -66,6 +69,25 @@ class SistemaUsuarios {
 			}
 		}
 		return null;
+	}
+
+	Usuario validarPermiso(Integer usuarioId, Permiso permisoRequerido) throws UnauthorizedException {
+		Usuario usuario = getUsuarioPorId(usuarioId);
+		if (usuario == null) {
+			throw new UnauthorizedException("Usuario no encontrado");
+		}
+		if (!usuario.tienePermiso(permisoRequerido)) {
+			throw new UnauthorizedException("Usuario no tiene permiso para acceder a este recurso");
+		}
+
+		if(usuario instanceof Propietario) {
+			Propietario propietario = (Propietario) usuario;
+			if(!propietario.puedeIngresarAlSistema()) {
+				throw new UnauthorizedException("Usuario deshabilitado, no puede ingresar al sistema");
+			}
+		}
+		
+		return usuario;
 	}
 
 }

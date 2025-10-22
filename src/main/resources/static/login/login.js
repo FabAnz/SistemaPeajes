@@ -176,7 +176,7 @@ function excepcionDeAplicacion(mensaje) {
             // Es un array de RespuestaDTO
             let mensajeError = 'Error al iniciar sesión';
             respuestas.forEach(resp => {
-                if (resp.id === 'error' || resp.id === 'ERROR' || resp.id === 'mensaje') {
+                if (resp.id === 'mensaje') {
                     mensajeError = resp.parametro;
                 }
             });
@@ -188,27 +188,6 @@ function excepcionDeAplicacion(mensaje) {
     }
     
     // Mostrar el mensaje tal cual
-    mostrarMensaje(mensaje);
-}
-
-// Esta función se ejecuta cuando hay errores HTTP (4xx, 5xx, etc.)
-function procesarErrorSubmit(status, text) {
-    ocultarLoading();
-    habilitarBoton();
-    formularioEnviado = false;
-    
-    console.error("Error HTTP " + status + ":", text);
-    
-    let mensaje = 'Error al procesar la solicitud';
-    
-    if (status === 404) {
-        mensaje = 'Servicio no disponible';
-    } else if (status === 500) {
-        mensaje = 'Error interno del servidor';
-    } else if (status === 0) {
-        mensaje = 'No se pudo conectar con el servidor. Verifica tu conexión.';
-    }
-    
     mostrarMensaje(mensaje);
 }
 
