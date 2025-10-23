@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
-import java.util.ArrayList;
 import ort.da.obligatorio339182.services.Fachada;
 import ort.da.obligatorio339182.utils.RespuestaDTO;
 import ort.da.obligatorio339182.exceptions.UnauthorizedException;
