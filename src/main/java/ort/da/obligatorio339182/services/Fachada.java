@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import ort.da.obligatorio339182.exceptions.AppException;
 import ort.da.obligatorio339182.exceptions.UnauthorizedException;
 import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
-import jakarta.servlet.http.HttpSession;
 
 @Service
 public class Fachada {
@@ -41,10 +40,12 @@ public class Fachada {
 	}
 
 	/**
-	 * sp.getBonificacionesPorUsuario(cedula)
+	 * Obtiene las bonificaciones asignadas a un usuario por su cédula
 	 */
 	public List<Bonificacion> getBonificacionesPorUsuario(Cedula cedula) {
-		return null;
+		return sp.getBonificacionesAsignadasPorUsuario(cedula).stream()
+			.map(ba -> ba.getBonificacion())
+			.toList();
 	}
 
 	public List<Vehiculo> getVehiculosDelUsuario(Cedula cedula) {

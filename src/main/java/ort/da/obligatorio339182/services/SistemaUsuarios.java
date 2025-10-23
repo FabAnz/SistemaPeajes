@@ -13,7 +13,6 @@ import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 
 @Service
 class SistemaUsuarios {
-	private static int s_idUsuario = 0;
 	private List<Usuario> usuarios;
 
 	SistemaUsuarios() {
@@ -24,7 +23,6 @@ class SistemaUsuarios {
 		if (!validarCedulaUnica(usuario.getCedula())) {
 			throw new AppException("La cédula ya está en uso");
 		}
-		usuario.setId(++s_idUsuario);
 		usuario.validar();
 		this.usuarios.add(usuario);
 	}

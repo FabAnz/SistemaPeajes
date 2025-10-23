@@ -9,11 +9,9 @@ import ort.da.obligatorio339182.model.valueObjects.Matricula;
 
 @Service
 class SistemaTransitos {
-	private static int s_idTransito;
 	private List<Transito> transitos;
 
 	SistemaTransitos() {
-		s_idTransito = 0;
 		this.transitos = new ArrayList<Transito>();
 	}
 

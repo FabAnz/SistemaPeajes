@@ -10,14 +10,10 @@ import java.util.List;
 
 @Service
 class SistemaVehiculos {
-	private static int s_idCategoria;
-	private static int s_idVehiculo;
 	private List<Categoria> categorias;
 	private List<Vehiculo> vehiculos;
 
 	SistemaVehiculos() {
-		s_idCategoria = 0;
-		s_idVehiculo = 0;
 		this.categorias = new ArrayList<Categoria>();
 		this.vehiculos = new ArrayList<Vehiculo>();
 	}

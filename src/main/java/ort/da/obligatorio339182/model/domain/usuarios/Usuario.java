@@ -7,18 +7,26 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.NonNull;
+import lombok.Setter;
 
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 public abstract class Usuario {
+	private static int nextId = 0;
+	
+	@Setter(AccessLevel.PRIVATE)
 	private int id;
-	@NonNull private String nombreCompleto;
+	private String nombreCompleto;
 	@Getter(AccessLevel.PROTECTED)
-	@NonNull private Contrasenia contrasenia;
-	@NonNull private Cedula cedula;
+	private Contrasenia contrasenia;
+	private Cedula cedula;
+
+	public Usuario(String nombreCompleto, Contrasenia contrasenia, Cedula cedula) {
+		this.id = ++nextId;
+		this.nombreCompleto = nombreCompleto;
+		this.contrasenia = contrasenia;
+		this.cedula = cedula;
+	}
 
 	public abstract void validar() throws AppException;
 
