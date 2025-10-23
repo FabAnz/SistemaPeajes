@@ -37,10 +37,26 @@
 
             <hr>
 
-            <!-- TODO: HU 2.2 - Bonificaciones asignadas -->
+            <!-- HU 2.2 - Bonificaciones asignadas -->
             <section id="seccion-bonificaciones">
                 <h2>Mis Bonificaciones</h2>
-                <p class="text-muted">Esta sección estará disponible próximamente...</p>
+                <div id="contenedor-bonificaciones">
+                    <table class="table" id="tabla-bonificaciones-container">
+                        <thead>
+                            <tr>
+                                <th>Bonificación</th>
+                                <th>Puesto</th>
+                                <th>Fecha de Asignación</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-bonificaciones">
+                            <!-- Las bonificaciones se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                    <p id="mensaje-sin-bonificaciones" class="text-muted">
+                        No tienes bonificaciones asignadas.
+                    </p>
+                </div>
             </section>
 
             <hr>

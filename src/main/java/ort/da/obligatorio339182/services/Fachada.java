@@ -2,9 +2,10 @@ package ort.da.obligatorio339182.services;
 
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import java.util.List;
-import ort.da.obligatorio339182.model.domain.bonifiaciones.Bonificacion;
+import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
 import ort.da.obligatorio339182.model.domain.usuarios.Usuario;
+import ort.da.obligatorio339182.model.domain.Puesto;
 import ort.da.obligatorio339182.model.valueObjects.Matricula;
 import org.springframework.stereotype.Service;
 import ort.da.obligatorio339182.exceptions.AppException;
@@ -39,21 +40,37 @@ public class Fachada {
 		return su.validarPermiso(usuarioId, permisoRequerido);
 	}
 
-	/**
-	 * Obtiene las bonificaciones asignadas a un usuario por su cédula
-	 */
-	public List<Bonificacion> getBonificacionesPorUsuario(Cedula cedula) {
-		return sp.getBonificacionesAsignadasPorUsuario(cedula).stream()
-			.map(ba -> ba.getBonificacion())
-			.toList();
-	}
-
 	public List<Vehiculo> getVehiculosDelUsuario(Cedula cedula) {
 		return null;
 	}
 
 	public Usuario getUsuarioPorCedula(String cedula) {
 		return su.getUsuarioPorCedula(cedula);
+	}
+
+	/**
+	 * Agrega un puesto al sistema
+	 * @param puesto El puesto a agregar
+	 */
+	public void agregarPuesto(Puesto puesto) {
+		sp.agregarPuesto(puesto);
+	}
+
+	/**
+	 * Agrega una bonificación asignada al sistema
+	 * @param bonificacionAsignada La bonificación asignada a agregar
+	 */
+	public void agregarBonificacionAsignada(BonificacionAsignada bonificacionAsignada) throws AppException {
+		sp.agregarBonificacionAsignada(bonificacionAsignada);
+	}
+
+	/**
+	 * Obtiene las bonificaciones asignadas a un propietario
+	 * @param propietario El propietario
+	 * @return Lista de bonificaciones asignadas al propietario
+	 */
+	public List<BonificacionAsignada> getBonificacionesPorPropietario(int propietarioId) {
+		return sp.getBonificacionesPorPropietario(propietarioId);
 	}
 
 	/**

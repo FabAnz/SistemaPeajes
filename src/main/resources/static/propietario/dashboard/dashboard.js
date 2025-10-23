@@ -28,6 +28,57 @@ function mostrar_propietario(dto) {
 }
 
 /**
+ * Función que procesa TODAS las bonificaciones asignadas (HU 2.2)
+ * Convención de vistaWeb.js: mostrar_{id} donde id es el que viene en RespuestaDTO
+ * 
+ * @param {Array} listaBonificaciones - Array de BonificacionAsignadaDTO con {nombreBonificacion, puesto, fechaAsignacion}
+ */
+function mostrar_bonificaciones(listaBonificaciones) {
+    const tbody = document.getElementById('tabla-bonificaciones');
+    const mensaje = document.getElementById('mensaje-sin-bonificaciones');
+    const tabla = document.getElementById('tabla-bonificaciones-container');
+    
+    // Verificar si hay bonificaciones
+    if (!listaBonificaciones || listaBonificaciones.length === 0) {
+        // No hay bonificaciones, mostrar mensaje
+        mensaje.style.display = 'block';
+        tabla.style.display = 'none';
+        return;
+    }
+    
+    // Hay bonificaciones, mostrar tabla y ocultar mensaje
+    mensaje.style.display = 'none';
+    tabla.style.display = 'table';
+    
+    // Limpiar el tbody por si acaso
+    tbody.innerHTML = '';
+    
+    // Agregar todas las bonificaciones a la tabla
+    listaBonificaciones.forEach(bonif => {
+        // Crear una nueva fila
+        const fila = document.createElement('tr');
+        
+        // Crear celdas para cada dato
+        const celdaNombre = document.createElement('td');
+        celdaNombre.textContent = bonif.nombreBonificacion;
+        
+        const celdaPuesto = document.createElement('td');
+        celdaPuesto.textContent = bonif.puesto;
+        
+        const celdaFecha = document.createElement('td');
+        celdaFecha.textContent = bonif.fechaAsignacion;
+        
+        // Agregar las celdas a la fila
+        fila.appendChild(celdaNombre);
+        fila.appendChild(celdaPuesto);
+        fila.appendChild(celdaFecha);
+        
+        // Agregar la fila al tbody
+        tbody.appendChild(fila);
+    });
+}
+
+/**
  * Retorna la clase CSS según el estado del propietario
  * @param {string} estado - El estado del propietario
  * @returns {string} La clase CSS a aplicar

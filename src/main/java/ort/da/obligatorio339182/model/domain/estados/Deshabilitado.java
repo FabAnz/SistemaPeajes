@@ -18,6 +18,14 @@ public class Deshabilitado extends Estado {
 		return false;
 	}
 
+	/**
+	 * Usuario deshabilitado NO recibe notificaciones
+	 */
+	@Override
+	public boolean recibeNotificaciones() {
+		return false;
+	}
+
 	@Override
 	public String getNombre() {
 		return "Deshabilitado";

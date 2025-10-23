@@ -49,6 +49,22 @@ public abstract class Estado {
 	}
 
 	/**
+	 * Indica si se aplican las bonificaciones en los tránsitos
+	 * Por defecto retorna true, Deshabilitado y Penalizado lo sobrescriben
+	 */
+	public boolean aplicanBonificaciones() {
+		return true;
+	}
+
+	/**
+	 * Indica si se registran notificaciones al usuario
+	 * Por defecto retorna true, Deshabilitado y Penalizado lo sobrescriben
+	 */
+	public boolean recibeNotificaciones() {
+		return true;
+	}
+
+	/**
 	 * Retorna el nombre del estado
 	 */
 	public abstract String getNombre();

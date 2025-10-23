@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ort.da.obligatorio339182.model.domain.Puesto;
 import ort.da.obligatorio339182.model.domain.Tarifa;
 import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
-import ort.da.obligatorio339182.model.valueObjects.Cedula;
+import ort.da.obligatorio339182.exceptions.AppException;
 
 @Service
 class SistemaPuestos {
@@ -20,21 +20,37 @@ class SistemaPuestos {
 		this.bonificacionesAsignadas = new ArrayList<BonificacionAsignada>();
 	}
 
+	/**
+	 * Agrega un puesto al sistema
+	 * @param puesto El puesto a agregar
+	 */
 	void agregarPuesto(Puesto puesto) {
+		puesto.validar();
 		this.puestos.add(puesto);
 	}
 
 	void agregarTarifa(Tarifa tarifa) {
+		tarifa.validar();
 		this.tarifas.add(tarifa);
 	}
 
-	void agregarBonificacionAsignada(BonificacionAsignada bonificacionAsignada) {
+	/**
+	 * Agrega una bonificación asignada al sistema
+	 * @param bonificacionAsignada La bonificación asignada a agregar
+	 */
+	void agregarBonificacionAsignada(BonificacionAsignada bonificacionAsignada) throws AppException {
+		bonificacionAsignada.validar();
 		this.bonificacionesAsignadas.add(bonificacionAsignada);
 	}
 
-	List<BonificacionAsignada> getBonificacionesAsignadasPorUsuario(Cedula cedula) {
+	/**
+	 * Obtiene las bonificaciones asignadas a un propietario
+	 * @param propietario El propietario
+	 * @return Lista de bonificaciones asignadas al propietario
+	 */
+	List<BonificacionAsignada> getBonificacionesPorPropietario(int propietarioId) {
 		return bonificacionesAsignadas.stream()
-			.filter(ba -> ba.getPropietario().getCedula().equals(cedula))
+			.filter(ba -> ba.getPropietario().getId() == propietarioId)
 			.toList();
 	}
 

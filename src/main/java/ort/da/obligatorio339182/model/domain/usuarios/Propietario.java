@@ -84,6 +84,22 @@ public class Propietario extends Usuario {
 		return this.estado.puedeIngresarAlSistema();
 	}
 
+	public boolean puedeRecibirBonificaciones() {
+		return this.estado.puedeAsignarBonificaciones();
+	}
+
+	public boolean puedeRealizarTransitos() {
+		return this.estado.puedeRealizarTransitos();
+	}
+
+	public boolean aplicanBonificaciones() {
+		return this.estado.aplicanBonificaciones();
+	}
+
+	public boolean recibeNotificaciones() {
+		return this.estado.recibeNotificaciones();
+	}
+
 	@Override
 	public boolean tienePermiso(Permiso permiso) {
 		return permisoPropietario.contains(permiso);

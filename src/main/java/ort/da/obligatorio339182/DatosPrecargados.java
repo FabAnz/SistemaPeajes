@@ -8,6 +8,10 @@ import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import ort.da.obligatorio339182.model.valueObjects.Contrasenia;
 import ort.da.obligatorio339182.model.domain.estados.Estado;
 import ort.da.obligatorio339182.exceptions.AppException;
+import ort.da.obligatorio339182.model.domain.Puesto;
+import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
+import ort.da.obligatorio339182.model.domain.bonifiaciones.Bonificacion;
+import java.time.LocalDate;
 
 /**
  * Clase que contiene todos los datos precargados del sistema.
@@ -53,15 +57,21 @@ public class DatosPrecargados {
         this.fachada = fachada;
     }
 
+    // Referencias a puestos para usar en bonificaciones
+    private Puesto puesto1;
+    private Puesto puesto2;
+    private Puesto puesto3;
+
     /**
      * Carga todos los datos precargados en el sistema.
      * Este método es llamado automáticamente al iniciar la aplicación.
      */
     public void cargarDatos() throws AppException {
         cargarPropietarios();
+        cargarPuestos();
+        cargarBonificaciones();
         // TODO: Agregar aquí la carga de otros datos precargados:
         // - Administradores
-        // - Puestos de peaje
         // - Categorías de vehículos
         // - Tarifas
         // - etc.
@@ -123,9 +133,51 @@ public class DatosPrecargados {
         fachada.agregarUsuario(propDeshabilitado);
     }
 
+    /**
+     * Carga los puestos de peaje iniciales del sistema.
+     */
+    private void cargarPuestos() {
+        // Puesto 1: Ruta 1
+        this.puesto1 = new Puesto("Peaje Ruta 1", "Km 45, Ruta 1");
+        fachada.agregarPuesto(this.puesto1);
+        
+        // Puesto 2: Ruta 5
+        this.puesto2 = new Puesto("Peaje Ruta 5", "Km 120, Ruta 5");
+        fachada.agregarPuesto(this.puesto2);
+        
+        // Puesto 3: Ruta 8
+        this.puesto3 = new Puesto("Peaje Ruta 8", "Km 80, Ruta 8");
+        fachada.agregarPuesto(this.puesto3);
+    }
+    
+    /**
+     * Carga las bonificaciones asignadas a los propietarios.
+     * Se asignan bonificaciones al propietario "Juan Pérez" para pruebas.
+     */
+    private void cargarBonificaciones() throws AppException {
+        // Obtener el propietario Juan Pérez (ya cargado)
+        Propietario juanPerez = (Propietario) fachada.getUsuarioPorCedula("12345672");
+        
+        // Usar referencias directas a los puestos (no buscar por ID)
+        // Asignar bonificación "Trabajador" en Ruta 1 (hace 30 días)
+        BonificacionAsignada bonif1 = new BonificacionAsignada(
+            juanPerez,
+            this.puesto1,
+            Bonificacion.getTrabajador()
+        );
+        fachada.agregarBonificacionAsignada(bonif1);
+        
+        // Asignar bonificación "Frecuente" en Ruta 5 (hace 15 días)
+        BonificacionAsignada bonif2 = new BonificacionAsignada(
+            juanPerez,
+            this.puesto2,
+            Bonificacion.getFrecuente()
+        );
+        fachada.agregarBonificacionAsignada(bonif2);
+    }
+
     // TODO: Agregar métodos para cargar otros datos:
     // private void cargarAdministradores() { ... }
-    // private void cargarPuestos() { ... }
     // private void cargarCategorias() { ... }
     // private void cargarTarifas() { ... }
 }
