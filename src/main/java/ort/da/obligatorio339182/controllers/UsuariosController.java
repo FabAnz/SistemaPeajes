@@ -16,6 +16,8 @@ import ort.da.obligatorio339182.dtos.bonifiaciones.BonificacionAsignada;
 import ort.da.obligatorio339182.dtos.PropietarioInfoDTO;
 import ort.da.obligatorio339182.dtos.BonificacionAsignadaDTO;
 import ort.da.obligatorio339182.dtos.VehiculoPropietarioDTO;
+import ort.da.obligatorio339182.dtos.TransitoPropietarioDTO;
+import ort.da.obligatorio339182.model.domain.Transito;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 
@@ -58,10 +60,23 @@ private final Fachada fachada;
 			vehiculosDTO.add(new VehiculoPropietarioDTO(v, cantidad, monto));
 		}
 		
+		// HU 2.4: Obtener tránsitos del propietario
+		List<Transito> transitos = fachada.getTransitosPorPropietario(propietario);
+		List<TransitoPropietarioDTO> transitosDTO = new ArrayList<>();
+		
+		// Construir cada TransitoDTO con información de bonificación aplicada
+		for (Transito t : transitos) {
+			BonificacionAsignada bonif = fachada.getBonificacionEnPuesto(
+				propietario, t.getPuesto(), t.getFechaHora()
+			);
+			transitosDTO.add(new TransitoPropietarioDTO(t, bonif));
+		}
+		
 		return RespuestaDTO.lista(
 			new RespuestaDTO("propietario", infoDTO),
 			new RespuestaDTO("bonificaciones", BonificacionAsignadaDTO.list(bonificaciones)),
-			new RespuestaDTO("vehiculos", vehiculosDTO)
+			new RespuestaDTO("vehiculos", vehiculosDTO),
+			new RespuestaDTO("transitos", transitosDTO)
 		);
 	}
 

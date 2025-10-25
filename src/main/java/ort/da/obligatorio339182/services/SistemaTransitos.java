@@ -52,4 +52,17 @@ class SistemaTransitos {
 		this.transitos.add(transito);
 	}
 
+	/**
+	 * Obtiene todos los tránsitos de un propietario ordenados por fecha descendente
+	 * Principio de Experto: SistemaTransitos es el experto en gestionar la colección de tránsitos
+	 * @param propietario El propietario
+	 * @return Lista de tránsitos ordenada por fechaHora descendente (más reciente primero)
+	 */
+	List<Transito> getTransitosPorPropietario(Propietario propietario) {
+		return transitos.stream()
+			.filter(t -> t.getPropietario().equals(propietario))
+			.sorted((t1, t2) -> t2.getFechaHora().compareTo(t1.getFechaHora()))
+			.toList();
+	}
+
 }

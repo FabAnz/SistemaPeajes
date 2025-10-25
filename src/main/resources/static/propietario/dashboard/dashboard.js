@@ -142,6 +142,97 @@ function mostrar_vehiculos(listaVehiculos) {
 }
 
 /**
+ * Función que procesa TODOS los tránsitos del propietario (HU 2.4)
+ * Convención de vistaWeb.js: mostrar_{id} donde id es el que viene en RespuestaDTO
+ * 
+ * @param {Array} listaTransitos - Array de TransitoPropietarioDTO
+ */
+function mostrar_transitos(listaTransitos) {
+    const tbody = document.getElementById('tabla-transitos');
+    const mensaje = document.getElementById('mensaje-sin-transitos');
+    const tabla = document.getElementById('tabla-transitos-container');
+    
+    // Verificar si hay tránsitos
+    if (!listaTransitos || listaTransitos.length === 0) {
+        // No hay tránsitos, mostrar mensaje
+        mensaje.style.display = 'block';
+        tabla.style.display = 'none';
+        return;
+    }
+    
+    // Hay tránsitos, mostrar tabla y ocultar mensaje
+    mensaje.style.display = 'none';
+    tabla.style.display = 'table';
+    
+    // Limpiar el tbody por si acaso
+    tbody.innerHTML = '';
+    
+    // Agregar todos los tránsitos a la tabla
+    listaTransitos.forEach(transito => {
+        // Crear una nueva fila
+        const fila = document.createElement('tr');
+        
+        // Crear celdas para cada dato
+        const celdaPuesto = document.createElement('td');
+        celdaPuesto.textContent = transito.puesto;
+        
+        const celdaMatricula = document.createElement('td');
+        celdaMatricula.textContent = transito.matricula;
+        celdaMatricula.style.fontWeight = 'bold';
+        
+        const celdaCategoria = document.createElement('td');
+        celdaCategoria.textContent = transito.categoria;
+        
+        const celdaTarifa = document.createElement('td');
+        celdaTarifa.textContent = formatearSaldo(transito.montoTarifa);
+        celdaTarifa.style.textAlign = 'right';
+        
+        const celdaBonificacion = document.createElement('td');
+        celdaBonificacion.textContent = transito.bonificacionAplicada;
+        // Resaltar si hay bonificación
+        if (transito.bonificacionAplicada !== 'Sin bonificación') {
+            celdaBonificacion.style.color = '#28a745';
+            celdaBonificacion.style.fontWeight = 'bold';
+        } else {
+            celdaBonificacion.style.color = '#6c757d';
+        }
+        
+        const celdaDescuento = document.createElement('td');
+        celdaDescuento.textContent = formatearSaldo(transito.montoBonificacion);
+        celdaDescuento.style.textAlign = 'right';
+        if (transito.montoBonificacion > 0) {
+            celdaDescuento.style.color = '#28a745';
+            celdaDescuento.style.fontWeight = 'bold';
+        }
+        
+        const celdaPagado = document.createElement('td');
+        celdaPagado.textContent = formatearSaldo(transito.montoPagado);
+        celdaPagado.style.textAlign = 'right';
+        celdaPagado.style.fontWeight = 'bold';
+        
+        const celdaFecha = document.createElement('td');
+        celdaFecha.textContent = transito.fecha;
+        
+        const celdaHora = document.createElement('td');
+        celdaHora.textContent = transito.hora;
+        
+        // Agregar las celdas a la fila
+        fila.appendChild(celdaPuesto);
+        fila.appendChild(celdaMatricula);
+        fila.appendChild(celdaCategoria);
+        fila.appendChild(celdaTarifa);
+        fila.appendChild(celdaBonificacion);
+        fila.appendChild(celdaDescuento);
+        fila.appendChild(celdaPagado);
+        fila.appendChild(celdaFecha);
+        fila.appendChild(celdaHora);
+        
+        // Agregar la fila al tbody
+        tbody.appendChild(fila);
+    });
+}
+
+/**
  * Retorna la clase CSS según el estado del propietario
  * @param {string} estado - El estado del propietario
  * @returns {string} La clase CSS a aplicar

@@ -14,6 +14,7 @@ import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
 import ort.da.obligatorio339182.model.domain.Transito;
 
 import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
 public class Fachada {
@@ -111,6 +112,26 @@ public class Fachada {
 	 */
 	public void agregarTransito(Transito transito) throws AppException {
 		st.agregarTransito(transito);
+	}
+
+	/**
+	 * Obtiene todos los tránsitos de un propietario ordenados por fecha descendente
+	 * @param propietario El propietario
+	 * @return Lista de tránsitos ordenada por fechaHora descendente
+	 */
+	public List<Transito> getTransitosPorPropietario(Propietario propietario) {
+		return st.getTransitosPorPropietario(propietario);
+	}
+
+	/**
+	 * Obtiene la bonificación que tenía un propietario en un puesto en una fecha específica
+	 * @param propietario El propietario
+	 * @param puesto El puesto
+	 * @param fechaTransito La fecha/hora del tránsito
+	 * @return La bonificación asignada o null si no había
+	 */
+	public BonificacionAsignada getBonificacionEnPuesto(Propietario propietario, Puesto puesto, LocalDateTime fechaTransito) {
+		return sp.getBonificacionAsignadaEnPuesto(propietario, puesto, fechaTransito);
 	}
 
 }

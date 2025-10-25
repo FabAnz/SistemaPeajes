@@ -87,10 +87,32 @@
 
             <hr>
 
-            <!-- TODO: HU 2.4 - Historial de tránsitos -->
+            <!-- HU 2.4 - Historial de tránsitos -->
             <section id="seccion-transitos">
                 <h2>Historial de Tránsitos</h2>
-                <p class="text-muted">Esta sección estará disponible próximamente...</p>
+                <div id="contenedor-transitos">
+                    <table class="table" id="tabla-transitos-container">
+                        <thead>
+                            <tr>
+                                <th>Puesto</th>
+                                <th>Matrícula</th>
+                                <th>Categoría</th>
+                                <th>Tarifa</th>
+                                <th>Bonificación</th>
+                                <th>Descuento</th>
+                                <th>Pagado</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-transitos">
+                            <!-- Los tránsitos se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                    <p id="mensaje-sin-transitos" class="text-muted">
+                        No tienes tránsitos registrados.
+                    </p>
+                </div>
             </section>
 
             <hr>

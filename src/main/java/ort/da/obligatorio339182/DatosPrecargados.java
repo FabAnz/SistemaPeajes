@@ -14,6 +14,7 @@ import ort.da.obligatorio339182.model.domain.Puesto;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
 import ort.da.obligatorio339182.model.domain.Categoria;
 import ort.da.obligatorio339182.model.domain.Transito;
+import ort.da.obligatorio339182.model.domain.Tarifa;
 import ort.da.obligatorio339182.model.valueObjects.Matricula;
 
 /**
@@ -64,6 +65,11 @@ public class DatosPrecargados {
     private Puesto puesto1;
     private Puesto puesto2;
     private Puesto puesto3;
+    
+    // Referencias a categorías para usar en puestos y vehículos
+    private Categoria auto;
+    private Categoria moto;
+    private Categoria camioneta;
 
     /**
      * Carga todos los datos precargados en el sistema.
@@ -141,16 +147,30 @@ public class DatosPrecargados {
      * Carga los puestos de peaje iniciales del sistema.
      */
     private void cargarPuestos() {
-        // Puesto 1: Ruta 1
+        // Crear categorías compartidas para puestos y vehículos
+        this.auto = new Categoria("Auto");
+        this.moto = new Categoria("Moto");
+        this.camioneta = new Categoria("Camioneta");
+        
+        // Puesto 1: Ruta 1 con tarifas
         this.puesto1 = new Puesto("Peaje Ruta 1", "Km 45, Ruta 1");
+        this.puesto1.getTarifas().add(new Tarifa(150, this.auto));
+        this.puesto1.getTarifas().add(new Tarifa(80, this.moto));
+        this.puesto1.getTarifas().add(new Tarifa(300, this.camioneta));
         fachada.agregarPuesto(this.puesto1);
         
-        // Puesto 2: Ruta 5
+        // Puesto 2: Ruta 5 con tarifas
         this.puesto2 = new Puesto("Peaje Ruta 5", "Km 120, Ruta 5");
+        this.puesto2.getTarifas().add(new Tarifa(200, this.auto));
+        this.puesto2.getTarifas().add(new Tarifa(100, this.moto));
+        this.puesto2.getTarifas().add(new Tarifa(400, this.camioneta));
         fachada.agregarPuesto(this.puesto2);
         
-        // Puesto 3: Ruta 8
+        // Puesto 3: Ruta 8 con tarifas
         this.puesto3 = new Puesto("Peaje Ruta 8", "Km 80, Ruta 8");
+        this.puesto3.getTarifas().add(new Tarifa(250, this.auto));
+        this.puesto3.getTarifas().add(new Tarifa(120, this.moto));
+        this.puesto3.getTarifas().add(new Tarifa(350, this.camioneta));
         fachada.agregarPuesto(this.puesto3);
     }
     
@@ -188,16 +208,13 @@ public class DatosPrecargados {
         // Obtener el propietario Juan Pérez (ya cargado)
         Propietario juanPerez = (Propietario) fachada.getUsuarioPorCedula("12345672");
         
-        // Crear categorías para los vehículos
-        Categoria auto = new Categoria("Auto");
-        Categoria moto = new Categoria("Moto");
-        Categoria camioneta = new Categoria("Camioneta");
+        // Usar categorías compartidas (ya creadas en cargarPuestos)
         
         // Vehículo 1: Auto de Juan Pérez
         Vehiculo vehiculo1 = new Vehiculo(
             "Toyota Corolla",
             "Gris",
-            auto,
+            this.auto,
             new Matricula("ABC1234")
         );
         juanPerez.agregarVehiculo(vehiculo1);
@@ -206,7 +223,7 @@ public class DatosPrecargados {
         Vehiculo vehiculo2 = new Vehiculo(
             "Honda Wave",
             "Rojo",
-            moto,
+            this.moto,
             new Matricula("XYZ5678")
         );
         juanPerez.agregarVehiculo(vehiculo2);
@@ -215,7 +232,7 @@ public class DatosPrecargados {
         Vehiculo vehiculo3 = new Vehiculo(
             "Ford Ranger",
             "Blanco",
-            camioneta,
+            this.camioneta,
             new Matricula("DEF9012")
         );
         juanPerez.agregarVehiculo(vehiculo3);

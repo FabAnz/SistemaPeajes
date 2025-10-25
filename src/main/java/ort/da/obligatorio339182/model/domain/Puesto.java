@@ -29,4 +29,22 @@ public class Puesto {
 		return null;
 	}
 
+	/**
+	 * Obtiene la tarifa para una categoría específica en este puesto
+	 * Principio de Experto: Puesto es el experto en sus tarifas
+	 * @param categoria La categoría del vehículo
+	 * @return El monto de la tarifa, o 0 si no existe tarifa para esa categoría
+	 */
+	public int getTarifaPorCategoria(Categoria categoria) {
+		if (tarifas == null || tarifas.isEmpty()) {
+			return 0;
+		}
+		
+		return tarifas.stream()
+			.filter(t -> t.getCategoria() == categoria)
+			.findFirst()
+			.map(Tarifa::getMonto)
+			.orElse(0);
+	}
+
 }

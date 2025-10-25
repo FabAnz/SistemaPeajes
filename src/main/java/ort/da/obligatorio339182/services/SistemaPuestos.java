@@ -2,6 +2,7 @@ package ort.da.obligatorio339182.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import ort.da.obligatorio339182.model.domain.Puesto;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
@@ -53,6 +54,23 @@ class SistemaPuestos {
 		return bonificacionesAsignadas.stream()
 			.filter(ba -> ba.getPropietario().equals(propietario))
 			.toList();
+	}
+
+	/**
+	 * Obtiene la bonificación que tenía un propietario en un puesto específico en una fecha dada
+	 * Principio de Experto: SistemaPuestos es el experto en gestionar bonificaciones asignadas
+	 * @param propietario El propietario
+	 * @param puesto El puesto
+	 * @param fechaTransito La fecha/hora del tránsito
+	 * @return La bonificación asignada si existía en ese momento, null en caso contrario
+	 */
+	BonificacionAsignada getBonificacionAsignadaEnPuesto(Propietario propietario, Puesto puesto, LocalDateTime fechaTransito) {
+		return bonificacionesAsignadas.stream()
+			.filter(ba -> ba.getPropietario().equals(propietario))
+			.filter(ba -> ba.getPuesto().equals(puesto))
+			.filter(ba -> !ba.getFechaAsignacion().isAfter(fechaTransito.toLocalDate()))
+			.findFirst()
+			.orElse(null);
 	}
 
 }
