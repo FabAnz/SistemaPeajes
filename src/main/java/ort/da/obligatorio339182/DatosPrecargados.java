@@ -7,15 +7,15 @@ import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import ort.da.obligatorio339182.model.valueObjects.Contrasenia;
 import ort.da.obligatorio339182.model.domain.estados.Estado;
-import ort.da.obligatorio339182.dtos.bonifiaciones.Bonificacion;
-import ort.da.obligatorio339182.dtos.bonifiaciones.BonificacionAsignada;
 import ort.da.obligatorio339182.exceptions.AppException;
 import ort.da.obligatorio339182.model.domain.Puesto;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
+import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
 import ort.da.obligatorio339182.model.domain.Categoria;
-import ort.da.obligatorio339182.model.domain.Transito;
 import ort.da.obligatorio339182.model.domain.Tarifa;
 import ort.da.obligatorio339182.model.valueObjects.Matricula;
+import ort.da.obligatorio339182.model.domain.bonifiaciones.Trabajador;
+import ort.da.obligatorio339182.model.domain.bonifiaciones.Frecuente;
 
 /**
  * Clase que contiene todos los datos precargados del sistema.
@@ -73,7 +73,7 @@ public class DatosPrecargados {
 
     /**
      * Carga todos los datos precargados en el sistema.
-     * Este método es llamado automáticamente al iniciar la aplicación.
+     * Este método es llamado desde Obligatorio339182Application mediante CommandLineRunner.
      */
     public void cargarDatos() throws AppException {
         cargarPropietarios();
@@ -183,19 +183,19 @@ public class DatosPrecargados {
         Propietario juanPerez = (Propietario) fachada.getUsuarioPorCedula("12345672");
         
         // Usar referencias directas a los puestos (no buscar por ID)
-        // Asignar bonificación "Trabajador" en Ruta 1 (hace 30 días)
+        // Asignar bonificación "Trabajador" en Ruta 1
         BonificacionAsignada bonif1 = new BonificacionAsignada(
             juanPerez,
             this.puesto1,
-            Bonificacion.getTrabajador()
+            new Trabajador()
         );
         fachada.agregarBonificacionAsignada(bonif1);
         
-        // Asignar bonificación "Frecuente" en Ruta 5 (hace 15 días)
+        // Asignar bonificación "Frecuente" en Ruta 5
         BonificacionAsignada bonif2 = new BonificacionAsignada(
             juanPerez,
             this.puesto2,
-            Bonificacion.getFrecuente()
+            new Frecuente()
         );
         fachada.agregarBonificacionAsignada(bonif2);
     }
@@ -238,61 +238,29 @@ public class DatosPrecargados {
         juanPerez.agregarVehiculo(vehiculo3);
         
         // Crear tránsitos para el vehículo 1 (ABC1234) - 2 tránsitos
-        Transito transito1 = new Transito(
-            150,  // Cobro de $150
-            juanPerez,
-            this.puesto1,
-            vehiculo1
-        );
-        juanPerez.agregarTransito(transito1);
-        fachada.agregarTransito(transito1);
+        // Transito 1: Auto en Puesto1 ($150) - Con bonificación Trabajador ($80 si es día laboral)
+        // La bonificación se asigna automáticamente al agregar el tránsito
+        fachada.agregarTransito(juanPerez, this.puesto1, vehiculo1);
         
-        Transito transito2 = new Transito(
-            200,  // Cobro de $200
-            juanPerez,
-            this.puesto2,
-            vehiculo1
-        );
-        juanPerez.agregarTransito(transito2);
-        fachada.agregarTransito(transito2);
+        
+        // Transito 2: Auto en Puesto2 ($200) - Con bonificación Frecuente ($50 si es segunda pasada)
+        fachada.agregarTransito(juanPerez, this.puesto2, vehiculo1);
         
         // Crear tránsitos para el vehículo 2 (XYZ5678) - 1 tránsito
-        Transito transito3 = new Transito(
-            80,  // Cobro de $80
-            juanPerez,
-            this.puesto1,
-            vehiculo2
-        );
-        juanPerez.agregarTransito(transito3);
-        fachada.agregarTransito(transito3);
+        // Transito 3: Moto en Puesto1 ($80) - Con bonificación Trabajador ($80)
+        // Nota: El cobro mínimo debe ser mayor a 0, así que si aplica bonificación completa sería $0
+        // Asumimos que no se aplica en este caso o hay un mínimo de $1
+        fachada.agregarTransito(juanPerez, this.puesto1, vehiculo2);
         
         // Crear tránsitos para el vehículo 3 (DEF9012) - 3 tránsitos
-        Transito transito4 = new Transito(
-            250,  // Cobro de $250
-            juanPerez,
-            this.puesto3,
-            vehiculo3
-        );
-        juanPerez.agregarTransito(transito4);
-        fachada.agregarTransito(transito4);
+        // Transito 4: Camioneta en Puesto3 ($350) - SIN bonificación (Juan no tiene bonif en Puesto3)
+        fachada.agregarTransito(juanPerez, this.puesto3, vehiculo3);
         
-        Transito transito5 = new Transito(
-            300,  // Cobro de $300
-            juanPerez,
-            this.puesto1,
-            vehiculo3
-        );
-        juanPerez.agregarTransito(transito5);
-        fachada.agregarTransito(transito5);
+        // Transito 5: Camioneta en Puesto1 ($300) - Con bonificación Trabajador ($80)
+        fachada.agregarTransito(juanPerez, this.puesto1, vehiculo3);
         
-        Transito transito6 = new Transito(
-            280,  // Cobro de $280
-            juanPerez,
-            this.puesto2,
-            vehiculo3
-        );
-        juanPerez.agregarTransito(transito6);
-        fachada.agregarTransito(transito6);
+        // Transito 6: Camioneta en Puesto2 ($400) - Con bonificación Frecuente ($50)
+        fachada.agregarTransito(juanPerez, this.puesto2, vehiculo3);
     }
 
     // TODO: Agregar métodos para cargar otros datos:

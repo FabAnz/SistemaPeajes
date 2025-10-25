@@ -2,18 +2,23 @@ package ort.da.obligatorio339182.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 import ort.da.obligatorio339182.model.domain.Transito;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
 import ort.da.obligatorio339182.exceptions.AppException;
+import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
+import org.springframework.context.annotation.Lazy;
+import ort.da.obligatorio339182.model.domain.Puesto;
 
 @Service
 class SistemaTransitos {
 	private List<Transito> transitos;
-
-	SistemaTransitos() {
+	private final Fachada fachada;
+	SistemaTransitos(@Lazy Fachada fachada) {
 		this.transitos = new ArrayList<Transito>();
+		this.fachada = fachada;
 	}
 
 	/**
@@ -47,9 +52,20 @@ class SistemaTransitos {
 	 * Agrega un tránsito al sistema
 	 * @param transito El tránsito a agregar
 	 */
-	void agregarTransito(Transito transito) throws AppException {
+	void agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo) throws AppException {
+		BonificacionAsignada bonificacion = fachada.getBonificacionEnPuesto(propietario, puesto);
+		boolean esPrimerTransitoDelDia = esPrimerTransitoDelDia(puesto, vehiculo);
+
+		Transito transito = new Transito(propietario, puesto, vehiculo, bonificacion, esPrimerTransitoDelDia);
 		transito.validar();
 		this.transitos.add(transito);
+	}
+
+	boolean esPrimerTransitoDelDia(Puesto puesto, Vehiculo vehiculo) {
+		return !transitos.stream()
+			.filter(t -> t.getPuesto().equals(puesto))
+			.filter(t -> t.getVehiculo().equals(vehiculo))
+			.anyMatch(t -> t.getFechaHora().toLocalDate().equals(LocalDate.now()));
 	}
 
 	/**

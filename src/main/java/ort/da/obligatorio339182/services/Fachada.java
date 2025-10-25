@@ -2,19 +2,18 @@ package ort.da.obligatorio339182.services;
 
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
+import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 import ort.da.obligatorio339182.model.domain.usuarios.Usuario;
 import ort.da.obligatorio339182.model.domain.Puesto;
 import org.springframework.stereotype.Service;
 
-import ort.da.obligatorio339182.dtos.bonifiaciones.BonificacionAsignada;
 import ort.da.obligatorio339182.exceptions.AppException;
 import ort.da.obligatorio339182.exceptions.UnauthorizedException;
 import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
 import ort.da.obligatorio339182.model.domain.Transito;
 
 import java.util.List;
-import java.time.LocalDateTime;
 
 @Service
 public class Fachada {
@@ -107,14 +106,6 @@ public class Fachada {
 	}
 
 	/**
-	 * Agrega un tránsito al sistema
-	 * @param transito El tránsito a agregar
-	 */
-	public void agregarTransito(Transito transito) throws AppException {
-		st.agregarTransito(transito);
-	}
-
-	/**
 	 * Obtiene todos los tránsitos de un propietario ordenados por fecha descendente
 	 * @param propietario El propietario
 	 * @return Lista de tránsitos ordenada por fechaHora descendente
@@ -127,11 +118,14 @@ public class Fachada {
 	 * Obtiene la bonificación que tenía un propietario en un puesto en una fecha específica
 	 * @param propietario El propietario
 	 * @param puesto El puesto
-	 * @param fechaTransito La fecha/hora del tránsito
 	 * @return La bonificación asignada o null si no había
 	 */
-	public BonificacionAsignada getBonificacionEnPuesto(Propietario propietario, Puesto puesto, LocalDateTime fechaTransito) {
-		return sp.getBonificacionAsignadaEnPuesto(propietario, puesto, fechaTransito);
+	public BonificacionAsignada getBonificacionEnPuesto(Propietario propietario, Puesto puesto) {
+		return sp.getBonificacionAsignadaEnPuesto(propietario, puesto);
+	}
+
+	public void agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo) throws AppException {
+		st.agregarTransito(propietario, puesto, vehiculo);
 	}
 
 }

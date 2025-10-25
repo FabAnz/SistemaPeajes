@@ -12,7 +12,7 @@ import ort.da.obligatorio339182.model.domain.usuarios.Usuario;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
-import ort.da.obligatorio339182.dtos.bonifiaciones.BonificacionAsignada;
+import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
 import ort.da.obligatorio339182.dtos.PropietarioInfoDTO;
 import ort.da.obligatorio339182.dtos.BonificacionAsignadaDTO;
 import ort.da.obligatorio339182.dtos.VehiculoPropietarioDTO;
@@ -67,7 +67,7 @@ private final Fachada fachada;
 		// Construir cada TransitoDTO con información de bonificación aplicada
 		for (Transito t : transitos) {
 			BonificacionAsignada bonif = fachada.getBonificacionEnPuesto(
-				propietario, t.getPuesto(), t.getFechaHora()
+				propietario, t.getPuesto()
 			);
 			transitosDTO.add(new TransitoPropietarioDTO(t, bonif));
 		}

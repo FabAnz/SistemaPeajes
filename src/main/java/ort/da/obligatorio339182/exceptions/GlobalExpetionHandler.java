@@ -28,11 +28,12 @@ public class GlobalExpetionHandler {
     
     /**
      * Maneja errores de aplicación generales
+     * Retorna ID "mensaje" para que el frontend muestre el error específico
      */
     @ExceptionHandler(AppException.class)
     public ResponseEntity<List<RespuestaDTO>> handleAppException(AppException e) {
         return ResponseEntity.status(299).body(
-            RespuestaDTO.lista(new RespuestaDTO("error", e.getMessage()))
+            RespuestaDTO.lista(new RespuestaDTO("mensaje", e.getMessage()))
         );
     }
     

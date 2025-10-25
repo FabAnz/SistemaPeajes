@@ -1,10 +1,10 @@
-package ort.da.obligatorio339182.dtos.bonifiaciones;
+package ort.da.obligatorio339182.model.domain.bonifiaciones;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 import ort.da.obligatorio339182.model.domain.Puesto;
 import ort.da.obligatorio339182.exceptions.AppException;
-
+import ort.da.obligatorio339182.model.domain.Transito;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,14 +17,14 @@ public class BonificacionAsignada {
 	
 	@Setter(AccessLevel.PRIVATE)
 	private int id;
-	private LocalDate fechaAsignacion;
+	private LocalDateTime fechaAsignacion;
 	private Propietario propietario;
 	private Puesto puesto;
 	private Bonificacion bonificacion;
 
 	public BonificacionAsignada(Propietario propietario, Puesto puesto, Bonificacion bonificacion) {
 		this.id = ++nextId;
-		this.fechaAsignacion = LocalDate.now();
+		this.fechaAsignacion = LocalDateTime.now();
 		this.propietario = propietario;
 		this.puesto = puesto;
 		this.bonificacion = bonificacion;
@@ -49,6 +49,10 @@ public class BonificacionAsignada {
 		if (!this.propietario.puedeRecibirBonificaciones()) {
 			throw new AppException("El propietario no puede recibir bonificaciones");
 		}
+	}
+
+	public int getPorcentajeBonificacion(Transito transito) {
+		return this.bonificacion.getBonificacion(transito);
 	}
 
 }

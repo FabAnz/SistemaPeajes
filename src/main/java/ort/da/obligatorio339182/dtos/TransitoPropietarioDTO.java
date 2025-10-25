@@ -1,10 +1,8 @@
 package ort.da.obligatorio339182.dtos;
 
 import ort.da.obligatorio339182.model.domain.Transito;
-import ort.da.obligatorio339182.dtos.bonifiaciones.BonificacionAsignada;
-
+import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
 import lombok.Getter;
-
 /**
  * DTO para mostrar información completa de un tránsito al propietario
  * Principio de Experto: El DTO es experto en formatear la información para el frontend
