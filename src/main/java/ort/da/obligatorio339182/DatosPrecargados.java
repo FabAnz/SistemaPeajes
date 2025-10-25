@@ -7,11 +7,14 @@ import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import ort.da.obligatorio339182.model.valueObjects.Contrasenia;
 import ort.da.obligatorio339182.model.domain.estados.Estado;
+import ort.da.obligatorio339182.dtos.bonifiaciones.Bonificacion;
+import ort.da.obligatorio339182.dtos.bonifiaciones.BonificacionAsignada;
 import ort.da.obligatorio339182.exceptions.AppException;
 import ort.da.obligatorio339182.model.domain.Puesto;
-import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
-import ort.da.obligatorio339182.model.domain.bonifiaciones.Bonificacion;
-import java.time.LocalDate;
+import ort.da.obligatorio339182.model.domain.Vehiculo;
+import ort.da.obligatorio339182.model.domain.Categoria;
+import ort.da.obligatorio339182.model.domain.Transito;
+import ort.da.obligatorio339182.model.valueObjects.Matricula;
 
 /**
  * Clase que contiene todos los datos precargados del sistema.
@@ -70,6 +73,7 @@ public class DatosPrecargados {
         cargarPropietarios();
         cargarPuestos();
         cargarBonificaciones();
+        cargarVehiculos();
         // TODO: Agregar aquí la carga de otros datos precargados:
         // - Administradores
         // - Categorías de vehículos
@@ -174,6 +178,104 @@ public class DatosPrecargados {
             Bonificacion.getFrecuente()
         );
         fachada.agregarBonificacionAsignada(bonif2);
+    }
+
+    /**
+     * Carga los vehículos y tránsitos iniciales del sistema.
+     * Se asignan vehículos a Juan Pérez con tránsitos para pruebas de HU 2.3
+     */
+    private void cargarVehiculos() throws AppException {
+        // Obtener el propietario Juan Pérez (ya cargado)
+        Propietario juanPerez = (Propietario) fachada.getUsuarioPorCedula("12345672");
+        
+        // Crear categorías para los vehículos
+        Categoria auto = new Categoria("Auto");
+        Categoria moto = new Categoria("Moto");
+        Categoria camioneta = new Categoria("Camioneta");
+        
+        // Vehículo 1: Auto de Juan Pérez
+        Vehiculo vehiculo1 = new Vehiculo(
+            "Toyota Corolla",
+            "Gris",
+            auto,
+            new Matricula("ABC1234")
+        );
+        juanPerez.agregarVehiculo(vehiculo1);
+        
+        // Vehículo 2: Moto de Juan Pérez
+        Vehiculo vehiculo2 = new Vehiculo(
+            "Honda Wave",
+            "Rojo",
+            moto,
+            new Matricula("XYZ5678")
+        );
+        juanPerez.agregarVehiculo(vehiculo2);
+        
+        // Vehículo 3: Camioneta de Juan Pérez
+        Vehiculo vehiculo3 = new Vehiculo(
+            "Ford Ranger",
+            "Blanco",
+            camioneta,
+            new Matricula("DEF9012")
+        );
+        juanPerez.agregarVehiculo(vehiculo3);
+        
+        // Crear tránsitos para el vehículo 1 (ABC1234) - 2 tránsitos
+        Transito transito1 = new Transito(
+            150,  // Cobro de $150
+            juanPerez,
+            this.puesto1,
+            vehiculo1
+        );
+        juanPerez.agregarTransito(transito1);
+        fachada.agregarTransito(transito1);
+        
+        Transito transito2 = new Transito(
+            200,  // Cobro de $200
+            juanPerez,
+            this.puesto2,
+            vehiculo1
+        );
+        juanPerez.agregarTransito(transito2);
+        fachada.agregarTransito(transito2);
+        
+        // Crear tránsitos para el vehículo 2 (XYZ5678) - 1 tránsito
+        Transito transito3 = new Transito(
+            80,  // Cobro de $80
+            juanPerez,
+            this.puesto1,
+            vehiculo2
+        );
+        juanPerez.agregarTransito(transito3);
+        fachada.agregarTransito(transito3);
+        
+        // Crear tránsitos para el vehículo 3 (DEF9012) - 3 tránsitos
+        Transito transito4 = new Transito(
+            250,  // Cobro de $250
+            juanPerez,
+            this.puesto3,
+            vehiculo3
+        );
+        juanPerez.agregarTransito(transito4);
+        fachada.agregarTransito(transito4);
+        
+        Transito transito5 = new Transito(
+            300,  // Cobro de $300
+            juanPerez,
+            this.puesto1,
+            vehiculo3
+        );
+        juanPerez.agregarTransito(transito5);
+        fachada.agregarTransito(transito5);
+        
+        Transito transito6 = new Transito(
+            280,  // Cobro de $280
+            juanPerez,
+            this.puesto2,
+            vehiculo3
+        );
+        juanPerez.agregarTransito(transito6);
+        fachada.agregarTransito(transito6);
     }
 
     // TODO: Agregar métodos para cargar otros datos:

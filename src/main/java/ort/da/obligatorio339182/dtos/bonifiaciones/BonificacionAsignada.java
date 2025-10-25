@@ -1,4 +1,4 @@
-package ort.da.obligatorio339182.model.domain.bonifiaciones;
+package ort.da.obligatorio339182.dtos.bonifiaciones;
 
 import java.time.LocalDate;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;

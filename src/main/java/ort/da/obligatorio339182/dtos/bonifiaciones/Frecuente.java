@@ -1,4 +1,4 @@
-package ort.da.obligatorio339182.model.domain.bonifiaciones;
+package ort.da.obligatorio339182.dtos.bonifiaciones;
 
 public class Frecuente extends Bonificacion {
 

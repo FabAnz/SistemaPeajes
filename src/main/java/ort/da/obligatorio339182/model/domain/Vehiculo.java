@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.AccessLevel;
+import ort.da.obligatorio339182.exceptions.AppException;
 
 
 @Data
@@ -27,8 +28,25 @@ public class Vehiculo {
 		this.matricula = matricula;
 	}
 
-	public void validar() {
-
+	public void validar() throws AppException {
+		if (modelo == null || modelo.isBlank()) {
+			throw new AppException("El modelo del vehículo no puede estar vacío");
+		}
+		
+		if (color == null || color.isBlank()) {
+			throw new AppException("El color del vehículo no puede estar vacío");
+		}
+		
+		if (categoria == null) {
+			throw new AppException("La categoría del vehículo no puede ser nula");
+		}
+		
+		if (matricula == null) {
+			throw new AppException("La matrícula del vehículo no puede ser nula");
+		}
+		
+		// Validar la categoría (delega al experto)
+		categoria.validar();
 	}
 
 }

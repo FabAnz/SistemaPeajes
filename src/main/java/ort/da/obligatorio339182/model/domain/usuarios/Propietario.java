@@ -105,4 +105,19 @@ public class Propietario extends Usuario {
 		return permisoPropietario.contains(permiso);
 	}
 
+	public void agregarVehiculo(Vehiculo vehiculo) throws AppException {
+		vehiculo.validar();
+		this.vehiculos.add(vehiculo);
+	}
+
+	public void agregarTransito(Transito transito) throws AppException {
+		transito.validar();
+		this.transitos.add(transito);
+	}
+
+	public void agregarNotificacion(Notificacion notificacion) throws AppException {
+		notificacion.validar();
+		this.notificaciones.add(notificacion);
+	}
+
 }

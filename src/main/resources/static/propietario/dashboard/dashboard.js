@@ -79,6 +79,69 @@ function mostrar_bonificaciones(listaBonificaciones) {
 }
 
 /**
+ * Función que procesa TODOS los vehículos del propietario (HU 2.3)
+ * Convención de vistaWeb.js: mostrar_{id} donde id es el que viene en RespuestaDTO
+ * 
+ * @param {Array} listaVehiculos - Array de VehiculoPropietarioDTO con {matricula, modelo, color, cantidadTransitos, montoTotalGastado}
+ */
+function mostrar_vehiculos(listaVehiculos) {
+    const tbody = document.getElementById('tabla-vehiculos');
+    const mensaje = document.getElementById('mensaje-sin-vehiculos');
+    const tabla = document.getElementById('tabla-vehiculos-container');
+    
+    // Verificar si hay vehículos
+    if (!listaVehiculos || listaVehiculos.length === 0) {
+        // No hay vehículos, mostrar mensaje
+        mensaje.style.display = 'block';
+        tabla.style.display = 'none';
+        return;
+    }
+    
+    // Hay vehículos, mostrar tabla y ocultar mensaje
+    mensaje.style.display = 'none';
+    tabla.style.display = 'table';
+    
+    // Limpiar el tbody por si acaso
+    tbody.innerHTML = '';
+    
+    // Agregar todos los vehículos a la tabla
+    listaVehiculos.forEach(vehiculo => {
+        // Crear una nueva fila
+        const fila = document.createElement('tr');
+        
+        // Crear celdas para cada dato
+        const celdaMatricula = document.createElement('td');
+        celdaMatricula.textContent = vehiculo.matricula;
+        celdaMatricula.style.fontWeight = 'bold';
+        
+        const celdaModelo = document.createElement('td');
+        celdaModelo.textContent = vehiculo.modelo;
+        
+        const celdaColor = document.createElement('td');
+        celdaColor.textContent = vehiculo.color;
+        
+        const celdaCantidad = document.createElement('td');
+        celdaCantidad.textContent = vehiculo.cantidadTransitos;
+        celdaCantidad.style.textAlign = 'center';
+        
+        const celdaMonto = document.createElement('td');
+        celdaMonto.textContent = formatearSaldo(vehiculo.montoTotalGastado);
+        celdaMonto.style.textAlign = 'right';
+        celdaMonto.style.fontWeight = 'bold';
+        
+        // Agregar las celdas a la fila
+        fila.appendChild(celdaMatricula);
+        fila.appendChild(celdaModelo);
+        fila.appendChild(celdaColor);
+        fila.appendChild(celdaCantidad);
+        fila.appendChild(celdaMonto);
+        
+        // Agregar la fila al tbody
+        tbody.appendChild(fila);
+    });
+}
+
+/**
  * Retorna la clase CSS según el estado del propietario
  * @param {string} estado - El estado del propietario
  * @returns {string} La clase CSS a aplicar

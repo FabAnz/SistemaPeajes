@@ -3,7 +3,8 @@ package ort.da.obligatorio339182.dtos;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
+import ort.da.obligatorio339182.dtos.bonifiaciones.BonificacionAsignada;
+
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;

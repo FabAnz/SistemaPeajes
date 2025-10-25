@@ -3,6 +3,7 @@ package ort.da.obligatorio339182.services;
 import org.springframework.stereotype.Service;
 import ort.da.obligatorio339182.model.domain.Categoria;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
+import ort.da.obligatorio339182.exceptions.AppException;
 import ort.da.obligatorio339182.model.valueObjects.Matricula;
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import java.util.ArrayList;
@@ -30,12 +31,18 @@ class SistemaVehiculos {
 		return false;
 	}
 
-	void crearVehiculo(Matricula matricula, String modelo, String color, Categoria categoria) {
-
+	void agregarVehiculo(Vehiculo vehiculo) throws AppException {
+		vehiculo.validar();
+		this.vehiculos.add(vehiculo);
 	}
 
-	private Vehiculo geVehiculoPorMatricula(Matricula matricula) {
-		return null;
+	private Vehiculo getVehiculoPorMatricula(Matricula matricula) throws AppException {
+		for (Vehiculo vehiculo : vehiculos) {
+			if (vehiculo.getMatricula().equals(matricula)) {
+				return vehiculo;
+			}
+		}
+		throw new AppException("Vehículo no encontrado");
 	}
 
 	private boolean validarMatriculaUnica(Matricula matricula) {

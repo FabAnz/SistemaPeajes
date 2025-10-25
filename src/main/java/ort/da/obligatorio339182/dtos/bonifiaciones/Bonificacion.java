@@ -1,4 +1,4 @@
-package ort.da.obligatorio339182.model.domain.bonifiaciones;
+package ort.da.obligatorio339182.dtos.bonifiaciones;
 
 public abstract class Bonificacion {
 	private static final Exonerado exonerado = new Exonerado();

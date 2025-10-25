@@ -61,10 +61,28 @@
 
             <hr>
 
-            <!-- TODO: HU 2.3 - Vehículos registrados -->
+            <!-- HU 2.3 - Vehículos registrados -->
             <section id="seccion-vehiculos">
                 <h2>Mis Vehículos</h2>
-                <p class="text-muted">Esta sección estará disponible próximamente...</p>
+                <div id="contenedor-vehiculos">
+                    <table class="table" id="tabla-vehiculos-container">
+                        <thead>
+                            <tr>
+                                <th>Matrícula</th>
+                                <th>Modelo</th>
+                                <th>Color</th>
+                                <th>Tránsitos</th>
+                                <th>Monto Gastado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-vehiculos">
+                            <!-- Los vehículos se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                    <p id="mensaje-sin-vehiculos" class="text-muted">
+                        No tienes vehículos registrados.
+                    </p>
+                </div>
             </section>
 
             <hr>

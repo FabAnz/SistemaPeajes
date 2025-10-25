@@ -11,10 +11,13 @@ import ort.da.obligatorio339182.exceptions.UnauthorizedException;
 import ort.da.obligatorio339182.model.domain.usuarios.Usuario;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
-import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
+import ort.da.obligatorio339182.model.domain.Vehiculo;
+import ort.da.obligatorio339182.dtos.bonifiaciones.BonificacionAsignada;
 import ort.da.obligatorio339182.dtos.PropietarioInfoDTO;
 import ort.da.obligatorio339182.dtos.BonificacionAsignadaDTO;
+import ort.da.obligatorio339182.dtos.VehiculoPropietarioDTO;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -42,16 +45,28 @@ private final Fachada fachada;
 		PropietarioInfoDTO infoDTO = new PropietarioInfoDTO(propietario);
 		
 		// HU 2.2: Obtener bonificaciones asignadas al propietario
-		List<BonificacionAsignada> bonificaciones = fachada.getBonificacionesPorPropietario(usuarioId);
+		List<BonificacionAsignada> bonificaciones = fachada.getBonificacionesPorPropietario(propietario);
+		
+		// HU 2.3: Obtener vehículos del propietario con cálculos
+		List<Vehiculo> vehiculos = propietario.getVehiculos();
+		List<VehiculoPropietarioDTO> vehiculosDTO = new ArrayList<>();
+		
+		// Construir cada VehiculoDTO con datos calculados desde Fachada
+		for (Vehiculo v : vehiculos) {
+			int cantidad = fachada.cantidadTransitosPorPropietarioYVehiculo(propietario, v);
+			int monto = fachada.montoTotalPorPropietarioYVehiculo(propietario, v);
+			vehiculosDTO.add(new VehiculoPropietarioDTO(v, cantidad, monto));
+		}
 		
 		return RespuestaDTO.lista(
 			new RespuestaDTO("propietario", infoDTO),
-			new RespuestaDTO("bonificaciones", BonificacionAsignadaDTO.list(bonificaciones))
-			);
+			new RespuestaDTO("bonificaciones", BonificacionAsignadaDTO.list(bonificaciones)),
+			new RespuestaDTO("vehiculos", vehiculosDTO)
+		);
 	}
 
 	/**
-	 * fachada.getBonificacionesPorUsuario
+	 * fachada.getBonificacionesPorPropietario
 	 * getVehiculosDel Usuario(cedula)
 	 * cantidadTransitosPorCedulaYMatricula(cedula, matricula)
 	 * gastoEnTransitos(usuario, matricula)
