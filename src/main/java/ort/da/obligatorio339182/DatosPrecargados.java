@@ -295,10 +295,6 @@ public class DatosPrecargados {
                 "Se registró un tránsito en el puesto Puesto Colonia para el vehículo JKL3456. Monto cobrado: $180. Saldo actual: $820."));
         ana.agregarNotificacion(new Notificacion("Su estado ha sido cambiado a Suspendido por un administrador."));
         ana.agregarNotificacion(new Notificacion("Su estado ha sido cambiado a Deshabilitado por un administrador."));
-
-        // Agregar 2 notificaciones de ejemplo a María García (Suspendido)
-        maria.agregarNotificacion(new Notificacion("Se registró un tránsito en el puesto Puesto Colonia para el vehículo DEF5678. Monto cobrado: $180. Saldo actual: $2820."));
-        maria.agregarNotificacion(new Notificacion("Su estado ha sido cambiado a Suspendido por un administrador."));
     }
 
     // TODO: Agregar métodos para cargar otros datos:

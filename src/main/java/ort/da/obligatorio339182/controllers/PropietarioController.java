@@ -3,6 +3,7 @@ package ort.da.obligatorio339182.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 import ort.da.obligatorio339182.services.Fachada;
@@ -22,18 +23,19 @@ import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import ort.da.obligatorio339182.model.domain.Notificacion;
 import ort.da.obligatorio339182.dtos.NotificacionDTO;
+import ort.da.obligatorio339182.exceptions.AppException;
 
 @RestController
-@RequestMapping("/usuarios")
-public class UsuariosController {
+@RequestMapping("/propietario")
+public class PropietarioController {
 private final Fachada fachada;
 
-	public UsuariosController(Fachada fachada) {
+	public PropietarioController(Fachada fachada) {
 		this.fachada = fachada;
 	}
 
 	
-	@GetMapping("/dashboard-propietario")
+	@GetMapping("/dashboard")
 	public List<RespuestaDTO> obtenerInformacionPersonal(HttpSession session) throws UnauthorizedException {
 		Integer usuarioId = (Integer) session.getAttribute("usuarioId");
 		if(usuarioId == null) {
@@ -82,6 +84,24 @@ private final Fachada fachada;
 			new RespuestaDTO("bonificaciones", BonificacionAsignadaDTO.list(bonificaciones)),
 			new RespuestaDTO("vehiculos", vehiculosDTO),
 			new RespuestaDTO("transitos", transitosDTO),
+			new RespuestaDTO("notificaciones", NotificacionDTO.list(notificaciones))
+		);
+	}
+
+	@DeleteMapping("/notificaciones")
+	public List<RespuestaDTO> borrarNotificaciones(HttpSession session) throws UnauthorizedException, AppException {
+		Integer usuarioId = (Integer) session.getAttribute("usuarioId");
+		if(usuarioId == null) {
+			throw new UnauthorizedException("No hay sesión activa");
+		}
+		Usuario usuario = fachada.validarPermiso(usuarioId, Permiso.BORRAR_NOTIFICACIONES);
+		Propietario propietario = (Propietario) usuario;
+		propietario.borrarNotificaciones();
+
+		List<Notificacion> notificaciones = propietario.getNotificacionesOrdenadas();
+
+		return RespuestaDTO.lista(
+			new RespuestaDTO("mensaje", "Notificaciones borradas correctamente"),
 			new RespuestaDTO("notificaciones", NotificacionDTO.list(notificaciones))
 		);
 	}

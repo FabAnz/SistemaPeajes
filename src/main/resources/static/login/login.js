@@ -192,6 +192,32 @@ function excepcionDeAplicacion(mensaje) {
 }
 
 // ========================================
+// MANEJO DE ERRORES HTTP (vistaWeb.js)
+// ========================================
+
+function procesarErrorSubmit(status, text) {
+    console.error(`Error HTTP ${status}:`, text);
+    
+    // Limpiar el estado del formulario
+    ocultarLoading();
+    habilitarBoton();
+    formularioEnviado = false;
+    
+    let mensajeUsuario;
+    
+    if (status === 0) {
+        // Error de red: sin conexión, CORS, timeout, servidor caído
+        mensajeUsuario = 'No se pudo conectar con el servidor. Por favor, verifica tu conexión a Internet e intenta nuevamente.';
+    } else {
+        // Cualquier otro error HTTP (no debería ocurrir en esta aplicación)
+        mensajeUsuario = `Error inesperado de comunicación (${status}). Por favor, contacta al administrador.`;
+    }
+    
+    // Mostrar el error al usuario
+    mostrarMensaje(mensajeUsuario);
+}
+
+// ========================================
 // UI - LOADING Y BOTONES
 // ========================================
 

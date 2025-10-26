@@ -5,7 +5,7 @@
 
 // Configuración de vistaWeb.js
 // Esta URL se llama automáticamente cuando se carga la página (DOMContentLoaded)
-var urlIniciarVista = "/usuarios/dashboard-propietario";
+var urlIniciarVista = "/propietario/dashboard";
 var parametrosInicioVista = ""; // No necesita parámetros, usa la sesión HTTP
 
 /**
@@ -34,7 +34,7 @@ function mostrar_propietario(dto) {
  * @param {Array} listaBonificaciones - Array de BonificacionAsignadaDTO con {nombreBonificacion, puesto, fechaAsignacion}
  */
 function mostrar_bonificaciones(listaBonificaciones) {
-    const tbody = document.getElementById('tabla-bonificaciones');
+    const contenedor = document.getElementById('tabla-bonificaciones');
     const mensaje = document.getElementById('mensaje-sin-bonificaciones');
     const tabla = document.getElementById('tabla-bonificaciones-container');
     
@@ -50,32 +50,8 @@ function mostrar_bonificaciones(listaBonificaciones) {
     mensaje.style.display = 'none';
     tabla.style.display = 'table';
     
-    // Limpiar el tbody por si acaso
-    tbody.innerHTML = '';
-    
-    // Agregar todas las bonificaciones a la tabla
-    listaBonificaciones.forEach(bonif => {
-        // Crear una nueva fila
-        const fila = document.createElement('tr');
-        
-        // Crear celdas para cada dato
-        const celdaNombre = document.createElement('td');
-        celdaNombre.textContent = bonif.nombreBonificacion;
-        
-        const celdaPuesto = document.createElement('td');
-        celdaPuesto.textContent = bonif.puesto;
-        
-        const celdaFecha = document.createElement('td');
-        celdaFecha.textContent = bonif.fechaAsignacion;
-        
-        // Agregar las celdas a la fila
-        fila.appendChild(celdaNombre);
-        fila.appendChild(celdaPuesto);
-        fila.appendChild(celdaFecha);
-        
-        // Agregar la fila al tbody
-        tbody.appendChild(fila);
-    });
+    // Usar utilesVista.js para generar la tabla automáticamente
+    contenedor.innerHTML = crearTablaDesdeJson(listaBonificaciones);
 }
 
 /**
@@ -85,7 +61,7 @@ function mostrar_bonificaciones(listaBonificaciones) {
  * @param {Array} listaVehiculos - Array de VehiculoPropietarioDTO con {matricula, modelo, color, cantidadTransitos, montoTotalGastado}
  */
 function mostrar_vehiculos(listaVehiculos) {
-    const tbody = document.getElementById('tabla-vehiculos');
+    const contenedor = document.getElementById('tabla-vehiculos');
     const mensaje = document.getElementById('mensaje-sin-vehiculos');
     const tabla = document.getElementById('tabla-vehiculos-container');
     
@@ -101,44 +77,14 @@ function mostrar_vehiculos(listaVehiculos) {
     mensaje.style.display = 'none';
     tabla.style.display = 'table';
     
-    // Limpiar el tbody por si acaso
-    tbody.innerHTML = '';
+    // Formatear el monto antes de mostrar
+    const vehiculosFormateados = listaVehiculos.map(v => ({
+        ...v,
+        montoTotalGastado: formatearSaldo(v.montoTotalGastado)
+    }));
     
-    // Agregar todos los vehículos a la tabla
-    listaVehiculos.forEach(vehiculo => {
-        // Crear una nueva fila
-        const fila = document.createElement('tr');
-        
-        // Crear celdas para cada dato
-        const celdaMatricula = document.createElement('td');
-        celdaMatricula.textContent = vehiculo.matricula;
-        celdaMatricula.style.fontWeight = 'bold';
-        
-        const celdaModelo = document.createElement('td');
-        celdaModelo.textContent = vehiculo.modelo;
-        
-        const celdaColor = document.createElement('td');
-        celdaColor.textContent = vehiculo.color;
-        
-        const celdaCantidad = document.createElement('td');
-        celdaCantidad.textContent = vehiculo.cantidadTransitos;
-        celdaCantidad.style.textAlign = 'center';
-        
-        const celdaMonto = document.createElement('td');
-        celdaMonto.textContent = formatearSaldo(vehiculo.montoTotalGastado);
-        celdaMonto.style.textAlign = 'right';
-        celdaMonto.style.fontWeight = 'bold';
-        
-        // Agregar las celdas a la fila
-        fila.appendChild(celdaMatricula);
-        fila.appendChild(celdaModelo);
-        fila.appendChild(celdaColor);
-        fila.appendChild(celdaCantidad);
-        fila.appendChild(celdaMonto);
-        
-        // Agregar la fila al tbody
-        tbody.appendChild(fila);
-    });
+    // Usar utilesVista.js para generar la tabla automáticamente
+    contenedor.innerHTML = crearTablaDesdeJson(vehiculosFormateados);
 }
 
 /**
@@ -148,7 +94,7 @@ function mostrar_vehiculos(listaVehiculos) {
  * @param {Array} listaTransitos - Array de TransitoPropietarioDTO
  */
 function mostrar_transitos(listaTransitos) {
-    const tbody = document.getElementById('tabla-transitos');
+    const contenedor = document.getElementById('tabla-transitos');
     const mensaje = document.getElementById('mensaje-sin-transitos');
     const tabla = document.getElementById('tabla-transitos-container');
     
@@ -164,72 +110,16 @@ function mostrar_transitos(listaTransitos) {
     mensaje.style.display = 'none';
     tabla.style.display = 'table';
     
-    // Limpiar el tbody por si acaso
-    tbody.innerHTML = '';
+    // Formatear los montos antes de mostrar
+    const transitosFormateados = listaTransitos.map(t => ({
+        ...t,
+        montoTarifa: formatearSaldo(t.montoTarifa),
+        montoBonificacion: formatearSaldo(t.montoBonificacion),
+        montoPagado: formatearSaldo(t.montoPagado)
+    }));
     
-    // Agregar todos los tránsitos a la tabla
-    listaTransitos.forEach(transito => {
-        // Crear una nueva fila
-        const fila = document.createElement('tr');
-        
-        // Crear celdas para cada dato
-        const celdaPuesto = document.createElement('td');
-        celdaPuesto.textContent = transito.puesto;
-        
-        const celdaMatricula = document.createElement('td');
-        celdaMatricula.textContent = transito.matricula;
-        celdaMatricula.style.fontWeight = 'bold';
-        
-        const celdaCategoria = document.createElement('td');
-        celdaCategoria.textContent = transito.categoria;
-        
-        const celdaTarifa = document.createElement('td');
-        celdaTarifa.textContent = formatearSaldo(transito.montoTarifa);
-        celdaTarifa.style.textAlign = 'right';
-        
-        const celdaBonificacion = document.createElement('td');
-        celdaBonificacion.textContent = transito.bonificacionAplicada;
-        // Resaltar si hay bonificación
-        if (transito.bonificacionAplicada !== 'Sin bonificación') {
-            celdaBonificacion.style.color = '#28a745';
-            celdaBonificacion.style.fontWeight = 'bold';
-        } else {
-            celdaBonificacion.style.color = '#6c757d';
-        }
-        
-        const celdaDescuento = document.createElement('td');
-        celdaDescuento.textContent = formatearSaldo(transito.montoBonificacion);
-        celdaDescuento.style.textAlign = 'right';
-        if (transito.montoBonificacion > 0) {
-            celdaDescuento.style.color = '#28a745';
-            celdaDescuento.style.fontWeight = 'bold';
-        }
-        
-        const celdaPagado = document.createElement('td');
-        celdaPagado.textContent = formatearSaldo(transito.montoPagado);
-        celdaPagado.style.textAlign = 'right';
-        celdaPagado.style.fontWeight = 'bold';
-        
-        const celdaFecha = document.createElement('td');
-        celdaFecha.textContent = transito.fecha;
-        
-        const celdaHora = document.createElement('td');
-        celdaHora.textContent = transito.hora;
-        
-        // Agregar las celdas a la fila
-        fila.appendChild(celdaPuesto);
-        fila.appendChild(celdaMatricula);
-        fila.appendChild(celdaCategoria);
-        fila.appendChild(celdaTarifa);
-        fila.appendChild(celdaBonificacion);
-        fila.appendChild(celdaDescuento);
-        fila.appendChild(celdaPagado);
-        fila.appendChild(celdaFecha);
-        fila.appendChild(celdaHora);
-        
-        // Agregar la fila al tbody
-        tbody.appendChild(fila);
-    });
+    // Usar utilesVista.js para generar la tabla automáticamente
+    contenedor.innerHTML = crearTablaDesdeJson(transitosFormateados);
 }
 
 /**
@@ -266,7 +156,26 @@ function formatearSaldo(saldo) {
  * vistaWeb.js llama automáticamente a esta función cuando recibe errores del backend
  */
 function excepcionDeAplicacion(mensaje) {
-    sessionException(mensaje);    
+    // Parsear el mensaje que viene como JSON con RespuestaDTO
+    try {
+        const respuestas = JSON.parse(mensaje);
+        if (Array.isArray(respuestas)) {
+            // Buscar el RespuestaDTO con id "mensaje"
+            let mensajeError = 'Error en la operación';
+            respuestas.forEach(resp => {
+                if (resp.id === 'mensaje') {
+                    mensajeError = resp.parametro;
+                }
+            });
+            mostrarMensaje(mensajeError);
+            return;
+        }
+    } catch (e) {
+        // No es JSON, es un string directo
+    }
+    
+    // Mostrar el mensaje tal cual
+    mostrarMensaje(mensaje);
 }
 
 /**
@@ -276,7 +185,7 @@ function excepcionDeAplicacion(mensaje) {
  * @param {Array} listaNotificaciones - Array de NotificacionDTO con {id, mensaje, fecha, hora}
  */
 function mostrar_notificaciones(listaNotificaciones) {
-    const tbody = document.getElementById('tabla-notificaciones');
+    const contenedor = document.getElementById('tabla-notificaciones');
     const mensaje = document.getElementById('mensaje-sin-notificaciones');
     const tabla = document.getElementById('tabla-notificaciones-container');
     
@@ -292,29 +201,15 @@ function mostrar_notificaciones(listaNotificaciones) {
     mensaje.style.display = 'none';
     tabla.style.display = 'table';
     
-    // Limpiar el tbody por si acaso
-    tbody.innerHTML = '';
+    // Remover el campo 'id' para no mostrarlo en la tabla
+    const notificacionesSinId = listaNotificaciones.map(notif => ({
+        fecha: notif.fecha,
+        hora: notif.hora,
+        mensaje: notif.mensaje
+    }));
     
-    // Agregar todas las notificaciones a la tabla
-    listaNotificaciones.forEach(notif => {
-        const fila = document.createElement('tr');
-        
-        const celdaFecha = document.createElement('td');
-        celdaFecha.textContent = notif.fecha;
-        celdaFecha.style.whiteSpace = 'nowrap';
-        
-        const celdaHora = document.createElement('td');
-        celdaHora.textContent = notif.hora;
-        celdaHora.style.whiteSpace = 'nowrap';
-        
-        const celdaMensaje = document.createElement('td');
-        celdaMensaje.textContent = notif.mensaje;
-        
-        fila.appendChild(celdaFecha);
-        fila.appendChild(celdaHora);
-        fila.appendChild(celdaMensaje);
-        tbody.appendChild(fila);
-    });
+    // Usar utilesVista.js para generar la tabla automáticamente
+    contenedor.innerHTML = crearTablaDesdeJson(notificacionesSinId);
 }
 
 /**
@@ -325,4 +220,69 @@ function mostrar_notificaciones(listaNotificaciones) {
 function mostrar_redirigir(paginaUrl) {
     console.log("Redirigiendo a:", paginaUrl);
     window.location.href = paginaUrl;
+}
+
+/**
+ * Función que borra todas las notificaciones del propietario
+ * Muestra un diálogo de confirmación antes de borrar
+ */
+async function borrarNotificaciones() {
+    // Verificar si hay notificaciones antes de mostrar confirmación
+    const tabla = document.getElementById('tabla-notificaciones-container');
+    if (tabla.style.display === 'none') {
+        mostrarMensaje('No hay notificaciones para borrar');
+        return;
+    }
+    
+    // Confirmación antes de borrar usando utilesVista.js
+    const confirmar = await mostrarConfirmacion(
+        '¿Estás seguro que deseas borrar todas las notificaciones? Esta acción no se puede deshacer.'
+    );
+    
+    if (!confirmar) {
+        return;
+    }
+    
+    // Deshabilitar el botón para evitar clics múltiples
+    const boton = document.getElementById('btn-borrar-notificaciones');
+    const textoOriginal = boton.innerHTML;
+    boton.disabled = true;
+    boton.innerHTML = '⏳ Borrando...';
+    
+    // Usar vistaWeb.js submit() en lugar de fetch directo
+    // Esto maneja automáticamente las respuestas y llama a las funciones mostrar_*
+    submit('/propietario/notificaciones', '', 'DELETE');
+    
+    // Rehabilitar el botón después de un breve delay para que el usuario vea el feedback
+    setTimeout(() => {
+        boton.disabled = false;
+        boton.innerHTML = textoOriginal;
+    }, 500);
+}
+
+/**
+ * Función llamada automáticamente por vistaWeb.js cuando se borran notificaciones exitosamente
+ * Convención: mostrar_{id} donde id='mensaje' viene en RespuestaDTO del backend
+ */
+function mostrar_mensaje(mensaje) {
+    // Mostrar mensaje de éxito usando utilesVista.js
+    mostrarMensaje(mensaje);
+}
+
+
+function procesarErrorSubmit(status, text) {
+    console.error(`Error HTTP ${status}:`, text);
+    
+    let mensajeUsuario;
+    
+    if (status === 0) {
+        // Error de red: sin conexión, CORS, timeout, servidor caído
+        mensajeUsuario = 'No se pudo conectar con el servidor. Por favor, verifica tu conexión a Internet e intenta nuevamente.';
+    } else {
+        // Cualquier otro error HTTP (no debería ocurrir en esta aplicación)
+        mensajeUsuario = `Error inesperado de comunicación (${status}). Por favor, contacta al administrador.`;
+    }
+    
+    // Mostrar el error usando utilesVista.js
+    mostrarMensaje(mensajeUsuario);
 }

@@ -21,7 +21,8 @@ import ort.da.obligatorio339182.exceptions.AppException;
 public class Propietario extends Usuario {
 
 	private static final Set<Permiso> permisoPropietario = Set.of(
-		Permiso.PROPIETARIO_DASHBOARD
+		Permiso.PROPIETARIO_DASHBOARD,
+		Permiso.BORRAR_NOTIFICACIONES
 	);
 
 	private int saldo;
@@ -138,4 +139,10 @@ public class Propietario extends Usuario {
 			.collect(Collectors.toList());
 	}
 
+	public void borrarNotificaciones() throws AppException {
+		if(this.notificaciones == null || this.notificaciones.isEmpty()) {
+			throw new AppException("No hay notificaciones para borrar");
+		}
+		this.notificaciones.clear();
+	}
 }
