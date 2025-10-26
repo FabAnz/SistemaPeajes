@@ -156,34 +156,9 @@ function formatearSaldo(saldo) {
  * vistaWeb.js llama automáticamente a esta función cuando recibe errores del backend
  */
 function excepcionDeAplicacion(mensaje) {
-    // Parsear el mensaje que viene como JSON con RespuestaDTO
-    try {
-        const respuestas = JSON.parse(mensaje);
-        if (Array.isArray(respuestas)) {
-            // Buscar el RespuestaDTO con id "mensaje"
-            let mensajeError = 'Error en la operación';
-            respuestas.forEach(resp => {
-                if (resp.id === 'mensaje') {
-                    mensajeError = resp.parametro;
-                }
-            });
-            mostrarMensaje(mensajeError);
-            return;
-        }
-    } catch (e) {
-        // No es JSON, es un string directo
-    }
-    
-    // Mostrar el mensaje tal cual
-    mostrarMensaje(mensaje);
+    sessionException(mensaje);
 }
 
-/**
- * Función que procesa TODAS las notificaciones del propietario (HU 2.5)
- * Convención de vistaWeb.js: mostrar_{id} donde id es el que viene en RespuestaDTO
- * 
- * @param {Array} listaNotificaciones - Array de NotificacionDTO con {id, mensaje, fecha, hora}
- */
 function mostrar_notificaciones(listaNotificaciones) {
     const contenedor = document.getElementById('tabla-notificaciones');
     const mensaje = document.getElementById('mensaje-sin-notificaciones');

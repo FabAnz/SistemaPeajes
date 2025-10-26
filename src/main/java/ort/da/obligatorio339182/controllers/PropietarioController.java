@@ -24,9 +24,11 @@ import java.util.ArrayList;
 import ort.da.obligatorio339182.model.domain.Notificacion;
 import ort.da.obligatorio339182.dtos.NotificacionDTO;
 import ort.da.obligatorio339182.exceptions.AppException;
+import org.springframework.context.annotation.Scope;
 
 @RestController
 @RequestMapping("/propietario")
+@Scope("session")
 public class PropietarioController {
 private final Fachada fachada;
 
