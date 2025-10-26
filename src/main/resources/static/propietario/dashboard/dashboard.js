@@ -270,6 +270,54 @@ function excepcionDeAplicacion(mensaje) {
 }
 
 /**
+ * Función que procesa TODAS las notificaciones del propietario (HU 2.5)
+ * Convención de vistaWeb.js: mostrar_{id} donde id es el que viene en RespuestaDTO
+ * 
+ * @param {Array} listaNotificaciones - Array de NotificacionDTO con {id, mensaje, fecha, hora}
+ */
+function mostrar_notificaciones(listaNotificaciones) {
+    const tbody = document.getElementById('tabla-notificaciones');
+    const mensaje = document.getElementById('mensaje-sin-notificaciones');
+    const tabla = document.getElementById('tabla-notificaciones-container');
+    
+    // Verificar si hay notificaciones
+    if (!listaNotificaciones || listaNotificaciones.length === 0) {
+        // No hay notificaciones, mostrar mensaje
+        mensaje.style.display = 'block';
+        tabla.style.display = 'none';
+        return;
+    }
+    
+    // Hay notificaciones, mostrar tabla y ocultar mensaje
+    mensaje.style.display = 'none';
+    tabla.style.display = 'table';
+    
+    // Limpiar el tbody por si acaso
+    tbody.innerHTML = '';
+    
+    // Agregar todas las notificaciones a la tabla
+    listaNotificaciones.forEach(notif => {
+        const fila = document.createElement('tr');
+        
+        const celdaFecha = document.createElement('td');
+        celdaFecha.textContent = notif.fecha;
+        celdaFecha.style.whiteSpace = 'nowrap';
+        
+        const celdaHora = document.createElement('td');
+        celdaHora.textContent = notif.hora;
+        celdaHora.style.whiteSpace = 'nowrap';
+        
+        const celdaMensaje = document.createElement('td');
+        celdaMensaje.textContent = notif.mensaje;
+        
+        fila.appendChild(celdaFecha);
+        fila.appendChild(celdaHora);
+        fila.appendChild(celdaMensaje);
+        tbody.appendChild(fila);
+    });
+}
+
+/**
  * Función que procesa la redirección
  * Se ejecuta cuando el backend retorna {id: "redirigir", parametro: "/url"}
  * @param {string} paginaUrl - URL a la que redirigir

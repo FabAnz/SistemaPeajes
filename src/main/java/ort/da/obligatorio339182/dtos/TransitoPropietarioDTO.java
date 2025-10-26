@@ -3,10 +3,8 @@ package ort.da.obligatorio339182.dtos;
 import ort.da.obligatorio339182.model.domain.Transito;
 import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
 import lombok.Getter;
-/**
- * DTO para mostrar información completa de un tránsito al propietario
- * Principio de Experto: El DTO es experto en formatear la información para el frontend
- */
+import java.time.format.DateTimeFormatter;
+
 @Getter
 public class TransitoPropietarioDTO {
 	
@@ -35,8 +33,8 @@ public class TransitoPropietarioDTO {
 			? bonificacionAsignada.getBonificacion().getNombre() 
 			: "Sin bonificación";
 		this.montoPagado = transito.getCobro();
-		this.fecha = transito.getFechaFormateada();
-		this.hora = transito.getHoraFormateada();
+		this.fecha = transito.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		this.hora = transito.getFechaHora().format(DateTimeFormatter.ofPattern("HH:mm"));
 	}
 
 }

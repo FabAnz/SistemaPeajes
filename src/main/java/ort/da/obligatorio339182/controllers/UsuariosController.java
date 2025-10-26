@@ -20,6 +20,8 @@ import ort.da.obligatorio339182.dtos.TransitoPropietarioDTO;
 import ort.da.obligatorio339182.model.domain.Transito;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import ort.da.obligatorio339182.model.domain.Notificacion;
+import ort.da.obligatorio339182.dtos.NotificacionDTO;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -71,23 +73,17 @@ private final Fachada fachada;
 			);
 			transitosDTO.add(new TransitoPropietarioDTO(t, bonif));
 		}
+
+		// HU 2.5: Obtener notificaciones del propietario
+		List<Notificacion> notificaciones = propietario.getNotificacionesOrdenadas();
 		
 		return RespuestaDTO.lista(
 			new RespuestaDTO("propietario", infoDTO),
 			new RespuestaDTO("bonificaciones", BonificacionAsignadaDTO.list(bonificaciones)),
 			new RespuestaDTO("vehiculos", vehiculosDTO),
-			new RespuestaDTO("transitos", transitosDTO)
+			new RespuestaDTO("transitos", transitosDTO),
+			new RespuestaDTO("notificaciones", NotificacionDTO.list(notificaciones))
 		);
 	}
-
-	/**
-	 * fachada.getBonificacionesPorPropietario
-	 * getVehiculosDel Usuario(cedula)
-	 * cantidadTransitosPorCedulaYMatricula(cedula, matricula)
-	 * gastoEnTransitos(usuario, matricula)
-	 */
-	/* private List<RespuestaDTO> cargarTablero(UsuarioDTO usuario) {
-		return null;
-	} */
 
 }

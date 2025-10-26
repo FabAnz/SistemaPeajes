@@ -117,10 +117,26 @@
 
             <hr>
 
-            <!-- TODO: HU 2.5 - Notificaciones -->
+            <!-- HU 2.5 - Notificaciones -->
             <section id="seccion-notificaciones">
                 <h2>Notificaciones</h2>
-                <p class="text-muted">Esta sección estará disponible próximamente...</p>
+                <div id="contenedor-notificaciones">
+                    <table class="table" id="tabla-notificaciones-container">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Mensaje</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-notificaciones">
+                            <!-- Las notificaciones se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                    <p id="mensaje-sin-notificaciones" class="text-muted">
+                        No tienes notificaciones.
+                    </p>
+                </div>
             </section>
 
             <hr>

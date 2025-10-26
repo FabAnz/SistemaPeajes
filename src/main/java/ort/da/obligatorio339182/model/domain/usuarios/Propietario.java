@@ -3,12 +3,15 @@ package ort.da.obligatorio339182.model.domain.usuarios;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
 import ort.da.obligatorio339182.model.domain.estados.Estado;
 import ort.da.obligatorio339182.model.domain.Notificacion;
 import ort.da.obligatorio339182.model.domain.Transito;
 import ort.da.obligatorio339182.model.valueObjects.Contrasenia;
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import ort.da.obligatorio339182.exceptions.AppException;
@@ -26,6 +29,7 @@ public class Propietario extends Usuario {
 	private List<Transito> transitos;
 	private List<Vehiculo> vehiculos;
 	private Estado estado;
+	@Getter(AccessLevel.PRIVATE)
 	private List<Notificacion> notificaciones;
 
 	public Propietario(String nombreCompleto, Contrasenia contrasenia, Cedula cedula) {
@@ -125,6 +129,13 @@ public class Propietario extends Usuario {
 			throw new AppException("No tiene saldo suficiente para realizar el pago");
 		}
 		this.saldo -= monto;
+	}
+
+	public List<Notificacion> getNotificacionesOrdenadas() {
+		//Orden descendente por fechaHora
+		return this.notificaciones.stream()
+			.sorted(Comparator.comparing(Notificacion::getFechaHora).reversed())
+			.collect(Collectors.toList());
 	}
 
 }

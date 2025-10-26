@@ -113,24 +113,4 @@ public class Transito {
 		return getTarifaOriginal() * porcentajeABonificacion / 100;
 	}
 
-	/**
-	 * Obtiene la fecha en formato dd/MM/yyyy
-	 * 
-	 * @return Fecha formateada
-	 */
-	public String getFechaFormateada() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-		return fechaHora.format(formatter);
-	}
-
-	/**
-	 * Obtiene la hora en formato HH:mm
-	 * 
-	 * @return Hora formateada
-	 */
-	public String getHoraFormateada() {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-		return fechaHora.format(formatter);
-	}
-
 }
