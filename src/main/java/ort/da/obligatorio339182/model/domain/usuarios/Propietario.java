@@ -120,4 +120,11 @@ public class Propietario extends Usuario {
 		this.notificaciones.add(notificacion);
 	}
 
+	public void restarSaldo(int monto) throws AppException {
+		if(monto > this.saldo) {
+			throw new AppException("No tiene saldo suficiente para realizar el pago");
+		}
+		this.saldo -= monto;
+	}
+
 }

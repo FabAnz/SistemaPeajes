@@ -13,6 +13,7 @@ import ort.da.obligatorio339182.exceptions.UnauthorizedException;
 import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
 import ort.da.obligatorio339182.model.domain.Transito;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -124,8 +125,19 @@ public class Fachada {
 		return sp.getBonificacionAsignadaEnPuesto(propietario, puesto);
 	}
 
+	/**
+	 * Agrega un tránsito con la fecha actual
+	 */
 	public void agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo) throws AppException {
 		st.agregarTransito(propietario, puesto, vehiculo);
+	}
+
+	/**
+	 * Agrega un tránsito con una fecha específica
+	 * Útil para cargar datos de prueba
+	 */
+	public void agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo, LocalDateTime fechaHora) throws AppException {
+		st.agregarTransito(propietario, puesto, vehiculo, fechaHora);
 	}
 
 }

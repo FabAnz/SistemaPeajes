@@ -2,7 +2,6 @@ package ort.da.obligatorio339182.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import ort.da.obligatorio339182.model.domain.Puesto;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;

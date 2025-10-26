@@ -3,6 +3,7 @@ package ort.da.obligatorio339182.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import ort.da.obligatorio339182.model.domain.Transito;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
@@ -49,23 +50,37 @@ class SistemaTransitos {
 	}
 
 	/**
-	 * Agrega un tránsito al sistema
-	 * @param transito El tránsito a agregar
+	 * Agrega un tránsito al sistema con la fecha actual
 	 */
 	void agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo) throws AppException {
-		BonificacionAsignada bonificacion = fachada.getBonificacionEnPuesto(propietario, puesto);
-		boolean esPrimerTransitoDelDia = esPrimerTransitoDelDia(puesto, vehiculo);
+		agregarTransito(propietario, puesto, vehiculo, LocalDateTime.now());
+	}
 
-		Transito transito = new Transito(propietario, puesto, vehiculo, bonificacion, esPrimerTransitoDelDia);
+	/**
+	 * Agrega un tránsito al sistema con una fecha específica
+	 * Útil para cargar datos de prueba
+	 */
+	void agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo, LocalDateTime fechaHora) throws AppException {
+		BonificacionAsignada bonificacion = fachada.getBonificacionEnPuesto(propietario, puesto);
+		boolean esPrimerTransitoDelDia = esPrimerTransitoDelDia(puesto, vehiculo, fechaHora.toLocalDate());
+
+		Transito transito = new Transito(propietario, puesto, vehiculo, bonificacion, esPrimerTransitoDelDia, fechaHora);
 		transito.validar();
 		this.transitos.add(transito);
 	}
 
-	boolean esPrimerTransitoDelDia(Puesto puesto, Vehiculo vehiculo) {
+	/**
+	 * Verifica si es el primer tránsito del día para un vehículo en un puesto
+	 * @param puesto El puesto
+	 * @param vehiculo El vehículo
+	 * @param fecha La fecha a verificar
+	 * @return true si es el primer tránsito del día, false en caso contrario
+	 */
+	boolean esPrimerTransitoDelDia(Puesto puesto, Vehiculo vehiculo, LocalDate fecha) {
 		return !transitos.stream()
 			.filter(t -> t.getPuesto().equals(puesto))
 			.filter(t -> t.getVehiculo().equals(vehiculo))
-			.anyMatch(t -> t.getFechaHora().toLocalDate().equals(LocalDate.now()));
+			.anyMatch(t -> t.getFechaHora().toLocalDate().equals(fecha));
 	}
 
 	/**

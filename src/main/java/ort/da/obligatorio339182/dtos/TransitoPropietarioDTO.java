@@ -14,8 +14,8 @@ public class TransitoPropietarioDTO {
 	private String matricula;
 	private String categoria;
 	private int montoTarifa;
-	private String bonificacionAplicada;
 	private int montoBonificacion;
+	private String bonificacionAplicada;
 	private int montoPagado;
 	private String fecha;
 	private String hora;
@@ -30,10 +30,10 @@ public class TransitoPropietarioDTO {
 		this.matricula = transito.getVehiculo().getMatricula().getValor();
 		this.categoria = transito.getVehiculo().getCategoria().getNombre();
 		this.montoTarifa = transito.getTarifaOriginal();
-		this.bonificacionAplicada = bonificacionAsignada != null 
+		this.montoBonificacion = transito.getMontoBonificacion();
+		this.bonificacionAplicada = montoBonificacion > 0
 			? bonificacionAsignada.getBonificacion().getNombre() 
 			: "Sin bonificación";
-		this.montoBonificacion = transito.getMontoBonificacion();
 		this.montoPagado = transito.getCobro();
 		this.fecha = transito.getFechaFormateada();
 		this.hora = transito.getHoraFormateada();

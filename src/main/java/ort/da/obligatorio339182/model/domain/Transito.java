@@ -32,17 +32,35 @@ public class Transito {
 			BonificacionAsignada bonificacion,
 			boolean esPrimerTransitoDelDia)
 			throws AppException {
+		this(propietario, puesto, vehiculo, bonificacion, esPrimerTransitoDelDia, LocalDateTime.now());
+	}
+
+	/**
+	 * Constructor que permite especificar la fecha del tránsito
+	 * Útil para cargar datos de prueba con fechas específicas
+	 */
+	public Transito(
+			Propietario propietario,
+			Puesto puesto,
+			Vehiculo vehiculo,
+			BonificacionAsignada bonificacion,
+			boolean esPrimerTransitoDelDia,
+			LocalDateTime fechaHora)
+			throws AppException {
 		this.id = ++nextId;
-		this.fechaHora = LocalDateTime.now();
+		this.fechaHora = fechaHora;
 		this.propietario = propietario;
 		this.puesto = puesto;
 		this.vehiculo = vehiculo;
 		this.bonificacion = bonificacion;
-		this.calcularCobro();
 		this.esPrimerTransitoDelDia = esPrimerTransitoDelDia;
+		this.calcularCobro();
 	}
 
 	public void validar() throws AppException {
+		if(!propietario.puedeRealizarTransitos()) {
+			throw new AppException("El propietario no puede realizar tránsitos");
+		}
 		if (cobro < 0) {
 			throw new AppException("El cobro debe ser mayor o igual a 0");
 		}
@@ -63,7 +81,10 @@ public class Transito {
 	public void calcularCobro() throws AppException {
 		int tarifaOriginal = getTarifaOriginal();
 		int montoBonificacion = getMontoBonificacion();
-		this.cobro = tarifaOriginal - montoBonificacion;
+		int pagoTotal = tarifaOriginal - montoBonificacion;
+
+		this.propietario.restarSaldo(pagoTotal);
+		this.cobro = pagoTotal;
 	}
 
 	/**
@@ -85,7 +106,7 @@ public class Transito {
 	 * @return Monto del descuento por bonificación
 	 */
 	public int getMontoBonificacion() {
-		if(bonificacion == null || !propietario.puedeRecibirBonificaciones()) {
+		if(bonificacion == null || !propietario.aplicanBonificaciones()) {
 			return 0;
 		}
 		int porcentajeABonificacion = bonificacion.getPorcentajeBonificacion(this);

@@ -1,5 +1,6 @@
 package ort.da.obligatorio339182;
 
+import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 import ort.da.obligatorio339182.services.Fachada;
@@ -237,30 +238,71 @@ public class DatosPrecargados {
         );
         juanPerez.agregarVehiculo(vehiculo3);
         
-        // Crear tránsitos para el vehículo 1 (ABC1234) - 2 tránsitos
-        // Transito 1: Auto en Puesto1 ($150) - Con bonificación Trabajador ($80 si es día laboral)
-        // La bonificación se asigna automáticamente al agregar el tránsito
-        fachada.agregarTransito(juanPerez, this.puesto1, vehiculo1);
+        // ===== TRÁNSITOS CON FECHAS ESPECÍFICAS PARA PROBAR BONIFICACIONES =====
         
+        // Definir fecha base para las pruebas
+        LocalDateTime hoy = LocalDateTime.now();
         
-        // Transito 2: Auto en Puesto2 ($200) - Con bonificación Frecuente ($50 si es segunda pasada)
-        fachada.agregarTransito(juanPerez, this.puesto2, vehiculo1);
+        // === PRUEBA 1: Bonificación Trabajador en día LABORAL (Lunes) ===
+        LocalDateTime lunesTodayAt10Am = hoy.withDayOfMonth(27).withHour(10).withMinute(0); // Lunes 27/10/2025 10:00
         
-        // Crear tránsitos para el vehículo 2 (XYZ5678) - 1 tránsito
-        // Transito 3: Moto en Puesto1 ($80) - Con bonificación Trabajador ($80)
-        // Nota: El cobro mínimo debe ser mayor a 0, así que si aplica bonificación completa sería $0
-        // Asumimos que no se aplica en este caso o hay un mínimo de $1
-        fachada.agregarTransito(juanPerez, this.puesto1, vehiculo2);
+        // Transito 1: Auto en Puesto1 ($150) - Día laboral con bonificación Trabajador (80%)
+        // Descuento: $120, Paga: $30
+        fachada.agregarTransito(juanPerez, this.puesto1, vehiculo1, lunesTodayAt10Am);
         
-        // Crear tránsitos para el vehículo 3 (DEF9012) - 3 tránsitos
-        // Transito 4: Camioneta en Puesto3 ($350) - SIN bonificación (Juan no tiene bonif en Puesto3)
-        fachada.agregarTransito(juanPerez, this.puesto3, vehiculo3);
+        // === PRUEBA 2: Bonificación Trabajador en FIN DE SEMANA (Sábado) ===
+        LocalDateTime sabadoTodayAt10Am = hoy.withHour(10).withMinute(0); // Sábado (hoy) 10:00
         
-        // Transito 5: Camioneta en Puesto1 ($300) - Con bonificación Trabajador ($80)
-        fachada.agregarTransito(juanPerez, this.puesto1, vehiculo3);
+        // Transito 2: Moto en Puesto1 ($80) - Fin de semana, Trabajador NO aplica
+        // Descuento: $0, Paga: $80
+        fachada.agregarTransito(juanPerez, this.puesto1, vehiculo2, sabadoTodayAt10Am);
         
-        // Transito 6: Camioneta en Puesto2 ($400) - Con bonificación Frecuente ($50)
-        fachada.agregarTransito(juanPerez, this.puesto2, vehiculo3);
+        // === PRUEBA 3: Sin bonificación ===
+        LocalDateTime sabadoTodayAt11Am = hoy.withHour(11).withMinute(0);
+        
+        // Transito 3: Camioneta en Puesto3 ($350) - SIN bonificación (Juan no tiene bonif en Puesto3)
+        // Descuento: $0, Paga: $350
+        fachada.agregarTransito(juanPerez, this.puesto3, vehiculo3, sabadoTodayAt11Am);
+        
+        // === PRUEBA 4: Bonificación FRECUENTE - Primer tránsito del día ===
+        LocalDateTime sabadoTodayAt12Pm = hoy.withHour(12).withMinute(0);
+        
+        // Transito 4: Auto en Puesto2 ($200) - PRIMER tránsito del día en Puesto2
+        // Frecuente NO aplica en primer tránsito
+        // Descuento: $0, Paga: $200
+        fachada.agregarTransito(juanPerez, this.puesto2, vehiculo1, sabadoTodayAt12Pm);
+        
+        // === PRUEBA 5: Bonificación FRECUENTE - Segundo tránsito del día ===
+        LocalDateTime sabadoTodayAt14Pm = hoy.withHour(14).withMinute(0);
+        
+        // Transito 5: Auto en Puesto2 ($200) - SEGUNDO tránsito del día en Puesto2
+        // Frecuente SÍ aplica: 50% de descuento
+        // Descuento: $100, Paga: $100 ✨
+        fachada.agregarTransito(juanPerez, this.puesto2, vehiculo1, sabadoTodayAt14Pm);
+        
+        // === PRUEBA 6: Bonificación FRECUENTE - Tercer tránsito del mismo día ===
+        LocalDateTime sabadoTodayAt16Pm = hoy.withHour(16).withMinute(0);
+        
+        // Transito 6: Auto en Puesto2 ($200) - TERCER tránsito del día en Puesto2
+        // Frecuente SÍ aplica: 50% de descuento
+        // Descuento: $100, Paga: $100 ✨
+        fachada.agregarTransito(juanPerez, this.puesto2, vehiculo1, sabadoTodayAt16Pm);
+        
+        // === PRUEBA 7: Bonificación FRECUENTE con diferente vehículo en mismo puesto ===
+        LocalDateTime sabadoTodayAt17Pm = hoy.withHour(17).withMinute(0);
+        
+        // Transito 7: Camioneta en Puesto2 ($400) - PRIMER tránsito de ESTE vehículo en Puesto2
+        // Frecuente NO aplica (es primer tránsito de este vehículo específico)
+        // Descuento: $0, Paga: $400
+        fachada.agregarTransito(juanPerez, this.puesto2, vehiculo3, sabadoTodayAt17Pm);
+        
+        // === PRUEBA 8: Bonificación FRECUENTE - Segundo tránsito de la camioneta ===
+        LocalDateTime sabadoTodayAt18Pm = hoy.withHour(18).withMinute(0);
+        
+        // Transito 8: Camioneta en Puesto2 ($400) - SEGUNDO tránsito de este vehículo en Puesto2
+        // Frecuente SÍ aplica: 50% de descuento
+        // Descuento: $200, Paga: $200 ✨
+        fachada.agregarTransito(juanPerez, this.puesto2, vehiculo3, sabadoTodayAt18Pm);
     }
 
     // TODO: Agregar métodos para cargar otros datos:
