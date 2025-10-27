@@ -1,0 +1,82 @@
+/**
+ * Estilos específicos para el Dashboard del Administrador
+ */
+
+/* Mensaje de bienvenida */
+.welcome-message {
+    font-size: 1.1rem;
+    color: #495057;
+    margin: 1.5rem 0;
+}
+
+/* Placeholder de información */
+.info-placeholder {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 2rem;
+    margin: 1.5rem 0;
+}
+
+/* Lista de características futuras */
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem auto;
+    max-width: 400px;
+}
+
+.feature-list li {
+    padding: 0.75rem 1rem;
+    margin: 0.5rem 0;
+    background-color: white;
+    border-left: 4px solid var(--primary-color, #007bff);
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.feature-list li:hover {
+    background-color: #f8f9fa;
+    transform: translateX(5px);
+    transition: all 0.3s ease;
+}
+
+/* Secciones del dashboard */
+section {
+    margin: 2rem 0;
+}
+
+section h2 {
+    margin-bottom: 1rem;
+    color: #495057;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+}
+
+/* Texto muted */
+.text-muted {
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Separador horizontal */
+hr {
+    margin: 2rem 0;
+    border: 0;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .feature-list {
+        max-width: 100%;
+    }
+    
+    .info-placeholder {
+        padding: 1.5rem;
+    }
+    
+    .welcome-message {
+        font-size: 1rem;
+    }
+}
+

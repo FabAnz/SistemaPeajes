@@ -38,7 +38,7 @@ private final Fachada fachada;
 
 	
 	@GetMapping("/dashboard")
-	public List<RespuestaDTO> obtenerInformacionPersonal(HttpSession session) throws UnauthorizedException {
+	public List<RespuestaDTO> cargarDashboardPropietario(HttpSession session) throws UnauthorizedException {
 		Integer usuarioId = (Integer) session.getAttribute("usuarioId");
 		if(usuarioId == null) {
 			throw new UnauthorizedException("No hay sesión activa");

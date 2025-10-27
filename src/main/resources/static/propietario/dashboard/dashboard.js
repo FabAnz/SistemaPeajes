@@ -193,7 +193,6 @@ function mostrar_notificaciones(listaNotificaciones) {
  * @param {string} paginaUrl - URL a la que redirigir
  */
 function mostrar_redirigir(paginaUrl) {
-    console.log("Redirigiendo a:", paginaUrl);
     window.location.href = paginaUrl;
 }
 

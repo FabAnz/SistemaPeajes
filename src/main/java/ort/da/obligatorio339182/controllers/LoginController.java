@@ -31,17 +31,21 @@ public class LoginController {
             @RequestParam String contrasenia) throws AppException {
         
         Usuario usuario = fachada.login(cedula, contrasenia);
-        
-        // Seguridad: Solo guardar el ID del usuario en sesión
-        session.setAttribute("usuarioId", usuario.getId());
-        String paginaRedireccion = "";
-        paginaRedireccion = usuario.tienePermiso(Permiso.ADMIN_DASHBOARD) ? "/administrador/dashboard.html" : "";
-        paginaRedireccion = usuario.tienePermiso(Permiso.PROPIETARIO_DASHBOARD) ? "/propietario/dashboard/dashboard.html" : "";
-        if(paginaRedireccion.isEmpty()) {
-            throw new AppException("No tiene permisos para acceder a ningún dashboard");
-        }
 
-        // Solo retornar la URL de redirección - Los dashboards ya saben quién son por su propia URL
+        String paginaRedireccion = "";
+        if(usuario.tienePermiso(Permiso.ADMIN_DASHBOARD)) {
+            paginaRedireccion = "/administrador/dashboard/dashboard.html";
+        }
+        
+        if(usuario.tienePermiso(Permiso.PROPIETARIO_DASHBOARD)) {
+            paginaRedireccion = "/propietario/dashboard/dashboard.html";
+        } 
+        
+        if(paginaRedireccion.isEmpty()) {
+            throw new AppException("No tiene permisos para acceder");
+        }
+        
+        session.setAttribute("usuarioId", usuario.getId());
         return RespuestaDTO.lista(
             new RespuestaDTO("redirigir", paginaRedireccion)
         );
