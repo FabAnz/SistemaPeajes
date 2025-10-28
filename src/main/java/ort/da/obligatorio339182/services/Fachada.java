@@ -107,15 +107,6 @@ public class Fachada {
 	}
 
 	/**
-	 * Obtiene todos los tránsitos de un propietario ordenados por fecha descendente
-	 * @param propietario El propietario
-	 * @return Lista de tránsitos ordenada por fechaHora descendente
-	 */
-	public List<Transito> getTransitosPorPropietario(Propietario propietario) {
-		return st.getTransitosPorPropietario(propietario);
-	}
-
-	/**
 	 * Obtiene la bonificación que tenía un propietario en un puesto en una fecha específica
 	 * @param propietario El propietario
 	 * @param puesto El puesto

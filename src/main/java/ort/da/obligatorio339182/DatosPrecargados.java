@@ -76,6 +76,14 @@ public class DatosPrecargados {
                 this.fachada = fachada;
         }
 
+        // Referencias públicas a usuarios para usar en tests
+        public static Propietario juanPerez;      // ID 1 - Habilitado
+        public static Propietario mariaGarcia;    // ID 2 - Suspendido
+        public static Propietario carlosLopez;    // ID 3 - Penalizado
+        public static Propietario anaRodriguez;   // ID 4 - Deshabilitado
+        public static Administrador adminPrincipal;    // ID 5
+        public static Administrador adminSecundario;   // ID 6
+
         // Referencias a puestos para usar en bonificaciones
         private Puesto puesto1;
         private Puesto puesto2;
@@ -86,20 +94,20 @@ public class DatosPrecargados {
         private Categoria moto;
         private Categoria camioneta;
 
-        /**
-         * Carga todos los datos precargados en el sistema.
-         * Este método es llamado desde Obligatorio339182Application mediante
-         * CommandLineRunner.
-         */
-        public void cargarDatos() throws AppException {
-                cargarAdministradores();
-                cargarPropietarios();
-                cargarPuestos();
-                cargarBonificaciones();
-                cargarVehiculos();
-                cargarNotificaciones();
-                // TODO: Agregar aquí la carga de otros datos precargados si es necesario
-        }
+	/**
+	 * Carga todos los datos precargados en el sistema.
+	 * Este método es llamado desde Obligatorio339182Application mediante
+	 * CommandLineRunner.
+	 */
+	public void cargarDatos() throws AppException {
+		cargarPropietarios();  // Cargar propietarios primero para que tengan IDs 1-4
+		cargarAdministradores();  // Luego administradores
+		cargarPuestos();
+		cargarBonificaciones();
+		cargarVehiculos();
+		cargarNotificaciones();
+		// TODO: Agregar aquí la carga de otros datos precargados si es necesario
+	}
 
         /**
          * Carga los administradores iniciales del sistema.
@@ -110,7 +118,7 @@ public class DatosPrecargados {
                 // Administrador 1: Admin Principal
                 // Tiene acceso completo a todas las funcionalidades de administración
                 // Cédula: 11111111 (cédula válida con dígito verificador correcto)
-                Administrador adminPrincipal = new Administrador(
+                adminPrincipal = new Administrador(
                                 "Admin Principal",
                                 new Contrasenia("Admin1234!"),
                                 new Cedula("11111111"));
@@ -119,7 +127,7 @@ public class DatosPrecargados {
                 // Administrador 2: Admin Secundario
                 // Otro usuario administrador para pruebas
                 // Cédula: 22222222 (cédula válida con dígito verificador correcto)
-                Administrador adminSecundario = new Administrador(
+                adminSecundario = new Administrador(
                                 "Admin Secundario",
                                 new Contrasenia("Admin1234!"),
                                 new Cedula("22222222"));
@@ -134,48 +142,48 @@ public class DatosPrecargados {
                 // Propietario 1: Habilitado
                 // Puede: Ingresar al sistema, realizar tránsitos, recibir bonificaciones
                 // Cédula: 12345672 (cédula válida con dígito verificador correcto)
-                Propietario propHabilitado = new Propietario(
+                juanPerez = new Propietario(
                                 "Juan Pérez",
                                 new Contrasenia("Test1234!"),
                                 new Cedula("12345672"));
-                propHabilitado.setSaldo(5000);
+                juanPerez.setSaldo(5000);
                 // Estado por defecto ya es habilitado
-                fachada.agregarUsuario(propHabilitado);
+                fachada.agregarUsuario(juanPerez);
 
                 // Propietario 2: Suspendido
                 // Puede: Ingresar al sistema
                 // No puede: Realizar tránsitos, recibir bonificaciones
                 // Cédula: 45678905 (cédula válida con dígito verificador correcto)
-                Propietario propSuspendido = new Propietario(
+                mariaGarcia = new Propietario(
                                 "María García",
                                 new Contrasenia("Test1234!"),
                                 new Cedula("45678905"));
-                propSuspendido.setSaldo(3000);
-                propSuspendido.setEstado(Estado.suspendido());
-                fachada.agregarUsuario(propSuspendido);
+                mariaGarcia.setSaldo(3000);
+                mariaGarcia.setEstado(Estado.suspendido());
+                fachada.agregarUsuario(mariaGarcia);
 
                 // Propietario 3: Penalizado
                 // Puede: Ingresar al sistema, realizar tránsitos
                 // No puede: Recibir bonificaciones
                 // Cédula: 1234561 (cédula de 7 dígitos válida con dígito verificador correcto)
-                Propietario propPenalizado = new Propietario(
+                carlosLopez = new Propietario(
                                 "Carlos López",
                                 new Contrasenia("Test1234!"),
                                 new Cedula("1234561"));
-                propPenalizado.setSaldo(2000);
-                propPenalizado.setEstado(Estado.penalizado());
-                fachada.agregarUsuario(propPenalizado);
+                carlosLopez.setSaldo(2000);
+                carlosLopez.setEstado(Estado.penalizado());
+                fachada.agregarUsuario(carlosLopez);
 
                 // Propietario 4: Deshabilitado
                 // No puede: Ingresar al sistema, realizar tránsitos, recibir bonificaciones
                 // Cédula: 23456783 (cédula válida con dígito verificador correcto)
-                Propietario propDeshabilitado = new Propietario(
+                anaRodriguez = new Propietario(
                                 "Ana Rodríguez",
                                 new Contrasenia("Test1234!"),
                                 new Cedula("23456783"));
-                propDeshabilitado.setSaldo(1000);
-                propDeshabilitado.setEstado(Estado.deshabilitado());
-                fachada.agregarUsuario(propDeshabilitado);
+                anaRodriguez.setSaldo(1000);
+                anaRodriguez.setEstado(Estado.deshabilitado());
+                fachada.agregarUsuario(anaRodriguez);
         }
 
         /**
@@ -214,10 +222,7 @@ public class DatosPrecargados {
          * Se asignan bonificaciones al propietario "Juan Pérez" para pruebas.
          */
         private void cargarBonificaciones() throws AppException {
-                // Obtener el propietario Juan Pérez (ya cargado)
-                Propietario juanPerez = (Propietario) fachada.getUsuarioPorCedula("12345672");
-
-                // Usar referencias directas a los puestos (no buscar por ID)
+                // Usar la referencia estática a Juan Pérez (ya cargado)
                 // Asignar bonificación "Trabajador" en Ruta 1
                 BonificacionAsignada bonif1 = new BonificacionAsignada(
                                 juanPerez,
@@ -238,9 +243,7 @@ public class DatosPrecargados {
          * Se asignan vehículos a Juan Pérez con tránsitos para pruebas de HU 2.3
          */
         private void cargarVehiculos() throws AppException {
-                // Obtener el propietario Juan Pérez (ya cargado)
-                Propietario juanPerez = (Propietario) fachada.getUsuarioPorCedula("12345672");
-
+                // Usar la referencia estática a Juan Pérez (ya cargado)
                 // Usar categorías compartidas (ya creadas en cargarPuestos)
 
                 // Vehículo 1: Auto de Juan Pérez
@@ -298,20 +301,16 @@ public class DatosPrecargados {
         }
 
         private void cargarNotificaciones() throws AppException {
-                // Obtener referencias a los propietarios
-                Propietario juan = (Propietario) fachada.getUsuarioPorCedula("12345672");
-                Propietario maria = (Propietario) fachada.getUsuarioPorCedula("45678905");
-                Propietario carlos = (Propietario) fachada.getUsuarioPorCedula("1234561");
-                Propietario ana = (Propietario) fachada.getUsuarioPorCedula("23456783");
+                // Usar las referencias estáticas a los propietarios (ya cargados)
 
                 // Juan Pérez - 3 notificaciones (Habilitado)
                 // Según context/notificaciones.md: notificaciones por tránsito y cambio de
                 // estado
-                juan.agregarNotificacion(
+                juanPerez.agregarNotificacion(
                                 new Notificacion("Su estado ha sido cambiado a Habilitado por un administrador."));
-                juan.agregarNotificacion(new Notificacion(
+                juanPerez.agregarNotificacion(new Notificacion(
                                 "Se registró un tránsito en el puesto Puesto Colonia para el vehículo ABC1234. Monto cobrado: $180. Saldo actual: $4820."));
-                juan.agregarNotificacion(new Notificacion(
+                juanPerez.agregarNotificacion(new Notificacion(
                                 "Se registró un tránsito en el puesto Puesto Montevideo para el vehículo ABC1234. Monto cobrado: $200. Saldo actual: $4620."));
 
                 // María García - SIN notificaciones (Suspendido)
@@ -319,20 +318,20 @@ public class DatosPrecargados {
 
                 // Carlos López - 3 notificaciones (Penalizado)
                 // Tránsitos y cambio de estado a Penalizado
-                carlos.agregarNotificacion(new Notificacion(
+                carlosLopez.agregarNotificacion(new Notificacion(
                                 "Se registró un tránsito en el puesto Puesto Montevideo para el vehículo GHI9012. Monto cobrado: $200. Saldo actual: $1800."));
-                carlos.agregarNotificacion(
+                carlosLopez.agregarNotificacion(
                                 new Notificacion("Su estado ha sido cambiado a Penalizado por un administrador."));
-                carlos.agregarNotificacion(new Notificacion(
+                carlosLopez.agregarNotificacion(new Notificacion(
                                 "Se registró un tránsito en el puesto Puesto Punta del Este para el vehículo GHI9012. Monto cobrado: $250. Saldo actual: $1550."));
 
                 // Ana Rodríguez - 3 notificaciones (Deshabilitado - aunque no podrá verlas)
                 // Solo cambios de estado y tránsitos previos
-                ana.agregarNotificacion(new Notificacion(
+                anaRodriguez.agregarNotificacion(new Notificacion(
                                 "Se registró un tránsito en el puesto Puesto Colonia para el vehículo JKL3456. Monto cobrado: $180. Saldo actual: $820."));
-                ana.agregarNotificacion(
+                anaRodriguez.agregarNotificacion(
                                 new Notificacion("Su estado ha sido cambiado a Suspendido por un administrador."));
-                ana.agregarNotificacion(
+                anaRodriguez.agregarNotificacion(
                                 new Notificacion("Su estado ha sido cambiado a Deshabilitado por un administrador."));
         }
 

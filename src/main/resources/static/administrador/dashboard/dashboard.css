@@ -1,82 +1,227 @@
 /**
- * Estilos específicos para el Dashboard del Administrador
+ * Estilos específicos del Dashboard del Administrador
  */
 
-/* Mensaje de bienvenida */
-.welcome-message {
-    font-size: 1.1rem;
-    color: #495057;
-    margin: 1.5rem 0;
-}
-
-/* Placeholder de información */
-.info-placeholder {
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 2rem;
-    margin: 1.5rem 0;
-}
-
-/* Lista de características futuras */
-.feature-list {
-    list-style: none;
-    padding: 0;
-    margin: 1.5rem auto;
-    max-width: 400px;
-}
-
-.feature-list li {
-    padding: 0.75rem 1rem;
-    margin: 0.5rem 0;
-    background-color: white;
-    border-left: 4px solid var(--primary-color, #007bff);
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.feature-list li:hover {
-    background-color: #f8f9fa;
-    transform: translateX(5px);
-    transition: all 0.3s ease;
-}
-
-/* Secciones del dashboard */
+/* Secciones */
 section {
-    margin: 2rem 0;
+    margin-bottom: 2rem;
 }
 
 section h2 {
-    margin-bottom: 1rem;
-    color: #495057;
-    border-bottom: 2px solid #e9ecef;
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
     padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border-color);
 }
 
-/* Texto muted */
+section h3 {
+    color: var(--text-color);
+    font-size: 1.2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Formularios del Administrador */
+.form-admin {
+    background-color: var(--background-light);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+/* Filas de formulario */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-row-inline {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+/* Grupos de formulario */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.flex-grow {
+    flex: 1;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="time"],
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Acciones de formulario */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+/* Caja de información del propietario */
+.info-box {
+    background-color: var(--background-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+/* Grid de información */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-item label {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.info-value {
+    color: var(--text-color);
+    font-size: 1.1rem;
+}
+
+/* Badges de estado */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.badge-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.badge-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.badge-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.badge-secondary {
+    background-color: #e2e3e5;
+    color: #383d41;
+}
+
+/* Tabla de bonificaciones asignadas */
+#contenedorBonificacionesAsignadas {
+    margin-top: 1.5rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table thead {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table tbody tr:hover {
+    background-color: var(--background-light);
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Mensaje de texto muted */
 .text-muted {
-    color: #6c757d;
+    color: var(--text-muted);
     font-style: italic;
+    text-align: center;
+    padding: 1rem;
 }
 
-/* Separador horizontal */
-hr {
-    margin: 2rem 0;
-    border: 0;
-    border-top: 1px solid #dee2e6;
+/* Mensaje de bienvenida */
+.welcome-message {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .feature-list {
-        max-width: 100%;
+    .form-row {
+        grid-template-columns: 1fr;
     }
     
-    .info-placeholder {
-        padding: 1.5rem;
+    .form-row-inline {
+        flex-direction: column;
+        align-items: stretch;
     }
     
-    .welcome-message {
-        font-size: 1rem;
+    .form-actions {
+        justify-content: stretch;
+    }
+    
+    .form-actions button {
+        width: 100%;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
     }
 }
-

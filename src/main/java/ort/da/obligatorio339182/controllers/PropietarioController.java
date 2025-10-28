@@ -67,7 +67,7 @@ private final Fachada fachada;
 		}
 		
 		// HU 2.4: Obtener tránsitos del propietario
-		List<Transito> transitos = fachada.getTransitosPorPropietario(propietario);
+		List<Transito> transitos = propietario.getTransitos();
 		List<TransitoPropietarioDTO> transitosDTO = new ArrayList<>();
 		
 		// Construir cada TransitoDTO con información de bonificación aplicada

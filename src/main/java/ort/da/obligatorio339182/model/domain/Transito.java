@@ -35,10 +35,8 @@ public class Transito {
 		this(propietario, puesto, vehiculo, bonificacion, esPrimerTransitoDelDia, LocalDateTime.now());
 	}
 
-	/**
-	 * Constructor que permite especificar la fecha del tránsito
-	 * Útil para cargar datos de prueba con fechas específicas
-	 */
+	// Constructor que permite especificar la fecha del tránsito
+	// Útil para cargar datos de prueba con fechas específicas
 	public Transito(
 			Propietario propietario,
 			Puesto puesto,
@@ -87,24 +85,12 @@ public class Transito {
 		this.cobro = pagoTotal;
 	}
 
-	/**
-	 * Calcula la tarifa original antes de aplicar bonificaciones
-	 * Principio de Experto: Transito conoce su puesto y vehículo,
-	 * delega al Puesto (experto en tarifas) el cálculo
-	 * 
-	 * @return Monto de la tarifa original
-	 */
+	// Calcula la tarifa original antes de aplicar bonificaciones
 	public int getTarifaOriginal() {
 		return puesto.getTarifaPorCategoria(vehiculo.getCategoria());
 	}
 
-	/**
-	 * Calcula el monto de bonificación aplicada en este tránsito
-	 * Principio de Experto: Transito es experto en calcular la diferencia
-	 * entre su tarifa original y el cobro final
-	 * 
-	 * @return Monto del descuento por bonificación
-	 */
+	// Calcula el monto de bonificación aplicada en este tránsito
 	public int getMontoBonificacion() {
 		if(bonificacion == null || !propietario.aplicanBonificaciones()) {
 			return 0;

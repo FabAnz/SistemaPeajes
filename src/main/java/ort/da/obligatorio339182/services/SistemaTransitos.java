@@ -67,33 +67,16 @@ class SistemaTransitos {
 		Transito transito = new Transito(propietario, puesto, vehiculo, bonificacion, esPrimerTransitoDelDia, fechaHora);
 		transito.validar();
 		this.transitos.add(transito);
+		propietario.agregarTransito(transito);
 	}
 
-	/**
-	 * Verifica si es el primer tránsito del día para un vehículo en un puesto
-	 * @param puesto El puesto
-	 * @param vehiculo El vehículo
-	 * @param fecha La fecha a verificar
-	 * @return true si es el primer tránsito del día, false en caso contrario
-	 */
+	// Verifica si es el primer tránsito del día para un vehículo en un puesto
+
 	boolean esPrimerTransitoDelDia(Puesto puesto, Vehiculo vehiculo, LocalDate fecha) {
 		return !transitos.stream()
 			.filter(t -> t.getPuesto().equals(puesto))
 			.filter(t -> t.getVehiculo().equals(vehiculo))
 			.anyMatch(t -> t.getFechaHora().toLocalDate().equals(fecha));
-	}
-
-	/**
-	 * Obtiene todos los tránsitos de un propietario ordenados por fecha descendente
-	 * Principio de Experto: SistemaTransitos es el experto en gestionar la colección de tránsitos
-	 * @param propietario El propietario
-	 * @return Lista de tránsitos ordenada por fechaHora descendente (más reciente primero)
-	 */
-	List<Transito> getTransitosPorPropietario(Propietario propietario) {
-		return transitos.stream()
-			.filter(t -> t.getPropietario().equals(propietario))
-			.sorted((t1, t2) -> t2.getFechaHora().compareTo(t1.getFechaHora()))
-			.toList();
 	}
 
 }

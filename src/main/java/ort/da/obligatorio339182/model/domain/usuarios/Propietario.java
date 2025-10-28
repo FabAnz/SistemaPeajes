@@ -145,4 +145,11 @@ public class Propietario extends Usuario {
 		}
 		this.notificaciones.clear();
 	}
+
+	public List<Transito> getTransitos() {
+		// Retornar tránsitos ordenados por fecha descendente (más reciente primero)
+		return this.transitos.stream()
+			.sorted(Comparator.comparing(Transito::getFechaHora).reversed())
+			.collect(Collectors.toList());
+	}
 }

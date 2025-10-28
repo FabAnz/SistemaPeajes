@@ -74,15 +74,18 @@ class SistemaUsuarios {
 		if (usuario == null) {
 			throw new UnauthorizedException("Usuario no encontrado");
 		}
-		if (!usuario.tienePermiso(permisoRequerido)) {
-			throw new UnauthorizedException("Usuario no tiene permiso para acceder a este recurso");
-		}
-
+		
+		// Verificar primero si el propietario puede ingresar al sistema
 		if(usuario instanceof Propietario) {
 			Propietario propietario = (Propietario) usuario;
 			if(!propietario.puedeIngresarAlSistema()) {
 				throw new UnauthorizedException("Usuario deshabilitado, no puede ingresar al sistema");
 			}
+		}
+		
+		// Luego verificar el permiso específico
+		if (!usuario.tienePermiso(permisoRequerido)) {
+			throw new UnauthorizedException("Usuario no tiene permiso para acceder a este recurso");
 		}
 		
 		return usuario;
