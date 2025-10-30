@@ -30,4 +30,8 @@ class SistemaBonificaciones {
         }
         return bonificacion;
     }
+
+    List<Bonificacion> getTodasBonificaciones() {
+        return bonificaciones;
+    }
 }

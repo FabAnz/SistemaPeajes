@@ -94,13 +94,16 @@ class SistemaUsuarios {
 		return usuario;
 	}
 
-	Propietario getPropietarioPorMatricula(Matricula matricula) throws AppException {
-		Vehiculo vehiculo = fachada.getVehiculoPorMatricula(matricula);
-		Propietario propietario = vehiculo.getPropietario();
-		if(propietario == null) {
+
+	Propietario getPropietarioPorCedula(String cedula) throws AppException {
+		Usuario usuario = getUsuarioPorCedula(cedula.toString());
+		if(usuario == null) {
 			throw new AppException("Propietario no encontrado");
 		}
-		return propietario;
+		if(!(usuario instanceof Propietario)) {
+			throw new AppException("Usuario no es un propietario");
+		}
+		return (Propietario) usuario;
 	}
 
 }

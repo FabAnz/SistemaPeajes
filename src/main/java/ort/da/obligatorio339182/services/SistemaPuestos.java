@@ -34,6 +34,10 @@ class SistemaPuestos {
 
 	// Agrega una bonificación asignada al sistema
 	void agregarBonificacionAsignada(BonificacionAsignada bonificacionAsignada) throws AppException {
+		BonificacionAsignada bonificacionAsignadaExistente = getBonificacionAsignadaEnPuesto(bonificacionAsignada.getPropietario(), bonificacionAsignada.getPuesto());
+		if(bonificacionAsignadaExistente != null) {
+			throw new AppException("Ya tiene una bonificación asignada para ese puesto");
+		}
 		bonificacionAsignada.validar();
 		this.bonificacionesAsignadas.add(bonificacionAsignada);
 	}

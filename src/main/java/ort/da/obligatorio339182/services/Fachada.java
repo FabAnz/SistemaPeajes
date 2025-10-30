@@ -55,6 +55,10 @@ public class Fachada {
 		return su.getUsuarioPorCedula(cedula);
 	}
 
+	public Propietario getPropietarioPorCedula(String cedula) throws AppException {
+		return su.getPropietarioPorCedula(cedula);
+	}
+
 	public void agregarPuesto(Puesto puesto) {
 		sp.agregarPuesto(puesto);
 	}
@@ -111,12 +115,12 @@ public class Fachada {
 		return sp.getTodosPuestos();
 	}
 
-	public Propietario getPropietarioPorMatricula(Matricula matricula) throws AppException {
-		return su.getPropietarioPorMatricula(matricula);
-	}
-
 	public Bonificacion getBonificacionPorNombre(String nombre) throws AppException {
 		return sb.getBonificacionPorNombre(nombre);
+	}
+
+	public List<Bonificacion> getTodasBonificaciones() {
+		return sb.getTodasBonificaciones();
 	}
 
 }

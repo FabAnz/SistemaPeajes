@@ -24,12 +24,17 @@ import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import ort.da.obligatorio339182.model.domain.bonifiaciones.Bonificacion;
 import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
+import ort.da.obligatorio339182.dtos.BonificacionDTO;
+import ort.da.obligatorio339182.dtos.BonificacionAsignadaDTO;
+import ort.da.obligatorio339182.dtos.PropietarioResumenDTO;
 
 @RestController
 @RequestMapping("/administrador")
 @Scope("session")
 public class AdminController extends BaseController {
 
+    private Propietario propietarioEncontrado;
+    
     public AdminController(Fachada fachada) {
         super(fachada);
     }
@@ -42,9 +47,12 @@ public class AdminController extends BaseController {
         // Obtener lista de puestos para el select de emular tránsito
         List<Puesto> puestos = fachada.getTodosPuestos();
         
+        // Obtener lista de bonificaciones disponibles para el select
+        List<Bonificacion> bonificaciones = fachada.getTodasBonificaciones();
+        
         return RespuestaDTO.lista(
-            new RespuestaDTO("mensaje", "Dashboard cargado correctamente"),
-            new RespuestaDTO("puestos", PuestoDTO.list(puestos))
+            new RespuestaDTO("puestos", PuestoDTO.list(puestos)),
+            new RespuestaDTO("bonificaciones", BonificacionDTO.list(bonificaciones))
         );
     }
 
@@ -102,7 +110,7 @@ public class AdminController extends BaseController {
     @PostMapping("/asignar-bonificacion")
     public List<RespuestaDTO> asignarBonificacion (
         HttpSession session,
-        @RequestParam String pMatricula,
+        @RequestParam String cedula,
         @RequestParam int pPuesto,
         @RequestParam String pBonificacion) throws UnauthorizedException, AppException {
 
@@ -110,15 +118,35 @@ public class AdminController extends BaseController {
         fachada.validarPermiso(usuarioId, Permiso.ASIGNAR_BONIFICACION);
 
         //Obtener datos para construir la bonificacion asignada
-        Propietario propietario = fachada.getPropietarioPorMatricula(new Matricula(pMatricula));
         Puesto puesto = fachada.getPuestoPorId(pPuesto);
         Bonificacion bonificacion = fachada.getBonificacionPorNombre(pBonificacion);
 
-        BonificacionAsignada bonificacionAsignada = new BonificacionAsignada(propietario, puesto, bonificacion);
+        BonificacionAsignada bonificacionAsignada = new BonificacionAsignada(propietarioEncontrado, puesto, bonificacion);
         fachada.agregarBonificacionAsignada(bonificacionAsignada);
 
+        // Obtener bonificaciones actualizadas del propietario
+        List<BonificacionAsignada> bonificacionesAsignadas = fachada.getBonificacionesPorPropietario(propietarioEncontrado);
+
         return RespuestaDTO.lista(
-            new RespuestaDTO("mensaje", "Bonificación asignada correctamente")
+            new RespuestaDTO("mensaje", "Bonificación asignada correctamente"),
+            new RespuestaDTO("bonificacionesAsignadas", BonificacionAsignadaDTO.list(bonificacionesAsignadas))
+        );
+    }
+
+    @PostMapping("/buscar-propietario")
+    public List<RespuestaDTO> buscarPropietario(
+        HttpSession session,
+        @RequestParam String cedula
+    ) throws UnauthorizedException, AppException {
+        Integer usuarioId = validarSesion(session);
+        fachada.validarPermiso(usuarioId, Permiso.ASIGNAR_BONIFICACION);
+
+        propietarioEncontrado = fachada.getPropietarioPorCedula(cedula);
+        List<BonificacionAsignada> bonificacionesAsignadas = fachada.getBonificacionesPorPropietario(propietarioEncontrado);
+
+        return RespuestaDTO.lista(
+            new RespuestaDTO("propietario", PropietarioResumenDTO.from(propietarioEncontrado)),
+            new RespuestaDTO("bonificacionesAsignadas", BonificacionAsignadaDTO.list(bonificacionesAsignadas))
         );
     }
 }

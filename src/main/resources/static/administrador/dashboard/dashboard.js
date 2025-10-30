@@ -7,6 +7,9 @@
 var urlIniciarVista = "/administrador/dashboard";
 var parametrosInicioVista = ""; // No necesita parámetros, usa la sesión HTTP
 
+// Estado interno
+let propietarioCargado = false;
+
 
 function mostrar_puestos(puestos) {
     // Cargar puestos en el select de emular tránsito
@@ -18,6 +21,15 @@ function mostrar_puestos(puestos) {
         selectPuestoTransito.appendChild(option);
     });
     
+    // Cargar puestos en el select de asignar bonificación
+    const selectPuestoBonificacion = document.getElementById('puestoBonificacion');
+    puestos.forEach(puesto => {
+        const option = document.createElement('option');
+        option.value = puesto.id;
+        option.textContent = `${puesto.nombre} - ${puesto.direccion}`;
+        selectPuestoBonificacion.appendChild(option);
+    });
+    
     console.log(`✅ ${puestos.length} puestos cargados`);
 }
 
@@ -25,6 +37,15 @@ function mostrar_nuevoSaldo(nuevoSaldo) {
     mostrarMensaje(`Tránsito emulado correctamente.\n\nNuevo saldo del propietario: $${nuevoSaldo}`);
     // Limpiar el formulario
     document.getElementById('formEmularTransito').reset();
+}
+
+function mostrar_mensaje(mensaje) {
+    mostrarMensaje(mensaje);
+    // Si es mensaje de bonificación asignada, limpiar select
+    if(mensaje.includes('Bonificación asignada')) {
+        document.getElementById('bonificacion').value = '';
+        document.getElementById('puestoBonificacion').value = '';
+    }
 }
 
 function mostrar_redirigir(paginaUrl) {
@@ -124,6 +145,174 @@ function emularTransito() {
     
     // Enviar al backend usando vistaWeb.js
     submit('/administrador/emular-transito', params, 'POST');
+}
+
+// ========== FUNCIONES DE ASIGNACIÓN DE BONIFICACIONES ==========
+
+/**
+ * Función que carga las bonificaciones disponibles en el select
+ */
+function mostrar_bonificaciones(bonificaciones) {
+    const selectBonificacion = document.getElementById('bonificacion');
+    bonificaciones.forEach(bonif => {
+        const option = document.createElement('option');
+        option.value = bonif.nombre;
+        option.textContent = bonif.nombre;
+        selectBonificacion.appendChild(option);
+    });
+    
+    console.log(`✅ ${bonificaciones.length} bonificaciones cargadas`);
+}
+
+/**
+ * Función que muestra información del propietario buscado
+ */
+function mostrar_propietario(propietario) {
+    console.log('📋 Mostrando información del propietario:', propietario);
+    
+    // Mostrar información del propietario
+    document.getElementById('nombrePropietarioBonificacion').textContent = propietario.nombreCompleto;
+    document.getElementById('estadoPropietarioBonificacion').textContent = propietario.estado;
+    
+    // Aplicar clase de badge según estado
+    const badgeEstado = document.getElementById('estadoPropietarioBonificacion');
+    badgeEstado.className = 'info-value badge badge-' + propietario.estado.toLowerCase();
+    
+    // Mostrar contenedores
+    document.getElementById('infoPropietarioBonificacion').style.display = 'block';
+    document.getElementById('formAsignarBonificacion').style.display = 'block';
+
+    // Habilitar selects y botón de asignación
+    const selectBon = document.getElementById('bonificacion');
+    const selectPue = document.getElementById('puestoBonificacion');
+    const btnAsignar = document.getElementById('btnAsignarBonificacion');
+    if (selectBon) selectBon.disabled = false;
+    if (selectPue) selectPue.disabled = false;
+    if (btnAsignar) btnAsignar.disabled = false;
+    propietarioCargado = true;
+}
+
+/**
+ * Función que muestra las bonificaciones asignadas del propietario
+ */
+function mostrar_bonificacionesAsignadas(bonificaciones) {
+    console.log('🎁 Mostrando bonificaciones asignadas:', bonificaciones);
+    
+    const contenedor = document.getElementById('tabla-bonificaciones-asignadas');
+    const contenedorPrincipal = document.getElementById('contenedorBonificacionesAsignadas');
+    const mensaje = document.getElementById('mensaje-sin-bonificaciones-asignadas');
+    const tabla = document.getElementById('tabla-bonificaciones-asignadas-container');
+    
+    // Mostrar el contenedor principal
+    contenedorPrincipal.style.display = 'block';
+    
+    // Verificar si hay bonificaciones
+    if (!bonificaciones || bonificaciones.length === 0) {
+        // No hay bonificaciones, mostrar mensaje
+        mensaje.style.display = 'block';
+        tabla.style.display = 'none';
+        return;
+    }
+    
+    // Hay bonificaciones, mostrar tabla y ocultar mensaje
+    mensaje.style.display = 'none';
+    tabla.style.display = 'table';
+    
+    // Usar utilesVista.js para generar la tabla automáticamente
+    contenedor.innerHTML = crearTablaDesdeJson(bonificaciones);
+}
+
+/**
+ * Event listener para buscar propietario
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicialmente deshabilitado hasta encontrar propietario
+    const selectBon = document.getElementById('bonificacion');
+    const selectPue = document.getElementById('puestoBonificacion');
+    const btnAsignar = document.getElementById('btnAsignarBonificacion');
+    if (selectBon) selectBon.disabled = true;
+    if (selectPue) selectPue.disabled = true;
+    if (btnAsignar) btnAsignar.disabled = true;
+
+    // Buscar propietario por cédula
+    const formBuscarPropietario = document.getElementById('formBuscarPropietario');
+    if (formBuscarPropietario) {
+        formBuscarPropietario.addEventListener('submit', function(e) {
+            e.preventDefault();
+            buscarPropietario();
+        });
+    }
+    const formAsignarBonificacion = document.getElementById('formAsignarBonificacion');
+    if (formAsignarBonificacion) {
+        formAsignarBonificacion.addEventListener('submit', function(e) {
+            e.preventDefault();
+            asignarBonificacion();
+        });
+    }
+});
+
+/**
+ * Función que busca un propietario por cédula (HU 6)
+ */
+// Búsqueda independiente del propietario por cédula
+function buscarPropietario() {
+    console.log('🔎 Buscando propietario por cédula');
+    const cedula = document.getElementById('cedulaBonificacion')
+        ? document.getElementById('cedulaBonificacion').value.trim()
+        : '';
+    if (!cedula) {
+        mostrarMensaje('Por favor, ingrese una cédula');
+        return;
+    }
+
+    // Reiniciar estado UI
+    propietarioCargado = false;
+    const btnAsignar = document.getElementById('btnAsignarBonificacion');
+    if (btnAsignar) btnAsignar.disabled = true;
+
+    // Enviar al backend: requiere endpoint que retorne { propietario, bonificacionesAsignadas }
+    const params = `cedula=${encodeURIComponent(cedula)}`;
+    submit('/administrador/buscar-propietario', params, 'POST');
+}
+
+/**
+ * Función que asigna una bonificación a un propietario (HU 6)
+ */
+function asignarBonificacion() {
+    console.log('🎁 Asignando bonificación');
+    
+    const cedula = document.getElementById('cedulaBonificacion')
+        ? document.getElementById('cedulaBonificacion').value.trim()
+        : '';
+    const puesto = document.getElementById('puestoBonificacion').value;
+    const bonificacion = document.getElementById('bonificacion').value;
+    
+    // Validaciones básicas
+    if(!propietarioCargado) {
+        mostrarMensaje('Primero busque y cargue un propietario por cédula');
+        return;
+    }
+    if(!cedula) {
+        mostrarMensaje('Por favor, ingrese una cédula');
+        return;
+    }
+    if(!bonificacion) {
+        mostrarMensaje('Por favor, seleccione una bonificación');
+        return;
+    }
+    
+    if(!puesto) {
+        mostrarMensaje('Por favor, seleccione un puesto');
+        return;
+    }
+    
+    // Construir parámetros
+    const params = `cedula=${encodeURIComponent(cedula)}&pPuesto=${encodeURIComponent(puesto)}&pBonificacion=${encodeURIComponent(bonificacion)}`;
+    
+    console.log('📤 Enviando al backend:', params);
+    
+    // Enviar al backend usando vistaWeb.js
+    submit('/administrador/asignar-bonificacion', params, 'POST');
 }
 
 // ========== INICIALIZACIÓN ==========
