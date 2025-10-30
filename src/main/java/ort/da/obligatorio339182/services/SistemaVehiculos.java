@@ -6,6 +6,7 @@ import ort.da.obligatorio339182.model.domain.Vehiculo;
 import ort.da.obligatorio339182.exceptions.AppException;
 import ort.da.obligatorio339182.model.valueObjects.Matricula;
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
+import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,30 +24,42 @@ class SistemaVehiculos {
 
 	}
 
-	private Categoria getCategoriaPorNombre(String nombre) {
+	Categoria getCategoriaPorNombre(String nombre) {
 		return null;
 	}
 
-	private boolean validarNombreUnicoCategoria(String nombre) {
+	boolean validarNombreUnicoCategoria(String nombre) {
 		return false;
+	}
+
+	void agregarVehiculoConPropietario(Vehiculo vehiculo, Propietario propietario) throws AppException {
+		vehiculo.validar();
+		vehiculo.setPropietario(propietario);
+		propietario.agregarVehiculo(vehiculo);
+		this.agregarVehiculo(vehiculo);
 	}
 
 	void agregarVehiculo(Vehiculo vehiculo) throws AppException {
-		vehiculo.validar();
+		if (vehiculo.getPropietario() == null) {
+			vehiculo.validar();
+		}
+		Matricula matricula = vehiculo.getMatricula();
+		if (validarMatriculaUnica(matricula)) {
+			throw new AppException("La matrícula ya está en uso");
+		}
 		this.vehiculos.add(vehiculo);
 	}
 
-	private Vehiculo getVehiculoPorMatricula(Matricula matricula) throws AppException {
-		for (Vehiculo vehiculo : vehiculos) {
-			if (vehiculo.getMatricula().equals(matricula)) {
-				return vehiculo;
-			}
-		}
-		throw new AppException("Vehículo no encontrado");
+	Vehiculo getVehiculoPorMatricula(Matricula matricula) {
+		return vehiculos.stream()
+				.filter(v -> v.getMatricula().equals(matricula))
+				.findFirst()
+				.orElse(null);
 	}
 
-	private boolean validarMatriculaUnica(Matricula matricula) {
-		return false;
+	boolean validarMatriculaUnica(Matricula matricula) {
+		return vehiculos.stream()
+				.anyMatch(v -> v.getMatricula().equals(matricula));
 	}
 
 	/**

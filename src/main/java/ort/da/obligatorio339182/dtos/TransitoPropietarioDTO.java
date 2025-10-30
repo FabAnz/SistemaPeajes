@@ -18,11 +18,6 @@ public class TransitoPropietarioDTO {
 	private String fecha;
 	private String hora;
 
-	/**
-	 * Constructor que calcula toda la información del tránsito
-	 * @param transito El tránsito
-	 * @param bonificacionAsignada La bonificación que tenía en ese momento (puede ser null)
-	 */
 	public TransitoPropietarioDTO(Transito transito, BonificacionAsignada bonificacionAsignada) {
 		this.puesto = transito.getPuesto().getNombre();
 		this.matricula = transito.getVehiculo().getMatricula().getValor();

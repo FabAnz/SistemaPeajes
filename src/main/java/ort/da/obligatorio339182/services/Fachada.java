@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import ort.da.obligatorio339182.exceptions.AppException;
 import ort.da.obligatorio339182.exceptions.UnauthorizedException;
 import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
-import ort.da.obligatorio339182.model.domain.Transito;
+import ort.da.obligatorio339182.model.valueObjects.Matricula;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -68,67 +68,56 @@ public class Fachada {
 		sp.agregarBonificacionAsignada(bonificacionAsignada);
 	}
 
-	/**
-	 * Obtiene las bonificaciones asignadas a un propietario
-	 * @param propietario El propietario
-	 * @return Lista de bonificaciones asignadas al propietario
-	 */
+	// Obtiene las bonificaciones asignadas a un propietario
 	public List<BonificacionAsignada> getBonificacionesPorPropietario(Propietario propietario) {
 		return sp.getBonificacionesPorPropietario(propietario);
 	}
 
-	/**
-	 * Obtiene un usuario por su ID
-	 * @param id El ID del usuario
-	 * @return El usuario si existe, null en caso contrario
-	 */
+	// Obtiene un usuario por su ID
 	public Usuario getUsuarioPorId(int id) {
 		return su.getUsuarioPorId(id);
 	}
 
-	/**
-	 * Calcula la cantidad de tránsitos realizados por un propietario en un vehículo específico
-	 * @param propietario El propietario
-	 * @param vehiculo El vehículo
-	 * @return Cantidad de tránsitos
-	 */
+	// Calcula la cantidad de tránsitos realizados por un propietario en un vehículo específico
 	public int cantidadTransitosPorPropietarioYVehiculo(Propietario propietario, Vehiculo vehiculo) {
 		return st.cantidadTransitosPorPropietarioYVehiculo(propietario, vehiculo);
 	}
 
-	/**
-	 * Calcula el monto total gastado por un propietario en un vehículo específico
-	 * @param propietario El propietario
-	 * @param vehiculo El vehículo
-	 * @return Monto total gastado
-	 */
+	// Calcula el monto total gastado por un propietario en un vehículo específico
 	public int montoTotalPorPropietarioYVehiculo(Propietario propietario, Vehiculo vehiculo) {
 		return st.montoTotalPorPropietarioYVehiculo(propietario, vehiculo);
 	}
 
-	/**
-	 * Obtiene la bonificación que tenía un propietario en un puesto en una fecha específica
-	 * @param propietario El propietario
-	 * @param puesto El puesto
-	 * @return La bonificación asignada o null si no había
-	 */
+	// Obtiene la bonificación que tenía un propietario en un puesto en una fecha específica
 	public BonificacionAsignada getBonificacionEnPuesto(Propietario propietario, Puesto puesto) {
 		return sp.getBonificacionAsignadaEnPuesto(propietario, puesto);
 	}
 
-	/**
-	 * Agrega un tránsito con la fecha actual
-	 */
+	public void agregarVehiculo(Vehiculo vehiculo) throws AppException {
+		sv.agregarVehiculo(vehiculo);
+	}
+
+	public void agregarVehiculoConPropietario(Vehiculo vehiculo, Propietario propietario) throws AppException {
+		sv.agregarVehiculoConPropietario(vehiculo, propietario);
+	}
+
+	// Agrega un tránsito con la fecha actual
 	public void agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo) throws AppException {
 		st.agregarTransito(propietario, puesto, vehiculo);
 	}
 
-	/**
-	 * Agrega un tránsito con una fecha específica
-	 * Útil para cargar datos de prueba
-	 */
+	// Agrega un tránsito con una fecha específica
+	// Útil para cargar datos de prueba
 	public void agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo, LocalDateTime fechaHora) throws AppException {
 		st.agregarTransito(propietario, puesto, vehiculo, fechaHora);
+	}
+
+	public Puesto getPuestoPorId(int id) {
+		return sp.getPuestoPorId(id);
+	}
+
+	public Vehiculo getVehiculoPorMatricula(Matricula matricula) {
+		return sv.getVehiculoPorMatricula(matricula);
 	}
 
 }

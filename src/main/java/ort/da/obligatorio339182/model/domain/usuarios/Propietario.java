@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
-import ort.da.obligatorio339182.model.domain.estados.Estado;
+import ort.da.obligatorio339182.model.domain.estados.Habilitado;
 import ort.da.obligatorio339182.model.domain.Notificacion;
 import ort.da.obligatorio339182.model.domain.Transito;
 import ort.da.obligatorio339182.model.valueObjects.Contrasenia;
@@ -15,6 +15,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import ort.da.obligatorio339182.exceptions.AppException;
+import ort.da.obligatorio339182.model.domain.estados.Estado;
 
 @Getter
 @Setter
@@ -39,7 +40,7 @@ public class Propietario extends Usuario {
 		this.saldoMinimo = 100;
 		this.transitos = new ArrayList<>();
 		this.vehiculos = new ArrayList<>();
-		this.estado = Estado.habilitado();
+		this.estado = new Habilitado();
 		this.notificaciones = new ArrayList<>();
 	}
 
@@ -120,7 +121,8 @@ public class Propietario extends Usuario {
 		this.transitos.add(transito);
 	}
 
-	public void agregarNotificacion(Notificacion notificacion) throws AppException {
+	public void agregarNotificacion(String mensaje) throws AppException {
+		Notificacion notificacion = new Notificacion(mensaje);
 		notificacion.validar();
 		this.notificaciones.add(notificacion);
 	}

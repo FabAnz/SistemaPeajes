@@ -1,72 +1,17 @@
 package ort.da.obligatorio339182.model.domain.estados;
 
-public abstract class Estado {
-	// Singleton de cada estado - Inicialización correcta
-	private static final Estado habilitado = new Habilitado();
-	private static final Estado deshabilitado = new Deshabilitado();
-	private static final Estado suspendido = new Suspendido();
-	private static final Estado penalizado = new Penalizado();
+public interface Estado {
 
-	// Métodos para obtener las instancias únicas
-	public static Estado habilitado() {
-		return habilitado;
-	}
+	public boolean puedeIngresarAlSistema();
 
-	public static Estado deshabilitado() {
-		return deshabilitado;
-	}
+	public boolean puedeRealizarTransitos();
 
-	public static Estado suspendido() {
-		return suspendido;
-	}
+	public boolean puedeAsignarBonificaciones();
 
-	public static Estado penalizado() {
-		return penalizado;
-	}
+	public boolean aplicanBonificaciones();
 
-	/**
-	 * Indica si el usuario puede ingresar al sistema
-	 * Por defecto retorna true, cada estado sobrescribe si necesita
-	 */
-	public boolean puedeIngresarAlSistema() {
-		return true;
-	}
+	public boolean recibeNotificaciones();
 
-	/**
-	 * Indica si el usuario puede realizar tránsitos
-	 * Por defecto retorna true, cada estado sobrescribe si necesita
-	 */
-	public boolean puedeRealizarTransitos() {
-		return true;
-	}
-
-	/**
-	 * Indica si se pueden asignar bonificaciones al usuario
-	 * Por defecto retorna false, solo Habilitado lo sobrescribe
-	 */
-	public boolean puedeAsignarBonificaciones() {
-		return false;
-	}
-
-	/**
-	 * Indica si se aplican las bonificaciones en los tránsitos
-	 * Por defecto retorna true, Deshabilitado y Penalizado lo sobrescriben
-	 */
-	public boolean aplicanBonificaciones() {
-		return true;
-	}
-
-	/**
-	 * Indica si se registran notificaciones al usuario
-	 * Por defecto retorna true, Deshabilitado y Penalizado lo sobrescriben
-	 */
-	public boolean recibeNotificaciones() {
-		return true;
-	}
-
-	/**
-	 * Retorna el nombre del estado
-	 */
-	public abstract String getNombre();
+	public String getNombre();
 
 }

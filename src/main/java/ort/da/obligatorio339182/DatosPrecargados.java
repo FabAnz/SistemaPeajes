@@ -8,7 +8,6 @@ import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 import ort.da.obligatorio339182.model.domain.usuarios.Administrador;
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import ort.da.obligatorio339182.model.valueObjects.Contrasenia;
-import ort.da.obligatorio339182.model.domain.estados.Estado;
 import ort.da.obligatorio339182.exceptions.AppException;
 import ort.da.obligatorio339182.model.domain.Puesto;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
@@ -18,7 +17,9 @@ import ort.da.obligatorio339182.model.domain.Tarifa;
 import ort.da.obligatorio339182.model.valueObjects.Matricula;
 import ort.da.obligatorio339182.model.domain.bonifiaciones.Trabajador;
 import ort.da.obligatorio339182.model.domain.bonifiaciones.Frecuente;
-import ort.da.obligatorio339182.model.domain.Notificacion;
+import ort.da.obligatorio339182.model.domain.estados.Suspendido;
+import ort.da.obligatorio339182.model.domain.estados.Penalizado;
+import ort.da.obligatorio339182.model.domain.estados.Deshabilitado;
 
 /**
  * Clase que contiene todos los datos precargados del sistema.
@@ -77,12 +78,12 @@ public class DatosPrecargados {
         }
 
         // Referencias públicas a usuarios para usar en tests
-        public static Propietario juanPerez;      // ID 1 - Habilitado
-        public static Propietario mariaGarcia;    // ID 2 - Suspendido
-        public static Propietario carlosLopez;    // ID 3 - Penalizado
-        public static Propietario anaRodriguez;   // ID 4 - Deshabilitado
-        public static Administrador adminPrincipal;    // ID 5
-        public static Administrador adminSecundario;   // ID 6
+        public static Propietario juanPerez; // ID 1 - Habilitado
+        public static Propietario mariaGarcia; // ID 2 - Suspendido
+        public static Propietario carlosLopez; // ID 3 - Penalizado
+        public static Propietario anaRodriguez; // ID 4 - Deshabilitado
+        public static Administrador adminPrincipal; // ID 5
+        public static Administrador adminSecundario; // ID 6
 
         // Referencias a puestos para usar en bonificaciones
         private Puesto puesto1;
@@ -94,20 +95,19 @@ public class DatosPrecargados {
         private Categoria moto;
         private Categoria camioneta;
 
-	/**
-	 * Carga todos los datos precargados en el sistema.
-	 * Este método es llamado desde Obligatorio339182Application mediante
-	 * CommandLineRunner.
-	 */
-	public void cargarDatos() throws AppException {
-		cargarPropietarios();  // Cargar propietarios primero para que tengan IDs 1-4
-		cargarAdministradores();  // Luego administradores
-		cargarPuestos();
-		cargarBonificaciones();
-		cargarVehiculos();
-		cargarNotificaciones();
-		// TODO: Agregar aquí la carga de otros datos precargados si es necesario
-	}
+        /**
+         * Carga todos los datos precargados en el sistema.
+         * Este método es llamado desde Obligatorio339182Application mediante
+         * CommandLineRunner.
+         */
+        public void cargarDatos() throws AppException {
+                cargarPropietarios(); // Cargar propietarios primero para que tengan IDs 1-4
+                cargarAdministradores(); // Luego administradores
+                cargarPuestos();
+                cargarBonificaciones();
+                cargarVehiculos();
+                // TODO: Agregar aquí la carga de otros datos precargados si es necesario
+        }
 
         /**
          * Carga los administradores iniciales del sistema.
@@ -159,7 +159,7 @@ public class DatosPrecargados {
                                 new Contrasenia("Test1234!"),
                                 new Cedula("45678905"));
                 mariaGarcia.setSaldo(3000);
-                mariaGarcia.setEstado(Estado.suspendido());
+                mariaGarcia.setEstado(new Suspendido());
                 fachada.agregarUsuario(mariaGarcia);
 
                 // Propietario 3: Penalizado
@@ -171,7 +171,7 @@ public class DatosPrecargados {
                                 new Contrasenia("Test1234!"),
                                 new Cedula("1234561"));
                 carlosLopez.setSaldo(2000);
-                carlosLopez.setEstado(Estado.penalizado());
+                carlosLopez.setEstado(new Penalizado());
                 fachada.agregarUsuario(carlosLopez);
 
                 // Propietario 4: Deshabilitado
@@ -182,7 +182,7 @@ public class DatosPrecargados {
                                 new Contrasenia("Test1234!"),
                                 new Cedula("23456783"));
                 anaRodriguez.setSaldo(1000);
-                anaRodriguez.setEstado(Estado.deshabilitado());
+                anaRodriguez.setEstado(new Deshabilitado());
                 fachada.agregarUsuario(anaRodriguez);
         }
 
@@ -252,7 +252,7 @@ public class DatosPrecargados {
                                 "Gris",
                                 this.auto,
                                 new Matricula("ABC1234"));
-                juanPerez.agregarVehiculo(vehiculo1);
+                fachada.agregarVehiculoConPropietario(vehiculo1, juanPerez);
 
                 // Vehículo 2: Moto de Juan Pérez
                 Vehiculo vehiculo2 = new Vehiculo(
@@ -260,7 +260,7 @@ public class DatosPrecargados {
                                 "Rojo",
                                 this.moto,
                                 new Matricula("XYZ5678"));
-                juanPerez.agregarVehiculo(vehiculo2);
+                fachada.agregarVehiculoConPropietario(vehiculo2, juanPerez);
 
                 // Vehículo 3: Camioneta de Juan Pérez
                 Vehiculo vehiculo3 = new Vehiculo(
@@ -268,7 +268,7 @@ public class DatosPrecargados {
                                 "Blanco",
                                 this.camioneta,
                                 new Matricula("DEF9012"));
-                juanPerez.agregarVehiculo(vehiculo3);
+                fachada.agregarVehiculoConPropietario(vehiculo3, juanPerez);
 
                 // ===== TRÁNSITOS CON FECHAS ESPECÍFICAS PARA PROBAR BONIFICACIONES =====
 
@@ -300,40 +300,6 @@ public class DatosPrecargados {
                 fachada.agregarTransito(juanPerez, this.puesto2, vehiculo3, sabadoTodayAt18Pm);
         }
 
-        private void cargarNotificaciones() throws AppException {
-                // Usar las referencias estáticas a los propietarios (ya cargados)
-
-                // Juan Pérez - 3 notificaciones (Habilitado)
-                // Según context/notificaciones.md: notificaciones por tránsito y cambio de
-                // estado
-                juanPerez.agregarNotificacion(
-                                new Notificacion("Su estado ha sido cambiado a Habilitado por un administrador."));
-                juanPerez.agregarNotificacion(new Notificacion(
-                                "Se registró un tránsito en el puesto Puesto Colonia para el vehículo ABC1234. Monto cobrado: $180. Saldo actual: $4820."));
-                juanPerez.agregarNotificacion(new Notificacion(
-                                "Se registró un tránsito en el puesto Puesto Montevideo para el vehículo ABC1234. Monto cobrado: $200. Saldo actual: $4620."));
-
-                // María García - SIN notificaciones (Suspendido)
-                // Se deja sin notificaciones para testear el caso de lista vacía
-
-                // Carlos López - 3 notificaciones (Penalizado)
-                // Tránsitos y cambio de estado a Penalizado
-                carlosLopez.agregarNotificacion(new Notificacion(
-                                "Se registró un tránsito en el puesto Puesto Montevideo para el vehículo GHI9012. Monto cobrado: $200. Saldo actual: $1800."));
-                carlosLopez.agregarNotificacion(
-                                new Notificacion("Su estado ha sido cambiado a Penalizado por un administrador."));
-                carlosLopez.agregarNotificacion(new Notificacion(
-                                "Se registró un tránsito en el puesto Puesto Punta del Este para el vehículo GHI9012. Monto cobrado: $250. Saldo actual: $1550."));
-
-                // Ana Rodríguez - 3 notificaciones (Deshabilitado - aunque no podrá verlas)
-                // Solo cambios de estado y tránsitos previos
-                anaRodriguez.agregarNotificacion(new Notificacion(
-                                "Se registró un tránsito en el puesto Puesto Colonia para el vehículo JKL3456. Monto cobrado: $180. Saldo actual: $820."));
-                anaRodriguez.agregarNotificacion(
-                                new Notificacion("Su estado ha sido cambiado a Suspendido por un administrador."));
-                anaRodriguez.agregarNotificacion(
-                                new Notificacion("Su estado ha sido cambiado a Deshabilitado por un administrador."));
-        }
 
         // TODO: Agregar métodos para cargar otros datos:
         // private void cargarAdministradores() { ... }

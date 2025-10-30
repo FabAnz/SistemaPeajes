@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.AccessLevel;
 import ort.da.obligatorio339182.exceptions.AppException;
-
+import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 
 @Data
 @NoArgsConstructor
@@ -19,6 +19,7 @@ public class Vehiculo {
 	private String color;
 	private Categoria categoria;
 	private Matricula matricula;
+	private Propietario propietario;
 
 	public Vehiculo(String modelo, String color, Categoria categoria, Matricula matricula) {
 		this.id = ++nextId;

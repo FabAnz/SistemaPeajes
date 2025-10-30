@@ -1,18 +1,39 @@
 package ort.da.obligatorio339182.model.domain.estados;
 
-public class Suspendido extends Estado {
+import lombok.EqualsAndHashCode;
 
-	/**
-	 * Usuario suspendido NO puede realizar tránsitos
-	 */
+@EqualsAndHashCode
+public class Suspendido implements Estado {
+	/* Suspendido: El usuario puede ingresar al sistema, pero no puede realizar tránsitos. */
+
 	@Override
-	public boolean puedeRealizarTransitos() {
+	public boolean puedeIngresarAlSistema(){
+		return true;
+	};
+
+	@Override
+	public boolean puedeRealizarTransitos(){
 		return false;
-	}
+	};
 
 	@Override
-	public String getNombre() {
+	public boolean puedeAsignarBonificaciones(){
+		return true;
+	};
+
+	@Override
+	public boolean aplicanBonificaciones(){
+		return true;
+	};
+
+	@Override
+	public boolean recibeNotificaciones(){
+		return true;
+	};
+
+	@Override
+	public String getNombre(){
 		return "Suspendido";
-	}
+	};
 
 }

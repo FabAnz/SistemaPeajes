@@ -21,10 +21,7 @@ class SistemaPuestos {
 		this.bonificacionesAsignadas = new ArrayList<BonificacionAsignada>();
 	}
 
-	/**
-	 * Agrega un puesto al sistema
-	 * @param puesto El puesto a agregar
-	 */
+	// Agrega un puesto al sistema
 	void agregarPuesto(Puesto puesto) {
 		puesto.validar();
 		this.puestos.add(puesto);
@@ -35,37 +32,31 @@ class SistemaPuestos {
 		this.tarifas.add(tarifa);
 	}
 
-	/**
-	 * Agrega una bonificación asignada al sistema
-	 * @param bonificacionAsignada La bonificación asignada a agregar
-	 */
+	// Agrega una bonificación asignada al sistema
 	void agregarBonificacionAsignada(BonificacionAsignada bonificacionAsignada) throws AppException {
 		bonificacionAsignada.validar();
 		this.bonificacionesAsignadas.add(bonificacionAsignada);
 	}
 
-	/**
-	 * Obtiene las bonificaciones asignadas a un propietario
-	 * @param propietario El propietario
-	 * @return Lista de bonificaciones asignadas al propietario
-	 */
+	// Obtiene las bonificaciones asignadas a un propietario
 	List<BonificacionAsignada> getBonificacionesPorPropietario(Propietario propietario) {
 		return bonificacionesAsignadas.stream()
 			.filter(ba -> ba.getPropietario().equals(propietario))
 			.toList();
 	}
 
-	/**
-	 * Obtiene la bonificación que tenía un propietario en un puesto específico
-	 * Principio de Experto: SistemaPuestos es el experto en gestionar bonificaciones asignadas
-	 * @param propietario El propietario
-	 * @param puesto El puesto
-	 * @return La bonificación asignada si existía en ese momento, null en caso contrario
-	 */
+	// Obtiene la bonificación que tenía un propietario en un puesto específico
 	BonificacionAsignada getBonificacionAsignadaEnPuesto(Propietario propietario, Puesto puesto) {
 		return bonificacionesAsignadas.stream()
 			.filter(ba -> ba.getPropietario().equals(propietario))
 			.filter(ba -> ba.getPuesto().equals(puesto))
+			.findFirst()
+			.orElse(null);
+	}
+
+	Puesto getPuestoPorId(int id) {
+		return puestos.stream()
+			.filter(p -> p.getId() == id)
 			.findFirst()
 			.orElse(null);
 	}

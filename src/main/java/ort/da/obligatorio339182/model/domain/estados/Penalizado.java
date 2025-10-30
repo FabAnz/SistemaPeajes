@@ -1,31 +1,39 @@
 package ort.da.obligatorio339182.model.domain.estados;
 
-public class Penalizado extends Estado {
+import lombok.EqualsAndHashCode;
 
-	/**
-	 * Usuario penalizado puede ingresar y realizar tránsitos,
-	 * pero NO se le aplican bonificaciones ni recibe notificaciones
-	 */
+@EqualsAndHashCode
+public class Penalizado implements Estado {
+	/* Penalizado: El usuario puede ingresar al sistema, pero no se le registran notificaciones.
+	Puede realizar tránsitos, pero no aplican las bonificaciones que tenga asignadas. */
 
-	/**
-	 * Usuario penalizado NO tiene bonificaciones aplicadas en tránsitos
-	 */
 	@Override
-	public boolean aplicanBonificaciones() {
+	public boolean puedeIngresarAlSistema(){
+		return true;
+	};
+
+	@Override
+	public boolean puedeRealizarTransitos(){
+		return true;
+	};
+
+	@Override
+	public boolean puedeAsignarBonificaciones(){
+		return true;
+	};
+
+	@Override
+	public boolean aplicanBonificaciones(){
 		return false;
-	}
+	};
 
-	/**
-	 * Usuario penalizado NO recibe notificaciones
-	 */
 	@Override
-	public boolean recibeNotificaciones() {
+	public boolean recibeNotificaciones(){
 		return false;
-	}
+	};
 
 	@Override
-	public String getNombre() {
+	public String getNombre(){
 		return "Penalizado";
-	}
-
+	};
 }

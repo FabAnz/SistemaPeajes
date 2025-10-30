@@ -68,6 +68,12 @@ class SistemaTransitos {
 		transito.validar();
 		this.transitos.add(transito);
 		propietario.agregarTransito(transito);
+
+		//Crear notificaciones
+		if (propietario.recibeNotificaciones()) {
+			String mensajeTransito = fechaHora + " Pasaste por el puesto " + puesto.getNombre() + " con el vehículo " + vehiculo.getMatricula().getValor();
+			propietario.agregarNotificacion(mensajeTransito);
+		}
 	}
 
 	// Verifica si es el primer tránsito del día para un vehículo en un puesto

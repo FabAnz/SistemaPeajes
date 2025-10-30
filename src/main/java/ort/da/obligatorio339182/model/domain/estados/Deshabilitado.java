@@ -1,34 +1,44 @@
 package ort.da.obligatorio339182.model.domain.estados;
 
-public class Deshabilitado extends Estado {
+import lombok.EqualsAndHashCode;
 
-	/**
-	 * Usuario deshabilitado NO puede ingresar al sistema
+@EqualsAndHashCode
+public class Deshabilitado implements Estado {
+
+	/*
+	 * Deshabilitado: El usuario no puede ingresar al sistema ni puede realizar
+	 * tránsitos.
+	 * Tampoco se le pueden asignar bonificaciones.
 	 */
+
 	@Override
 	public boolean puedeIngresarAlSistema() {
 		return false;
 	}
 
-	/**
-	 * Usuario deshabilitado NO puede realizar tránsitos
-	 */
 	@Override
 	public boolean puedeRealizarTransitos() {
 		return false;
 	}
 
-	/**
-	 * Usuario deshabilitado NO recibe notificaciones
-	 */
 	@Override
-	public boolean recibeNotificaciones() {
+	public boolean puedeAsignarBonificaciones() {
+		return false;
+	}
+
+	@Override
+	public boolean aplicanBonificaciones() {
 		return false;
 	}
 
 	@Override
 	public String getNombre() {
 		return "Deshabilitado";
+	}
+
+	@Override
+	public boolean recibeNotificaciones() {
+		return false;
 	}
 
 }
