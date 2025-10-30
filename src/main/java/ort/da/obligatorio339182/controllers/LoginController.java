@@ -7,21 +7,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import ort.da.obligatorio339182.model.domain.usuarios.Usuario;
-import ort.da.obligatorio339182.services.Fachada;
 import ort.da.obligatorio339182.utils.RespuestaDTO;
 
 import java.util.List;
 import ort.da.obligatorio339182.exceptions.AppException;
 import jakarta.servlet.http.HttpSession;
 import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
+import ort.da.obligatorio339182.services.Fachada;
 
 @RestController
 @RequestMapping("/acceso")
-public class LoginController {
-    private final Fachada fachada;
+public class LoginController extends BaseController {
 
     public LoginController(Fachada fachada) {
-        this.fachada = fachada;
+        super(fachada);
     }
 
     @PostMapping("/login")

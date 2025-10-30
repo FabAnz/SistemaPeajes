@@ -29,20 +29,16 @@ import org.springframework.context.annotation.Scope;
 @RestController
 @RequestMapping("/propietario")
 @Scope("session")
-public class PropietarioController {
-private final Fachada fachada;
+public class PropietarioController extends BaseController {
 
 	public PropietarioController(Fachada fachada) {
-		this.fachada = fachada;
+		super(fachada);
 	}
 
 	
 	@GetMapping("/dashboard")
 	public List<RespuestaDTO> cargarDashboardPropietario(HttpSession session) throws UnauthorizedException {
-		Integer usuarioId = (Integer) session.getAttribute("usuarioId");
-		if(usuarioId == null) {
-			throw new UnauthorizedException("No hay sesión activa");
-		}
+		Integer usuarioId = validarSesion(session);
 		// Validar sesión y permisos
 		Usuario usuario = fachada.validarPermiso(usuarioId, Permiso.PROPIETARIO_DASHBOARD);
 		
@@ -92,10 +88,7 @@ private final Fachada fachada;
 
 	@DeleteMapping("/notificaciones")
 	public List<RespuestaDTO> borrarNotificaciones(HttpSession session) throws UnauthorizedException, AppException {
-		Integer usuarioId = (Integer) session.getAttribute("usuarioId");
-		if(usuarioId == null) {
-			throw new UnauthorizedException("No hay sesión activa");
-		}
+		Integer usuarioId = validarSesion(session);
 		Usuario usuario = fachada.validarPermiso(usuarioId, Permiso.BORRAR_NOTIFICACIONES);
 		Propietario propietario = (Propietario) usuario;
 		propietario.borrarNotificaciones();

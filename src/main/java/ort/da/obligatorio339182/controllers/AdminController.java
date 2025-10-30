@@ -26,20 +26,15 @@ import java.time.format.DateTimeParseException;
 @RestController
 @RequestMapping("/administrador")
 @Scope("session")
-public class AdminController {
-
-    private final Fachada fachada;
+public class AdminController extends BaseController {
 
     public AdminController(Fachada fachada) {
-        this.fachada = fachada;
+        super(fachada);
     }
 
     @GetMapping("/dashboard")
     public List<RespuestaDTO> cargarDashboardAdmin(HttpSession session) throws UnauthorizedException {
-        Integer usuarioId = (Integer) session.getAttribute("usuarioId");
-        if(usuarioId == null) {
-            throw new UnauthorizedException("No hay sesión activa");
-        }
+        Integer usuarioId = validarSesion(session);
         fachada.validarPermiso(usuarioId, Permiso.ADMIN_DASHBOARD);
         
         // Obtener lista de puestos para el select de emular tránsito
