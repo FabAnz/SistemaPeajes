@@ -12,6 +12,7 @@ import ort.da.obligatorio339182.exceptions.AppException;
 import ort.da.obligatorio339182.exceptions.UnauthorizedException;
 import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
 import ort.da.obligatorio339182.model.valueObjects.Matricula;
+import ort.da.obligatorio339182.model.domain.bonifiaciones.Bonificacion;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,12 +24,14 @@ public class Fachada {
 	private final SistemaPuestos sp;
 	private final SistemaVehiculos sv;
 	private final SistemaTransitos st;
+	private final SistemaBonificaciones sb;
 
-	public Fachada(SistemaUsuarios su, SistemaPuestos sp, SistemaVehiculos sv, SistemaTransitos st) {
+	public Fachada(SistemaUsuarios su, SistemaPuestos sp, SistemaVehiculos sv, SistemaTransitos st, SistemaBonificaciones sb) {
 		this.su = su;
 		this.sp = sp;
 		this.sv = sv;
 		this.st = st;
+		this.sb = sb;
 	}
 
 
@@ -52,43 +55,30 @@ public class Fachada {
 		return su.getUsuarioPorCedula(cedula);
 	}
 
-	/**
-	 * Agrega un puesto al sistema
-	 * @param puesto El puesto a agregar
-	 */
 	public void agregarPuesto(Puesto puesto) {
 		sp.agregarPuesto(puesto);
 	}
 
-	/**
-	 * Agrega una bonificación asignada al sistema
-	 * @param bonificacionAsignada La bonificación asignada a agregar
-	 */
 	public void agregarBonificacionAsignada(BonificacionAsignada bonificacionAsignada) throws AppException {
 		sp.agregarBonificacionAsignada(bonificacionAsignada);
 	}
 
-	// Obtiene las bonificaciones asignadas a un propietario
 	public List<BonificacionAsignada> getBonificacionesPorPropietario(Propietario propietario) {
 		return sp.getBonificacionesPorPropietario(propietario);
 	}
 
-	// Obtiene un usuario por su ID
 	public Usuario getUsuarioPorId(int id) {
 		return su.getUsuarioPorId(id);
 	}
 
-	// Calcula la cantidad de tránsitos realizados por un propietario en un vehículo específico
 	public int cantidadTransitosPorPropietarioYVehiculo(Propietario propietario, Vehiculo vehiculo) {
 		return st.cantidadTransitosPorPropietarioYVehiculo(propietario, vehiculo);
 	}
 
-	// Calcula el monto total gastado por un propietario en un vehículo específico
 	public int montoTotalPorPropietarioYVehiculo(Propietario propietario, Vehiculo vehiculo) {
 		return st.montoTotalPorPropietarioYVehiculo(propietario, vehiculo);
 	}
 
-	// Obtiene la bonificación que tenía un propietario en un puesto en una fecha específica
 	public BonificacionAsignada getBonificacionEnPuesto(Propietario propietario, Puesto puesto) {
 		return sp.getBonificacionAsignadaEnPuesto(propietario, puesto);
 	}
@@ -101,27 +91,32 @@ public class Fachada {
 		sv.agregarVehiculoConPropietario(vehiculo, propietario);
 	}
 
-	// Agrega un tránsito con la fecha actual
 	public void agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo) throws AppException {
 		st.agregarTransito(propietario, puesto, vehiculo);
 	}
 
-	// Agrega un tránsito con una fecha específica
-	// Útil para cargar datos de prueba
 	public void agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo, LocalDateTime fechaHora) throws AppException {
 		st.agregarTransito(propietario, puesto, vehiculo, fechaHora);
 	}
 
-	public Puesto getPuestoPorId(int id) {
+	public Puesto getPuestoPorId(int id) throws AppException {
 		return sp.getPuestoPorId(id);
 	}
 
-	public Vehiculo getVehiculoPorMatricula(Matricula matricula) {
+	public Vehiculo getVehiculoPorMatricula(Matricula matricula) throws AppException {
 		return sv.getVehiculoPorMatricula(matricula);
 	}
 
 	public List<Puesto> getTodosPuestos() {
 		return sp.getTodosPuestos();
+	}
+
+	public Propietario getPropietarioPorMatricula(Matricula matricula) throws AppException {
+		return su.getPropietarioPorMatricula(matricula);
+	}
+
+	public Bonificacion getBonificacionPorNombre(String nombre) throws AppException {
+		return sb.getBonificacionPorNombre(nombre);
 	}
 
 }

@@ -54,11 +54,15 @@ class SistemaPuestos {
 			.orElse(null);
 	}
 
-	Puesto getPuestoPorId(int id) {
-		return puestos.stream()
+	Puesto getPuestoPorId(int id) throws AppException {
+		Puesto puesto = puestos.stream()
 			.filter(p -> p.getId() == id)
 			.findFirst()
 			.orElse(null);
+		if(puesto == null) {
+			throw new AppException("Puesto no encontrado");
+		}
+		return puesto;
 	}
 
 	List<Puesto> getTodosPuestos() {

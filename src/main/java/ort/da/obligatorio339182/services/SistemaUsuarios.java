@@ -2,6 +2,8 @@ package ort.da.obligatorio339182.services;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import ort.da.obligatorio339182.exceptions.AppException;
@@ -10,12 +12,16 @@ import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
 import ort.da.obligatorio339182.model.domain.usuarios.Usuario;
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
+import ort.da.obligatorio339182.model.domain.Vehiculo;
+import ort.da.obligatorio339182.model.valueObjects.Matricula;
 
 @Service
 class SistemaUsuarios {
+	private final Fachada fachada;
 	private List<Usuario> usuarios;
 
-	SistemaUsuarios() {
+	SistemaUsuarios(@Lazy Fachada fachada) {
+		this.fachada = fachada;
 		this.usuarios = new ArrayList<Usuario>();
 	}
 
@@ -55,11 +61,6 @@ class SistemaUsuarios {
 		return usuario;
 	}
 
-	/**
-	 * Obtiene un usuario por su ID
-	 * @param id El ID del usuario
-	 * @return El usuario si existe, null en caso contrario
-	 */
 	Usuario getUsuarioPorId(int id) {
 		for (Usuario usuario : usuarios) {
 			if (usuario.getId() == id) {
@@ -91,6 +92,15 @@ class SistemaUsuarios {
 		}
 		
 		return usuario;
+	}
+
+	Propietario getPropietarioPorMatricula(Matricula matricula) throws AppException {
+		Vehiculo vehiculo = fachada.getVehiculoPorMatricula(matricula);
+		Propietario propietario = vehiculo.getPropietario();
+		if(propietario == null) {
+			throw new AppException("Propietario no encontrado");
+		}
+		return propietario;
 	}
 
 }

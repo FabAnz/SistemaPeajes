@@ -50,11 +50,15 @@ class SistemaVehiculos {
 		this.vehiculos.add(vehiculo);
 	}
 
-	Vehiculo getVehiculoPorMatricula(Matricula matricula) {
-		return vehiculos.stream()
+	Vehiculo getVehiculoPorMatricula(Matricula matricula) throws AppException {
+		Vehiculo vehiculo = vehiculos.stream()
 				.filter(v -> v.getMatricula().equals(matricula))
 				.findFirst()
 				.orElse(null);
+		if(vehiculo == null) {
+			throw new AppException("No existe el vehículo");
+		}
+		return vehiculo;
 	}
 
 	boolean validarMatriculaUnica(Matricula matricula) {

@@ -14,7 +14,8 @@ public class Administrador extends Usuario {
 
 	private static final Set<Permiso> permisoAdmin = Set.of(
 		Permiso.ADMIN_DASHBOARD,
-		Permiso.EMULAR_TRANSITO
+		Permiso.EMULAR_TRANSITO,
+		Permiso.ASIGNAR_BONIFICACION
 	);
 
 	public Administrador(String nombreCompleto, Contrasenia contrasenia, Cedula cedula) {

@@ -22,6 +22,8 @@ import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
+import ort.da.obligatorio339182.model.domain.bonifiaciones.Bonificacion;
+import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
 
 @RestController
 @RequestMapping("/administrador")
@@ -62,14 +64,9 @@ public class AdminController extends BaseController {
         //Obtener vehiculo por matricula
         Matricula matricula = new Matricula(pMatricula);
         Vehiculo vehiculo = fachada.getVehiculoPorMatricula(matricula);
-        if(vehiculo == null) {
-            throw new AppException("No existe el vehículo");
-        }
+
         //Obtener puesto por id
         Puesto puesto = fachada.getPuestoPorId(pPuesto);
-        if(puesto == null) {
-            throw new AppException("Puesto no encontrado");
-        }
 
         //Obtener propietario
         Propietario propietario = vehiculo.getPropietario();
@@ -99,6 +96,29 @@ public class AdminController extends BaseController {
         return RespuestaDTO.lista(
             new RespuestaDTO("mensaje", "Transito emulado correctamente"),
             new RespuestaDTO("nuevoSaldo", propietario.getSaldo())
+        );
+    }
+
+    @PostMapping("/asignar-bonificacion")
+    public List<RespuestaDTO> asignarBonificacion (
+        HttpSession session,
+        @RequestParam String pMatricula,
+        @RequestParam int pPuesto,
+        @RequestParam String pBonificacion) throws UnauthorizedException, AppException {
+
+        Integer usuarioId = validarSesion(session);
+        fachada.validarPermiso(usuarioId, Permiso.ASIGNAR_BONIFICACION);
+
+        //Obtener datos para construir la bonificacion asignada
+        Propietario propietario = fachada.getPropietarioPorMatricula(new Matricula(pMatricula));
+        Puesto puesto = fachada.getPuestoPorId(pPuesto);
+        Bonificacion bonificacion = fachada.getBonificacionPorNombre(pBonificacion);
+
+        BonificacionAsignada bonificacionAsignada = new BonificacionAsignada(propietario, puesto, bonificacion);
+        fachada.agregarBonificacionAsignada(bonificacionAsignada);
+
+        return RespuestaDTO.lista(
+            new RespuestaDTO("mensaje", "Bonificación asignada correctamente")
         );
     }
 }
