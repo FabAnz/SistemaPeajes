@@ -120,4 +120,8 @@ public class Fachada {
 		return sv.getVehiculoPorMatricula(matricula);
 	}
 
+	public List<Puesto> getTodosPuestos() {
+		return sp.getTodosPuestos();
+	}
+
 }

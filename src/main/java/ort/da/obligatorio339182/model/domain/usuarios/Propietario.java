@@ -111,15 +111,14 @@ public class Propietario extends Usuario {
 		this.transitos.add(transito);
 	}
 
-	public void agregarNotificacion(String mensaje) throws AppException {
-		Notificacion notificacion = new Notificacion(mensaje);
+	public void agregarNotificacion(Notificacion notificacion) throws AppException {
 		notificacion.validar();
 		this.notificaciones.add(notificacion);
 	}
 
 	public void restarSaldo(int monto) throws AppException {
 		if(monto > this.saldo) {
-			throw new AppException("No tiene saldo suficiente para realizar el pago");
+			throw new AppException("Saldo insuficiente: " + this.saldo);
 		}
 		this.saldo -= monto;
 	}

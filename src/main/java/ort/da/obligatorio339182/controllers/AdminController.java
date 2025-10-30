@@ -9,17 +9,19 @@ import ort.da.obligatorio339182.model.valueObjects.Matricula;
 import ort.da.obligatorio339182.utils.RespuestaDTO;
 import jakarta.servlet.http.HttpSession;
 import ort.da.obligatorio339182.exceptions.UnauthorizedException;
-import ort.da.obligatorio339182.model.domain.usuarios.Usuario;
 import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
-import ort.da.obligatorio339182.model.domain.usuarios.Administrador;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
 import ort.da.obligatorio339182.model.domain.Puesto;
-import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
+import ort.da.obligatorio339182.dtos.PuestoDTO;
+import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 
 @RestController
 @RequestMapping("/administrador")
@@ -40,8 +42,12 @@ public class AdminController {
         }
         fachada.validarPermiso(usuarioId, Permiso.ADMIN_DASHBOARD);
         
+        // Obtener lista de puestos para el select de emular tránsito
+        List<Puesto> puestos = fachada.getTodosPuestos();
+        
         return RespuestaDTO.lista(
-            new RespuestaDTO("mensaje", "Dashboard cargado correctamente")
+            new RespuestaDTO("mensaje", "Dashboard cargado correctamente"),
+            new RespuestaDTO("puestos", PuestoDTO.list(puestos))
         );
     }
 
@@ -49,7 +55,9 @@ public class AdminController {
     public List<RespuestaDTO> emularTransito(
         HttpSession session,
         @RequestParam String pMatricula,
-        @RequestParam int pPuesto) throws UnauthorizedException, AppException {
+        @RequestParam int pPuesto,
+        @RequestParam(required = false) String pFecha,
+        @RequestParam(required = false) String pHora) throws UnauthorizedException, AppException {
         Integer usuarioId = (Integer) session.getAttribute("usuarioId");
         if(usuarioId == null) {
             throw new UnauthorizedException("No hay sesión activa");
@@ -60,7 +68,7 @@ public class AdminController {
         Matricula matricula = new Matricula(pMatricula);
         Vehiculo vehiculo = fachada.getVehiculoPorMatricula(matricula);
         if(vehiculo == null) {
-            throw new AppException("Vehículo no encontrado");
+            throw new AppException("No existe el vehículo");
         }
         //Obtener puesto por id
         Puesto puesto = fachada.getPuestoPorId(pPuesto);
@@ -74,9 +82,28 @@ public class AdminController {
             throw new AppException("Propietario no encontrado");
         }
 
-        fachada.agregarTransito(propietario, puesto, vehiculo);
+        // Parsear fecha y hora si se proporcionan
+        LocalDateTime fechaHora = null;
+        if(pFecha != null && !pFecha.isEmpty() && pHora != null && !pHora.isEmpty()) {
+            try {
+                LocalDate fecha = LocalDate.parse(pFecha);
+                LocalTime hora = LocalTime.parse(pHora);
+                fechaHora = LocalDateTime.of(fecha, hora);
+            } catch (DateTimeParseException e) {
+                throw new AppException("Formato de fecha u hora inválido");
+            }
+        }
+
+        // Agregar tránsito con fecha específica o actual
+        if(fechaHora != null) {
+            fachada.agregarTransito(propietario, puesto, vehiculo, fechaHora);
+        } else {
+            fachada.agregarTransito(propietario, puesto, vehiculo);
+        }
+        
         return RespuestaDTO.lista(
-            new RespuestaDTO("mensaje", "Transito emulado correctamente")
+            new RespuestaDTO("mensaje", "Transito emulado correctamente"),
+            new RespuestaDTO("nuevoSaldo", propietario.getSaldo())
         );
     }
 }

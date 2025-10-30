@@ -61,4 +61,8 @@ class SistemaPuestos {
 			.orElse(null);
 	}
 
+	List<Puesto> getTodosPuestos() {
+		return puestos;
+	}
+
 }

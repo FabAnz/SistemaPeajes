@@ -25,7 +25,7 @@
             <!-- HU 5: Emular un tránsito -->
             <section id="seccion-emular-transito">
                 <h2>🚗 Emular Tránsito</h2>
-                <form id="formEmularTransito" class="form-admin">
+                <div id="formEmularTransito" class="form-admin">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="puestoTransito">Puesto de Peaje</label>
@@ -55,11 +55,11 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="button" onclick="emularTransito()" class="btn btn-primary">
                             ▶️ Emular Tránsito
                         </button>
                     </div>
-                </form>
+                </div>
             </section>
 
             <hr>

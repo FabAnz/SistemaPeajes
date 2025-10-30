@@ -270,35 +270,74 @@ public class DatosPrecargados {
                                 new Matricula("DEF9012"));
                 fachada.agregarVehiculoConPropietario(vehiculo3, juanPerez);
 
-                // ===== TRÁNSITOS CON FECHAS ESPECÍFICAS PARA PROBAR BONIFICACIONES =====
+                // Vehículo 4: Auto de María García
+                Vehiculo vehiculo4 = new Vehiculo(
+                                "Chevrolet Onix",
+                                "Negro",
+                                this.auto,
+                                new Matricula("GHI3456"));
+                fachada.agregarVehiculoConPropietario(vehiculo4, mariaGarcia);
 
-                // Definir fecha base para las pruebas
-                LocalDateTime hoy = LocalDateTime.now();
+                // Vehículo 5: Moto de Carlos López
+                Vehiculo vehiculo5 = new Vehiculo(
+                                "Yamaha FZ",
+                                "Azul",
+                                this.moto,
+                                new Matricula("JKL7890"));
+                fachada.agregarVehiculoConPropietario(vehiculo5, carlosLopez);
 
-                LocalDateTime lunesTodayAt10Am = hoy.withDayOfMonth(27).withHour(10).withMinute(0);
-                fachada.agregarTransito(juanPerez, this.puesto1, vehiculo1, lunesTodayAt10Am);
+                // Vehículo 6: Auto de Ana Rodríguez
+                Vehiculo vehiculo6 = new Vehiculo(
+                                "Volkswagen Gol",
+                                "Blanco",
+                                this.auto,
+                                new Matricula("MNO2345"));
+                fachada.agregarVehiculoConPropietario(vehiculo6, anaRodriguez);
 
-                LocalDateTime sabadoTodayAt10Am = hoy.withHour(10).withMinute(0);
-                fachada.agregarTransito(juanPerez, this.puesto1, vehiculo2, sabadoTodayAt10Am);
+		// ===== TRÁNSITOS CON FECHAS ESPECÍFICAS PARA PROBAR BONIFICACIONES =====
+		
+		// Fechas fijas para que los datos sean consistentes entre ejecuciones
+		// Esto permite probar todas las bonificaciones correctamente:
+		// - Bonificación TRABAJADOR (80% en puesto1): Aplica en días de semana (lunes-viernes)
+		// - Bonificación FRECUENTE (50% en puesto2): Aplica cuando NO es el primer tránsito del día
 
-                LocalDateTime sabadoTodayAt11Am = hoy.withHour(11).withMinute(0);
-                fachada.agregarTransito(juanPerez, this.puesto3, vehiculo3, sabadoTodayAt11Am);
+		// === PRUEBA BONIFICACIÓN TRABAJADOR (Puesto 1) ===
+		// Lunes 13 de enero de 2025 a las 10:00 AM - Debería aplicar Trabajador (80%)
+		LocalDateTime lunes13Ene10am = LocalDateTime.of(2025, 1, 13, 10, 0);
+		fachada.agregarTransito(juanPerez, this.puesto1, vehiculo1, lunes13Ene10am);
 
-                LocalDateTime sabadoTodayAt12Pm = hoy.withHour(12).withMinute(0);
-                fachada.agregarTransito(juanPerez, this.puesto2, vehiculo1, sabadoTodayAt12Pm);
+		// Sábado 8 de febrero de 2025 a las 10:00 AM - NO debería aplicar Trabajador (fin de semana)
+		LocalDateTime sabado8Feb10am = LocalDateTime.of(2025, 2, 8, 10, 0);
+		fachada.agregarTransito(juanPerez, this.puesto1, vehiculo2, sabado8Feb10am);
 
-                LocalDateTime sabadoTodayAt14Pm = hoy.withHour(14).withMinute(0);
-                fachada.agregarTransito(juanPerez, this.puesto2, vehiculo1, sabadoTodayAt14Pm);
+		// === TRÁNSITO SIN BONIFICACIÓN (Puesto 3) ===
+		// Sábado 8 de febrero de 2025 a las 11:00 AM - Sin bonificación
+		LocalDateTime sabado8Feb11am = LocalDateTime.of(2025, 2, 8, 11, 0);
+		fachada.agregarTransito(juanPerez, this.puesto3, vehiculo3, sabado8Feb11am);
 
-                LocalDateTime sabadoTodayAt16Pm = hoy.withHour(16).withMinute(0);
-                fachada.agregarTransito(juanPerez, this.puesto2, vehiculo1, sabadoTodayAt16Pm);
+		// === PRUEBA BONIFICACIÓN FRECUENTE (Puesto 2) ===
+		// Jueves 20 de marzo de 2025 - Múltiples tránsitos del mismo vehículo1 en el mismo día
 
-                LocalDateTime sabadoTodayAt17Pm = hoy.withHour(17).withMinute(0);
-                fachada.agregarTransito(juanPerez, this.puesto2, vehiculo3, sabadoTodayAt17Pm);
+		// Primer tránsito del día para vehiculo1 - NO aplica Frecuente (primer tránsito)
+		LocalDateTime jueves20Mar12pm = LocalDateTime.of(2025, 3, 20, 12, 0);
+		fachada.agregarTransito(juanPerez, this.puesto2, vehiculo1, jueves20Mar12pm);
 
-                LocalDateTime sabadoTodayAt18Pm = hoy.withHour(18).withMinute(0);
-                fachada.agregarTransito(juanPerez, this.puesto2, vehiculo3, sabadoTodayAt18Pm);
-        }
+		// Segundo tránsito del día para vehiculo1 - SÍ aplica Frecuente (50%)
+		LocalDateTime jueves20Mar14pm = LocalDateTime.of(2025, 3, 20, 14, 0);
+		fachada.agregarTransito(juanPerez, this.puesto2, vehiculo1, jueves20Mar14pm);
+
+		// Tercer tránsito del día para vehiculo1 - SÍ aplica Frecuente (50%)
+		LocalDateTime jueves20Mar16pm = LocalDateTime.of(2025, 3, 20, 16, 0);
+		fachada.agregarTransito(juanPerez, this.puesto2, vehiculo1, jueves20Mar16pm);
+
+		// Primer tránsito del día para vehiculo3 - NO aplica Frecuente (primer tránsito de este vehículo)
+		LocalDateTime jueves20Mar17pm = LocalDateTime.of(2025, 3, 20, 17, 0);
+		fachada.agregarTransito(juanPerez, this.puesto2, vehiculo3, jueves20Mar17pm);
+
+		// Segundo tránsito del día para vehiculo3 - SÍ aplica Frecuente (50%)
+		LocalDateTime jueves20Mar18pm = LocalDateTime.of(2025, 3, 20, 18, 0);
+		fachada.agregarTransito(juanPerez, this.puesto2, vehiculo3, jueves20Mar18pm);
+	}
 
 
         // TODO: Agregar métodos para cargar otros datos:

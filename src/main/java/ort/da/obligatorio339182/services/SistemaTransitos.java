@@ -12,6 +12,7 @@ import ort.da.obligatorio339182.exceptions.AppException;
 import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
 import org.springframework.context.annotation.Lazy;
 import ort.da.obligatorio339182.model.domain.Puesto;
+import ort.da.obligatorio339182.model.domain.Notificacion;
 
 @Service
 class SistemaTransitos {
@@ -71,8 +72,9 @@ class SistemaTransitos {
 
 		//Crear notificaciones
 		if (propietario.recibeNotificaciones()) {
-			String mensajeTransito = fechaHora + " Pasaste por el puesto " + puesto.getNombre() + " con el vehículo " + vehiculo.getMatricula().getValor();
-			propietario.agregarNotificacion(mensajeTransito);
+			String mensajeTransito = "Pasaste por el puesto " + puesto.getNombre() + " con el vehículo " + vehiculo.getMatricula().getValor();
+			Notificacion notificacion = new Notificacion(mensajeTransito, fechaHora);
+			propietario.agregarNotificacion(notificacion);
 		}
 	}
 

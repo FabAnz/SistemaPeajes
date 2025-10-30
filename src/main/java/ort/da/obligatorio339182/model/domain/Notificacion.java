@@ -23,6 +23,12 @@ public class Notificacion {
 		this.fechaHora = LocalDateTime.now();
 	}
 
+	public Notificacion(String mensaje, LocalDateTime fechaHora) {
+		this.id = ++nextId;
+		this.mensaje = mensaje;
+		this.fechaHora = fechaHora;
+	}
+
 	public void validar() throws AppException {
 		if(mensaje == null || mensaje.isBlank()) {
 			throw new AppException("El mensaje no puede ser null o vacío");
