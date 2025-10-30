@@ -80,22 +80,12 @@ public class Propietario extends Usuario {
 
 	@Override
 	public boolean accesoPermitido(String contrasenia) throws AppException {
-		if(!this.puedeIngresarAlSistema()) {
-			throw new AppException("Usuario deshabilitado, no puede ingresar al sistema");
-		}
+		this.estado.validarAccesoAlSistema();
 		return super.accesoPermitido(contrasenia);
 	}
 
-	public boolean puedeIngresarAlSistema() {
-		return this.estado.puedeIngresarAlSistema();
-	}
-
-	public boolean puedeRecibirBonificaciones() {
-		return this.estado.puedeAsignarBonificaciones();
-	}
-
-	public boolean puedeRealizarTransitos() {
-		return this.estado.puedeRealizarTransitos();
+	public void validarPuedeRealizarTransitos() throws AppException {
+		this.estado.validarPuedeRealizarTransitos();
 	}
 
 	public boolean aplicanBonificaciones() {

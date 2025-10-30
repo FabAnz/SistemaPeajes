@@ -2,7 +2,6 @@ package ort.da.obligatorio339182.model.domain;
 
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -56,9 +55,9 @@ public class Transito {
 	}
 
 	public void validar() throws AppException {
-		if(!propietario.puedeRealizarTransitos()) {
-			throw new AppException("El propietario no puede realizar tránsitos");
-		}
+		// Validar estado del propietario usando método de validación
+		propietario.validarPuedeRealizarTransitos();
+		
 		if (cobro < 0) {
 			throw new AppException("El cobro debe ser mayor o igual a 0");
 		}

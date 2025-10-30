@@ -1,6 +1,7 @@
 package ort.da.obligatorio339182.model.domain.estados;
 
 import lombok.EqualsAndHashCode;
+import ort.da.obligatorio339182.exceptions.AppException;
 
 @EqualsAndHashCode
 public class Deshabilitado implements Estado {
@@ -12,18 +13,13 @@ public class Deshabilitado implements Estado {
 	 */
 
 	@Override
-	public boolean puedeIngresarAlSistema() {
-		return false;
+	public void validarAccesoAlSistema() throws AppException {
+		throw new AppException("Usuario deshabilitado, no puede ingresar al sistema");
 	}
-
+	
 	@Override
-	public boolean puedeRealizarTransitos() {
-		return false;
-	}
-
-	@Override
-	public boolean puedeAsignarBonificaciones() {
-		return false;
+	public void validarPuedeRealizarTransitos() throws AppException {
+		throw new AppException("Usuario deshabilitado no puede realizar tránsitos");
 	}
 
 	@Override
@@ -32,13 +28,13 @@ public class Deshabilitado implements Estado {
 	}
 
 	@Override
-	public String getNombre() {
-		return "Deshabilitado";
+	public boolean recibeNotificaciones() {
+		return false;
 	}
 
 	@Override
-	public boolean recibeNotificaciones() {
-		return false;
+	public String getNombre() {
+		return "Deshabilitado";
 	}
 
 }

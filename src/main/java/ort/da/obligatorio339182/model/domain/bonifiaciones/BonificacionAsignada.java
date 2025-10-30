@@ -46,7 +46,10 @@ public class BonificacionAsignada {
 		if (this.bonificacion == null) {
 			throw new AppException("La bonificación no puede ser null");
 		}
-		if (!this.propietario.puedeRecibirBonificaciones()) {
+		// Validar que el propietario pueda recibir bonificaciones (no puede estar deshabilitado)
+		try {
+			this.propietario.getEstado().validarAccesoAlSistema();
+		} catch (AppException e) {
 			throw new AppException("El propietario no puede recibir bonificaciones");
 		}
 	}

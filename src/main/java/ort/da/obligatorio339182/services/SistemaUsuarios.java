@@ -78,8 +78,10 @@ class SistemaUsuarios {
 		// Verificar primero si el propietario puede ingresar al sistema
 		if(usuario instanceof Propietario) {
 			Propietario propietario = (Propietario) usuario;
-			if(!propietario.puedeIngresarAlSistema()) {
-				throw new UnauthorizedException("Usuario deshabilitado, no puede ingresar al sistema");
+			try {
+				propietario.getEstado().validarAccesoAlSistema();
+			} catch (AppException e) {
+				throw new UnauthorizedException(e.getMessage());
 			}
 		}
 		
