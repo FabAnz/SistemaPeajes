@@ -22,9 +22,8 @@ import ort.da.obligatorio339182.model.domain.estados.Estado;
 public class Propietario extends Usuario {
 
 	private static final Set<Permiso> permisoPropietario = Set.of(
-		Permiso.PROPIETARIO_DASHBOARD,
-		Permiso.BORRAR_NOTIFICACIONES
-	);
+			Permiso.PROPIETARIO_DASHBOARD,
+			Permiso.BORRAR_NOTIFICACIONES);
 
 	private int saldo;
 	private int saldoMinimo;
@@ -59,7 +58,7 @@ public class Propietario extends Usuario {
 		if (getCedula() == null) {
 			throw new AppException("La cédula no puede ser null");
 		}
-		
+
 		// Validar campos propios del Propietario
 		if (saldoMinimo < 0) {
 			throw new AppException("El saldo mínimo no puede ser negativo");
@@ -117,21 +116,21 @@ public class Propietario extends Usuario {
 	}
 
 	public void restarSaldo(int monto) throws AppException {
-		if(monto > this.saldo) {
+		if (monto > this.saldo) {
 			throw new AppException("Saldo insuficiente: " + this.saldo);
 		}
 		this.saldo -= monto;
 	}
 
 	public List<Notificacion> getNotificacionesOrdenadas() {
-		//Orden descendente por fechaHora
+		// Orden descendente por fechaHora
 		return this.notificaciones.stream()
-			.sorted(Comparator.comparing(Notificacion::getFechaHora).reversed())
-			.collect(Collectors.toList());
+				.sorted(Comparator.comparing(Notificacion::getFechaHora).reversed())
+				.collect(Collectors.toList());
 	}
 
 	public void borrarNotificaciones() throws AppException {
-		if(this.notificaciones == null || this.notificaciones.isEmpty()) {
+		if (this.notificaciones == null || this.notificaciones.isEmpty()) {
 			throw new AppException("No hay notificaciones para borrar");
 		}
 		this.notificaciones.clear();
@@ -140,7 +139,14 @@ public class Propietario extends Usuario {
 	public List<Transito> getTransitos() {
 		// Retornar tránsitos ordenados por fecha descendente (más reciente primero)
 		return this.transitos.stream()
-			.sorted(Comparator.comparing(Transito::getFechaHora).reversed())
-			.collect(Collectors.toList());
+				.sorted(Comparator.comparing(Transito::getFechaHora).reversed())
+				.collect(Collectors.toList());
+	}
+
+	public void setEstado(Estado estado) throws AppException {
+		if (estado.equals(this.estado)) {
+			throw new AppException("El propietario ya esta en estado " + estado.getNombre());
+		}
+		this.estado = estado;
 	}
 }

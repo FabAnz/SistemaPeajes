@@ -13,7 +13,9 @@ import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
 import ort.da.obligatorio339182.model.domain.Puesto;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
@@ -27,13 +29,14 @@ import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
 import ort.da.obligatorio339182.dtos.BonificacionDTO;
 import ort.da.obligatorio339182.dtos.BonificacionAsignadaDTO;
 import ort.da.obligatorio339182.dtos.PropietarioResumenDTO;
+import ort.da.obligatorio339182.model.domain.estados.Estado;
+import ort.da.obligatorio339182.dtos.EstadoDTO;
+import ort.da.obligatorio339182.dtos.CambiarEstadoDTO;
 
 @RestController
 @RequestMapping("/administrador")
 @Scope("session")
 public class AdminController extends BaseController {
-
-    private Propietario propietarioEncontrado;
     
     public AdminController(Fachada fachada) {
         super(fachada);
@@ -49,10 +52,14 @@ public class AdminController extends BaseController {
         
         // Obtener lista de bonificaciones disponibles para el select
         List<Bonificacion> bonificaciones = fachada.getTodasBonificaciones();
+
+        // Obtener lista de estados disponibles para el select
+        List<Estado> estados = fachada.getTodosEstados();
         
         return RespuestaDTO.lista(
             new RespuestaDTO("puestos", PuestoDTO.list(puestos)),
-            new RespuestaDTO("bonificaciones", BonificacionDTO.list(bonificaciones))
+            new RespuestaDTO("bonificaciones", BonificacionDTO.list(bonificaciones)),
+            new RespuestaDTO("estados", EstadoDTO.list(estados))
         );
     }
 
@@ -63,10 +70,7 @@ public class AdminController extends BaseController {
         @RequestParam int pPuesto,
         @RequestParam(required = false) String pFecha,
         @RequestParam(required = false) String pHora) throws UnauthorizedException, AppException {
-        Integer usuarioId = (Integer) session.getAttribute("usuarioId");
-        if(usuarioId == null) {
-            throw new UnauthorizedException("No hay sesión activa");
-        }
+        Integer usuarioId = validarSesion(session);
         fachada.validarPermiso(usuarioId, Permiso.EMULAR_TRANSITO);
         
         //Obtener vehiculo por matricula
@@ -117,15 +121,18 @@ public class AdminController extends BaseController {
         Integer usuarioId = validarSesion(session);
         fachada.validarPermiso(usuarioId, Permiso.ASIGNAR_BONIFICACION);
 
-        //Obtener datos para construir la bonificacion asignada
+        // Buscar propietario por cédula
+        Propietario propietario = fachada.getPropietarioPorCedula(cedula);
+
+        // Obtener datos para construir la bonificacion asignada
         Puesto puesto = fachada.getPuestoPorId(pPuesto);
         Bonificacion bonificacion = fachada.getBonificacionPorNombre(pBonificacion);
 
-        BonificacionAsignada bonificacionAsignada = new BonificacionAsignada(propietarioEncontrado, puesto, bonificacion);
+        BonificacionAsignada bonificacionAsignada = new BonificacionAsignada(propietario, puesto, bonificacion);
         fachada.agregarBonificacionAsignada(bonificacionAsignada);
 
         // Obtener bonificaciones actualizadas del propietario
-        List<BonificacionAsignada> bonificacionesAsignadas = fachada.getBonificacionesPorPropietario(propietarioEncontrado);
+        List<BonificacionAsignada> bonificacionesAsignadas = fachada.getBonificacionesPorPropietario(propietario);
 
         return RespuestaDTO.lista(
             new RespuestaDTO("mensaje", "Bonificación asignada correctamente"),
@@ -133,20 +140,48 @@ public class AdminController extends BaseController {
         );
     }
 
-    @PostMapping("/buscar-propietario")
+    @GetMapping("/buscar-propietario")
     public List<RespuestaDTO> buscarPropietario(
         HttpSession session,
         @RequestParam String cedula
     ) throws UnauthorizedException, AppException {
         Integer usuarioId = validarSesion(session);
-        fachada.validarPermiso(usuarioId, Permiso.ASIGNAR_BONIFICACION);
+        fachada.validarPermiso(usuarioId, Permiso.ADMIN_DASHBOARD);
 
-        propietarioEncontrado = fachada.getPropietarioPorCedula(cedula);
-        List<BonificacionAsignada> bonificacionesAsignadas = fachada.getBonificacionesPorPropietario(propietarioEncontrado);
+        // Buscar propietario por cédula
+        Propietario propietario = fachada.getPropietarioPorCedula(cedula);
+        if (propietario == null) {
+            throw new AppException("No se encontró un propietario con la cédula ingresada");
+        }
+
+        // Obtener bonificaciones asignadas del propietario
+        List<BonificacionAsignada> bonificacionesAsignadas = fachada.getBonificacionesPorPropietario(propietario);
 
         return RespuestaDTO.lista(
-            new RespuestaDTO("propietario", PropietarioResumenDTO.from(propietarioEncontrado)),
+            new RespuestaDTO("propietario", PropietarioResumenDTO.from(propietario)),
             new RespuestaDTO("bonificacionesAsignadas", BonificacionAsignadaDTO.list(bonificacionesAsignadas))
+        );
+    }
+
+    @PutMapping("/cambiar-estado-propietario")
+    public List<RespuestaDTO> cambiarEstadoPropietario(
+        HttpSession session,
+        @RequestBody CambiarEstadoDTO request
+    ) throws UnauthorizedException, AppException {
+        Integer usuarioId = validarSesion(session);
+        fachada.validarPermiso(usuarioId, Permiso.CAMBIAR_ESTADO_PROPIETARIO);
+
+        // Buscar propietario por cédula
+        Propietario propietario = fachada.getPropietarioPorCedula(request.getCedula());
+        if (propietario == null) {
+            throw new AppException("No se encontró un propietario con la cédula ingresada");
+        }
+
+        Estado nuevoEstado = fachada.getEstadoPorNombre(request.getEstado());
+        propietario.setEstado(nuevoEstado);
+
+        return RespuestaDTO.lista(
+            new RespuestaDTO("mensaje", "Estado cambiado correctamente")
         );
     }
 }

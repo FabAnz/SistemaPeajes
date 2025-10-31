@@ -13,6 +13,7 @@ import ort.da.obligatorio339182.exceptions.UnauthorizedException;
 import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
 import ort.da.obligatorio339182.model.valueObjects.Matricula;
 import ort.da.obligatorio339182.model.domain.bonifiaciones.Bonificacion;
+import ort.da.obligatorio339182.model.domain.estados.Estado;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,13 +26,21 @@ public class Fachada {
 	private final SistemaVehiculos sv;
 	private final SistemaTransitos st;
 	private final SistemaBonificaciones sb;
+	private final SistemaEstados se;
 
-	public Fachada(SistemaUsuarios su, SistemaPuestos sp, SistemaVehiculos sv, SistemaTransitos st, SistemaBonificaciones sb) {
+	public Fachada(
+		SistemaUsuarios su, 
+	SistemaPuestos sp, 
+	SistemaVehiculos sv, 
+	SistemaTransitos st, 
+	SistemaBonificaciones sb,
+	SistemaEstados se) {
 		this.su = su;
 		this.sp = sp;
 		this.sv = sv;
 		this.st = st;
 		this.sb = sb;
+		this.se = se;
 	}
 
 
@@ -121,6 +130,14 @@ public class Fachada {
 
 	public List<Bonificacion> getTodasBonificaciones() {
 		return sb.getTodasBonificaciones();
+	}
+
+	public Estado getEstadoPorNombre(String nombre) throws AppException {
+		return se.getEstadoPorNombre(nombre);
+	}
+
+	public List<Estado> getTodosEstados() {
+		return se.getTodosEstados();
 	}
 
 }

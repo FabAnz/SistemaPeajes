@@ -8,7 +8,8 @@ var urlIniciarVista = "/administrador/dashboard";
 var parametrosInicioVista = ""; // No necesita parámetros, usa la sesión HTTP
 
 // Estado interno
-let propietarioCargado = false;
+let contextoBusquedaActual = null; // 'bonificacion' | 'estado'
+let asignacionBonificacionRecienCompletada = false; // Flag para evitar mostrar bonificaciones después de asignar
 
 
 function mostrar_puestos(puestos) {
@@ -41,10 +42,85 @@ function mostrar_nuevoSaldo(nuevoSaldo) {
 
 function mostrar_mensaje(mensaje) {
     mostrarMensaje(mensaje);
-    // Si es mensaje de bonificación asignada, limpiar select
+    // Si es mensaje de bonificación asignada, limpiar formulario y ocultar información
     if(mensaje.includes('Bonificación asignada')) {
-        document.getElementById('bonificacion').value = '';
-        document.getElementById('puestoBonificacion').value = '';
+        // Activar flag para evitar que mostrar_bonificacionesAsignadas muestre la tabla
+        asignacionBonificacionRecienCompletada = true;
+        
+        // Limpiar campo de cédula
+        const cedulaInput = document.getElementById('cedulaBonificacion');
+        if (cedulaInput) cedulaInput.value = '';
+        
+        // Limpiar selects
+        const selectBonificacion = document.getElementById('bonificacion');
+        const selectPuesto = document.getElementById('puestoBonificacion');
+        if (selectBonificacion) {
+            selectBonificacion.value = '';
+            selectBonificacion.disabled = true;
+        }
+        if (selectPuesto) {
+            selectPuesto.value = '';
+            selectPuesto.disabled = true;
+        }
+        
+        // Deshabilitar botón de asignar
+        const btnAsignar = document.getElementById('btnAsignarBonificacion');
+        if (btnAsignar) btnAsignar.disabled = true;
+        
+        // Limpiar información del propietario
+        const nombreBonificacion = document.getElementById('nombrePropietarioBonificacion');
+        const estadoBonificacion = document.getElementById('estadoPropietarioBonificacion');
+        if (nombreBonificacion) nombreBonificacion.textContent = '-';
+        if (estadoBonificacion) {
+            estadoBonificacion.textContent = '-';
+            estadoBonificacion.className = 'info-value badge';
+        }
+        
+        // Limpiar contenido de la tabla de bonificaciones
+        const tablaBonificaciones = document.getElementById('tabla-bonificaciones-asignadas');
+        const tablaContainer = document.getElementById('tabla-bonificaciones-asignadas-container');
+        const mensajeSinBonificaciones = document.getElementById('mensaje-sin-bonificaciones-asignadas');
+        if (tablaBonificaciones) tablaBonificaciones.innerHTML = '';
+        if (tablaContainer) tablaContainer.style.display = 'none';
+        if (mensajeSinBonificaciones) mensajeSinBonificaciones.style.display = 'none';
+        
+        // Ocultar secciones
+        const infoBonificacionBox = document.getElementById('infoPropietarioBonificacion');
+        const formAsignarBonificacion = document.getElementById('formAsignarBonificacion');
+        const contenedorBonificaciones = document.getElementById('contenedorBonificacionesAsignadas');
+        if (infoBonificacionBox) infoBonificacionBox.style.display = 'none';
+        if (formAsignarBonificacion) formAsignarBonificacion.style.display = 'none';
+        if (contenedorBonificaciones) contenedorBonificaciones.style.display = 'none';
+        
+        // Resetear flag después de un breve delay para permitir que se procese el resto de la respuesta
+        setTimeout(() => {
+            asignacionBonificacionRecienCompletada = false;
+        }, 100);
+    }
+    // Si es mensaje de cambio de estado exitoso, limpiar formulario y ocultar información
+    if(mensaje.includes('Estado cambiado correctamente')) {
+        // Limpiar campo de cédula
+        const cedulaInput = document.getElementById('cedulaEstado');
+        if (cedulaInput) cedulaInput.value = '';
+        
+        // Limpiar select de nuevo estado
+        const selectEstado = document.getElementById('nuevoEstado');
+        if (selectEstado) selectEstado.value = '';
+        
+        // Limpiar información del propietario
+        const nombreEstado = document.getElementById('nombrePropietarioEstado');
+        const estadoActual = document.getElementById('estadoActualPropietario');
+        if (nombreEstado) nombreEstado.textContent = '-';
+        if (estadoActual) {
+            estadoActual.textContent = '-';
+            estadoActual.className = 'info-value badge';
+        }
+        
+        // Ocultar secciones
+        const infoEstadoBox = document.getElementById('infoPropietarioEstado');
+        const formCambiarEstado = document.getElementById('formCambiarEstado');
+        if (infoEstadoBox) infoEstadoBox.style.display = 'none';
+        if (formCambiarEstado) formCambiarEstado.style.display = 'none';
     }
 }
 
@@ -165,31 +241,70 @@ function mostrar_bonificaciones(bonificaciones) {
 }
 
 /**
+ * Función que carga los estados disponibles en el select (HU 7)
+ */
+function mostrar_estados(estados) {
+    const selectEstado = document.getElementById('nuevoEstado');
+    if (!selectEstado) return;
+
+    // Limpiar dejando el placeholder si existe
+    const placeholder = selectEstado.querySelector('option[value=""]');
+    selectEstado.innerHTML = '';
+    if (placeholder) {
+        selectEstado.appendChild(placeholder);
+    } else {
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = 'Seleccione un estado';
+        selectEstado.appendChild(opt);
+    }
+
+    estados.forEach(est => {
+        const option = document.createElement('option');
+        option.value = est.nombre;
+        option.textContent = est.nombre;
+        selectEstado.appendChild(option);
+    });
+
+    console.log(`✅ ${estados.length} estados cargados`);
+}
+
+/**
  * Función que muestra información del propietario buscado
  */
 function mostrar_propietario(propietario) {
     console.log('📋 Mostrando información del propietario:', propietario);
     
-    // Mostrar información del propietario
-    document.getElementById('nombrePropietarioBonificacion').textContent = propietario.nombreCompleto;
-    document.getElementById('estadoPropietarioBonificacion').textContent = propietario.estado;
-    
-    // Aplicar clase de badge según estado
-    const badgeEstado = document.getElementById('estadoPropietarioBonificacion');
-    badgeEstado.className = 'info-value badge badge-' + propietario.estado.toLowerCase();
-    
-    // Mostrar contenedores
-    document.getElementById('infoPropietarioBonificacion').style.display = 'block';
-    document.getElementById('formAsignarBonificacion').style.display = 'block';
+    // Bloque HU6: Asignar bonificación (solo si el contexto lo indica)
+    if (contextoBusquedaActual === 'bonificacion') {
+        document.getElementById('nombrePropietarioBonificacion').textContent = propietario.nombreCompleto;
+        document.getElementById('estadoPropietarioBonificacion').textContent = propietario.estado;
+        const badgeEstado = document.getElementById('estadoPropietarioBonificacion');
+        badgeEstado.className = 'info-value badge badge-' + propietario.estado.toLowerCase();
+        document.getElementById('infoPropietarioBonificacion').style.display = 'block';
+        document.getElementById('formAsignarBonificacion').style.display = 'block';
+        const selectBon = document.getElementById('bonificacion');
+        const selectPue = document.getElementById('puestoBonificacion');
+        const btnAsignar = document.getElementById('btnAsignarBonificacion');
+        if (selectBon) selectBon.disabled = false;
+        if (selectPue) selectPue.disabled = false;
+        if (btnAsignar) btnAsignar.disabled = false;
+    }
 
-    // Habilitar selects y botón de asignación
-    const selectBon = document.getElementById('bonificacion');
-    const selectPue = document.getElementById('puestoBonificacion');
-    const btnAsignar = document.getElementById('btnAsignarBonificacion');
-    if (selectBon) selectBon.disabled = false;
-    if (selectPue) selectPue.disabled = false;
-    if (btnAsignar) btnAsignar.disabled = false;
-    propietarioCargado = true;
+    // Bloque HU7: Cambiar estado (solo si el contexto lo indica)
+    if (contextoBusquedaActual === 'estado') {
+        const nombreEstado = document.getElementById('nombrePropietarioEstado');
+        const estadoActual = document.getElementById('estadoActualPropietario');
+        const infoEstadoBox = document.getElementById('infoPropietarioEstado');
+        const formCambiarEstado = document.getElementById('formCambiarEstado');
+        if (nombreEstado) nombreEstado.textContent = propietario.nombreCompleto;
+        if (estadoActual) {
+            estadoActual.textContent = propietario.estado;
+            estadoActual.className = 'info-value badge badge-' + propietario.estado.toLowerCase();
+        }
+        if (infoEstadoBox) infoEstadoBox.style.display = 'block';
+        if (formCambiarEstado) formCambiarEstado.style.display = 'block';
+    }
 }
 
 /**
@@ -197,6 +312,16 @@ function mostrar_propietario(propietario) {
  */
 function mostrar_bonificacionesAsignadas(bonificaciones) {
     console.log('🎁 Mostrando bonificaciones asignadas:', bonificaciones);
+    // Si la búsqueda fue para HU7 (estado), no actualizar la sección de bonificaciones
+    if (contextoBusquedaActual === 'estado') {
+        console.log('↪️ Se omite actualización de bonificaciones (contexto HU7)');
+        return;
+    }
+    // Si acabamos de asignar una bonificación, no mostrar la tabla (se limpió en mostrar_mensaje)
+    if (asignacionBonificacionRecienCompletada) {
+        console.log('↪️ Se omite actualización de bonificaciones (asignación reciente)');
+        return;
+    }
     
     const contenedor = document.getElementById('tabla-bonificaciones-asignadas');
     const contenedorPrincipal = document.getElementById('contenedorBonificacionesAsignadas');
@@ -239,6 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (formBuscarPropietario) {
         formBuscarPropietario.addEventListener('submit', function(e) {
             e.preventDefault();
+            contextoBusquedaActual = 'bonificacion';
             buscarPropietario();
         });
     }
@@ -247,6 +373,25 @@ document.addEventListener('DOMContentLoaded', function() {
         formAsignarBonificacion.addEventListener('submit', function(e) {
             e.preventDefault();
             asignarBonificacion();
+        });
+    }
+
+    // HU 7: Buscar propietario para cambiar estado
+    const formBuscarPropietarioEstado = document.getElementById('formBuscarPropietarioEstado');
+    if (formBuscarPropietarioEstado) {
+        formBuscarPropietarioEstado.addEventListener('submit', function(e) {
+            e.preventDefault();
+            contextoBusquedaActual = 'estado';
+            buscarPropietarioEstado();
+        });
+    }
+
+    // HU 7: Cambiar estado submit
+    const formCambiarEstado = document.getElementById('formCambiarEstado');
+    if (formCambiarEstado) {
+        formCambiarEstado.addEventListener('submit', function(e) {
+            e.preventDefault();
+            cambiarEstadoPropietario();
         });
     }
 });
@@ -266,13 +411,33 @@ function buscarPropietario() {
     }
 
     // Reiniciar estado UI
-    propietarioCargado = false;
     const btnAsignar = document.getElementById('btnAsignarBonificacion');
     if (btnAsignar) btnAsignar.disabled = true;
 
-    // Enviar al backend: requiere endpoint que retorne { propietario, bonificacionesAsignadas }
+    // Enviar al backend: GET request para buscar propietario
     const params = `cedula=${encodeURIComponent(cedula)}`;
-    submit('/administrador/buscar-propietario', params, 'POST');
+    submit('/administrador/buscar-propietario', params, 'GET');
+}
+
+// HU 7: Búsqueda de propietario desde la sección de estado (reutiliza el mismo endpoint)
+function buscarPropietarioEstado() {
+    console.log('🔎 [HU7] Buscando propietario por cédula (cambiar estado)');
+    const cedula = document.getElementById('cedulaEstado')
+        ? document.getElementById('cedulaEstado').value.trim()
+        : '';
+    if (!cedula) {
+        mostrarMensaje('Por favor, ingrese una cédula');
+        return;
+    }
+
+    // Limpia visualmente la sección HU7 antes de cargar
+    const infoEstadoBox = document.getElementById('infoPropietarioEstado');
+    const formCambiarEstado = document.getElementById('formCambiarEstado');
+    if (infoEstadoBox) infoEstadoBox.style.display = 'none';
+    if (formCambiarEstado) formCambiarEstado.style.display = 'none';
+
+    const params = `cedula=${encodeURIComponent(cedula)}`;
+    submit('/administrador/buscar-propietario', params, 'GET');
 }
 
 /**
@@ -288,10 +453,6 @@ function asignarBonificacion() {
     const bonificacion = document.getElementById('bonificacion').value;
     
     // Validaciones básicas
-    if(!propietarioCargado) {
-        mostrarMensaje('Primero busque y cargue un propietario por cédula');
-        return;
-    }
     if(!cedula) {
         mostrarMensaje('Por favor, ingrese una cédula');
         return;
@@ -313,6 +474,72 @@ function asignarBonificacion() {
     
     // Enviar al backend usando vistaWeb.js
     submit('/administrador/asignar-bonificacion', params, 'POST');
+}
+
+// ========== HU 7: Cambiar Estado ==========
+function cambiarEstadoPropietario() {
+    const cedula = document.getElementById('cedulaEstado')
+        ? document.getElementById('cedulaEstado').value.trim()
+        : '';
+    const selectEstado = document.getElementById('nuevoEstado');
+    const estado = selectEstado ? selectEstado.value : '';
+
+    if (!cedula) {
+        mostrarMensaje('Por favor, busque un propietario primero');
+        return;
+    }
+
+    if (!estado) {
+        mostrarMensaje('Por favor, seleccione un estado');
+        return;
+    }
+
+    // Enviar como JSON para usar PUT con @RequestBody
+    const requestBody = JSON.stringify({
+        cedula: cedula,
+        estado: estado
+    });
+
+    fetch('/administrador/cambiar-estado-propietario', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include', // Incluir cookies de sesión
+        body: requestBody
+    })
+    .then(async response => {
+        const status = response.status;
+        const text = await response.text();
+        
+        // Manejar errores HTTP
+        if (status < 200 || status > 299) {
+            if (status === 299) {
+                // Excepción de aplicación
+                try {
+                    excepcionDeAplicacion(text);
+                } catch (e) {
+                    mostrarMensaje(text);
+                }
+            } else {
+                procesarErrorSubmit(status, text);
+            }
+            return;
+        }
+
+        // Procesar respuesta exitosa
+        try {
+            const json = JSON.parse(text);
+            if (Array.isArray(json)) {
+                procesarResultadosSubmit(json);
+            }
+        } catch (e) {
+            console.error('Error procesando la respuesta:', e);
+        }
+    })
+    .catch(error => {
+        procesarErrorSubmit(0, error.message);
+    });
 }
 
 // ========== INICIALIZACIÓN ==========
