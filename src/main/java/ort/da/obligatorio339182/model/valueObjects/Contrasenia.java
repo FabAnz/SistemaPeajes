@@ -28,11 +28,6 @@ public class Contrasenia {
 			throw new AppException("La contraseña no puede tener más de 50 caracteres");
 		}
 		
-		// Validar que contenga al menos una letra mayúscula
-		if (!valor.matches(".*[A-Z].*")) {
-			throw new AppException("La contraseña debe contener al menos una letra mayúscula");
-		}
-		
 		// Validar que contenga al menos una letra minúscula
 		if (!valor.matches(".*[a-z].*")) {
 			throw new AppException("La contraseña debe contener al menos una letra minúscula");

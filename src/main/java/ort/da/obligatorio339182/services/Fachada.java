@@ -4,6 +4,7 @@ import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
 import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
+import ort.da.obligatorio339182.model.domain.usuarios.Administrador;
 import ort.da.obligatorio339182.model.domain.usuarios.Usuario;
 import ort.da.obligatorio339182.model.domain.Puesto;
 import org.springframework.stereotype.Service;
@@ -138,6 +139,18 @@ public class Fachada {
 
 	public List<Estado> getTodosEstados() {
 		return se.getTodosEstados();
+	}
+
+	public void registrarSesionAdministrador(Administrador administrador) {
+		su.registrarSesionAdministrador(administrador);
+	}
+
+	public void tieneSesionActiva(Administrador administrador) throws AppException {
+		su.tieneSesionActiva(administrador);
+	}
+
+	public void borrarSesionAdministrador(Administrador administrador) {
+		su.borrarSesionAdministrador(administrador);
 	}
 
 }

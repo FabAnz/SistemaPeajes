@@ -3,7 +3,6 @@ package ort.da.obligatorio339182.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import ort.da.obligatorio339182.exceptions.AppException;
@@ -12,17 +11,17 @@ import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
 import ort.da.obligatorio339182.model.domain.usuarios.Usuario;
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
-import ort.da.obligatorio339182.model.domain.Vehiculo;
-import ort.da.obligatorio339182.model.valueObjects.Matricula;
+import ort.da.obligatorio339182.model.domain.Sesion;
+import ort.da.obligatorio339182.model.domain.usuarios.Administrador;
 
 @Service
 class SistemaUsuarios {
-	private final Fachada fachada;
 	private List<Usuario> usuarios;
+	private List<Sesion> sesiones;
 
-	SistemaUsuarios(@Lazy Fachada fachada) {
-		this.fachada = fachada;
+	SistemaUsuarios() {
 		this.usuarios = new ArrayList<Usuario>();
+		this.sesiones = new ArrayList<Sesion>();
 	}
 
 	void agregarUsuario(Usuario usuario) throws AppException {
@@ -55,7 +54,7 @@ class SistemaUsuarios {
 		Usuario usuario = getUsuarioPorCedula(cedula);
 
 		if (usuario == null || !usuario.accesoPermitido(contrasenia)) {
-			throw new AppException("Usuario y/o contraseña incorrectos");
+			throw new AppException("Acceso denegado");
 		}
 
 		return usuario;
@@ -104,6 +103,25 @@ class SistemaUsuarios {
 			throw new AppException("Usuario no es un propietario");
 		}
 		return (Propietario) usuario;
+	}
+
+	void tieneSesionActiva(Administrador administrador) throws AppException {
+		Sesion sesion = this.sesiones.stream()
+			.filter(s -> s.getAdministrador().equals(administrador))
+			.findFirst()
+			.orElse(null);
+		if(sesion != null) {
+			throw new AppException("Ud. Ya está logueado");
+		}
+	}
+
+	void registrarSesionAdministrador(Administrador administrador) {
+		Sesion sesion = new Sesion(administrador);
+		this.sesiones.add(sesion);
+	}
+
+	void borrarSesionAdministrador(Administrador administrador) {
+		this.sesiones.removeIf(s -> s.getAdministrador().equals(administrador));
 	}
 
 }

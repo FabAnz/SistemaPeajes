@@ -14,10 +14,14 @@ import ort.da.obligatorio339182.exceptions.AppException;
 import jakarta.servlet.http.HttpSession;
 import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
 import ort.da.obligatorio339182.services.Fachada;
+import ort.da.obligatorio339182.model.domain.usuarios.Administrador;
+import org.springframework.context.annotation.Scope;
 
 @RestController
 @RequestMapping("/acceso")
+@Scope("session")
 public class LoginController extends BaseController {
+    private Usuario usuario;
 
     public LoginController(Fachada fachada) {
         super(fachada);
@@ -29,10 +33,13 @@ public class LoginController extends BaseController {
             @RequestParam String cedula, 
             @RequestParam String contrasenia) throws AppException {
         
-        Usuario usuario = fachada.login(cedula, contrasenia);
+        usuario = fachada.login(cedula, contrasenia);
 
         String paginaRedireccion = "";
         if(usuario.tienePermiso(Permiso.ADMIN_DASHBOARD)) {
+            Administrador administrador = (Administrador) usuario;
+            fachada.tieneSesionActiva(administrador);
+            fachada.registrarSesionAdministrador(administrador);
             paginaRedireccion = "/administrador/dashboard/dashboard.html";
         }
         
@@ -52,6 +59,13 @@ public class LoginController extends BaseController {
 
     @GetMapping("/logout")
     public List<RespuestaDTO> logout(HttpSession session) {
+
+
+        if(usuario!=null && usuario.tienePermiso(Permiso.ADMIN_DASHBOARD)) {
+            Administrador administrador = (Administrador) usuario;
+            fachada.borrarSesionAdministrador(administrador);
+        }
+
         session.removeAttribute("usuarioId");
         session.invalidate();
         return RespuestaDTO.lista(

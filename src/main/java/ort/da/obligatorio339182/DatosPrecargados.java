@@ -31,11 +31,11 @@ import ort.da.obligatorio339182.model.domain.estados.Deshabilitado;
  * según los requerimientos del proyecto.
  * 
  * ===== USUARIOS PRECARGADOS =====
- * 
+ *
  * Propietario 1 - Habilitado:
- * - Nombre: Juan Pérez
- * - Cédula: 12345672
- * - Contraseña: Test1234!
+ * - Nombre: Usuario Propietario
+ * - Cédula: 23456789
+ * - Contraseña: prop.123
  * - Estado: Habilitado - Puede hacer todo
  * 
  * Propietario 2 - Suspendido:
@@ -59,9 +59,10 @@ import ort.da.obligatorio339182.model.domain.estados.Deshabilitado;
  * ===== ADMINISTRADORES PRECARGADOS =====
  * 
  * Administrador 1:
- * - Nombre: Admin Principal
- * - Cédula: 11111111
- * - Contraseña: Admin1234!
+ * - Nombre: Usuario Administrador
+ * - Cédula: 12345678
+ * - Contraseña: admin.123
+ * 
  * 
  * Administrador 2:
  * - Nombre: Admin Secundario
@@ -78,7 +79,7 @@ public class DatosPrecargados {
         }
 
         // Referencias públicas a usuarios para usar en tests
-        public static Propietario juanPerez; // ID 1 - Habilitado
+        public static Propietario usuarioPropietario; // ID 1 - Habilitado
         public static Propietario mariaGarcia; // ID 2 - Suspendido
         public static Propietario carlosLopez; // ID 3 - Penalizado
         public static Propietario anaRodriguez; // ID 4 - Deshabilitado
@@ -117,11 +118,11 @@ public class DatosPrecargados {
         private void cargarAdministradores() throws AppException {
                 // Administrador 1: Admin Principal
                 // Tiene acceso completo a todas las funcionalidades de administración
-                // Cédula: 11111111 (cédula válida con dígito verificador correcto)
+                // Cédula: 12345678 (cédula válida con dígito verificador correcto)
                 adminPrincipal = new Administrador(
-                                "Admin Principal",
-                                new Contrasenia("Admin1234!"),
-                                new Cedula("11111111"));
+                                "Usuario Administrador",
+                                new Contrasenia("admin.123"),
+                                new Cedula("12345678"));
                 fachada.agregarUsuario(adminPrincipal);
 
                 // Administrador 2: Admin Secundario
@@ -141,14 +142,15 @@ public class DatosPrecargados {
         private void cargarPropietarios() throws AppException {
                 // Propietario 1: Habilitado
                 // Puede: Ingresar al sistema, realizar tránsitos, recibir bonificaciones
-                // Cédula: 12345672 (cédula válida con dígito verificador correcto)
-                juanPerez = new Propietario(
-                                "Juan Pérez",
-                                new Contrasenia("Test1234!"),
-                                new Cedula("12345672"));
-                juanPerez.setSaldo(5000);
+                // Cédula: 23456789 (cédula válida con dígito verificador correcto)
+                usuarioPropietario = new Propietario(
+                                "Usuario Propietario",
+                                new Contrasenia("prop.123"),
+                                new Cedula("23456789"));
+                usuarioPropietario.setSaldo(2000);
+                usuarioPropietario.setSaldoMinimo(500);
                 // Estado por defecto ya es habilitado
-                fachada.agregarUsuario(juanPerez);
+                fachada.agregarUsuario(usuarioPropietario);
 
                 // Propietario 2: Suspendido
                 // Puede: Ingresar al sistema
@@ -225,14 +227,14 @@ public class DatosPrecargados {
                 // Usar la referencia estática a Juan Pérez (ya cargado)
                 // Asignar bonificación "Trabajador" en Ruta 1
                 BonificacionAsignada bonif1 = new BonificacionAsignada(
-                                juanPerez,
+                                usuarioPropietario,
                                 this.puesto1,
                                 new Trabajador());
                 fachada.agregarBonificacionAsignada(bonif1);
 
                 // Asignar bonificación "Frecuente" en Ruta 5
                 BonificacionAsignada bonif2 = new BonificacionAsignada(
-                                juanPerez,
+                                usuarioPropietario,
                                 this.puesto2,
                                 new Frecuente());
                 fachada.agregarBonificacionAsignada(bonif2);
@@ -252,7 +254,7 @@ public class DatosPrecargados {
                                 "Gris",
                                 this.auto,
                                 new Matricula("ABC1234"));
-                fachada.agregarVehiculoConPropietario(vehiculo1, juanPerez);
+                fachada.agregarVehiculoConPropietario(vehiculo1, usuarioPropietario);
 
                 // Vehículo 2: Moto de Juan Pérez
                 Vehiculo vehiculo2 = new Vehiculo(
@@ -260,7 +262,7 @@ public class DatosPrecargados {
                                 "Rojo",
                                 this.moto,
                                 new Matricula("XYZ5678"));
-                fachada.agregarVehiculoConPropietario(vehiculo2, juanPerez);
+                fachada.agregarVehiculoConPropietario(vehiculo2, usuarioPropietario);
 
                 // Vehículo 3: Camioneta de Juan Pérez
                 Vehiculo vehiculo3 = new Vehiculo(
@@ -268,7 +270,7 @@ public class DatosPrecargados {
                                 "Blanco",
                                 this.camioneta,
                                 new Matricula("DEF9012"));
-                fachada.agregarVehiculoConPropietario(vehiculo3, juanPerez);
+                fachada.agregarVehiculoConPropietario(vehiculo3, usuarioPropietario);
 
                 // Vehículo 4: Auto de María García
                 Vehiculo vehiculo4 = new Vehiculo(
@@ -304,39 +306,39 @@ public class DatosPrecargados {
 		// === PRUEBA BONIFICACIÓN TRABAJADOR (Puesto 1) ===
 		// Lunes 13 de enero de 2025 a las 10:00 AM - Debería aplicar Trabajador (80%)
 		LocalDateTime lunes13Ene10am = LocalDateTime.of(2025, 1, 13, 10, 0);
-		fachada.agregarTransito(juanPerez, this.puesto1, vehiculo1, lunes13Ene10am);
+		fachada.agregarTransito(usuarioPropietario, this.puesto1, vehiculo1, lunes13Ene10am);
 
 		// Sábado 8 de febrero de 2025 a las 10:00 AM - NO debería aplicar Trabajador (fin de semana)
 		LocalDateTime sabado8Feb10am = LocalDateTime.of(2025, 2, 8, 10, 0);
-		fachada.agregarTransito(juanPerez, this.puesto1, vehiculo2, sabado8Feb10am);
+		fachada.agregarTransito(usuarioPropietario, this.puesto1, vehiculo2, sabado8Feb10am);
 
 		// === TRÁNSITO SIN BONIFICACIÓN (Puesto 3) ===
 		// Sábado 8 de febrero de 2025 a las 11:00 AM - Sin bonificación
 		LocalDateTime sabado8Feb11am = LocalDateTime.of(2025, 2, 8, 11, 0);
-		fachada.agregarTransito(juanPerez, this.puesto3, vehiculo3, sabado8Feb11am);
+		fachada.agregarTransito(usuarioPropietario, this.puesto3, vehiculo3, sabado8Feb11am);
 
 		// === PRUEBA BONIFICACIÓN FRECUENTE (Puesto 2) ===
 		// Jueves 20 de marzo de 2025 - Múltiples tránsitos del mismo vehículo1 en el mismo día
 
 		// Primer tránsito del día para vehiculo1 - NO aplica Frecuente (primer tránsito)
 		LocalDateTime jueves20Mar12pm = LocalDateTime.of(2025, 3, 20, 12, 0);
-		fachada.agregarTransito(juanPerez, this.puesto2, vehiculo1, jueves20Mar12pm);
+		fachada.agregarTransito(usuarioPropietario, this.puesto2, vehiculo1, jueves20Mar12pm);
 
 		// Segundo tránsito del día para vehiculo1 - SÍ aplica Frecuente (50%)
 		LocalDateTime jueves20Mar14pm = LocalDateTime.of(2025, 3, 20, 14, 0);
-		fachada.agregarTransito(juanPerez, this.puesto2, vehiculo1, jueves20Mar14pm);
+		fachada.agregarTransito(usuarioPropietario, this.puesto2, vehiculo1, jueves20Mar14pm);
 
 		// Tercer tránsito del día para vehiculo1 - SÍ aplica Frecuente (50%)
 		LocalDateTime jueves20Mar16pm = LocalDateTime.of(2025, 3, 20, 16, 0);
-		fachada.agregarTransito(juanPerez, this.puesto2, vehiculo1, jueves20Mar16pm);
+		fachada.agregarTransito(usuarioPropietario, this.puesto2, vehiculo1, jueves20Mar16pm);
 
 		// Primer tránsito del día para vehiculo3 - NO aplica Frecuente (primer tránsito de este vehículo)
 		LocalDateTime jueves20Mar17pm = LocalDateTime.of(2025, 3, 20, 17, 0);
-		fachada.agregarTransito(juanPerez, this.puesto2, vehiculo3, jueves20Mar17pm);
+		fachada.agregarTransito(usuarioPropietario, this.puesto2, vehiculo3, jueves20Mar17pm);
 
 		// Segundo tránsito del día para vehiculo3 - SÍ aplica Frecuente (50%)
 		LocalDateTime jueves20Mar18pm = LocalDateTime.of(2025, 3, 20, 18, 0);
-		fachada.agregarTransito(juanPerez, this.puesto2, vehiculo3, jueves20Mar18pm);
+		fachada.agregarTransito(usuarioPropietario, this.puesto2, vehiculo3, jueves20Mar18pm);
 	}
 
 
