@@ -3,37 +3,97 @@
  * Inspirado en diseño CRM moderno y limpio
  */
 
-/* Título principal */
-h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-dark);
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.02em;
+/* Header navbar fijo en la parte superior */
+.dashboard-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--bg-card);
+    z-index: 1000;
 }
 
-/* Mensaje de bienvenida */
-.welcome-message {
-    color: var(--text-muted);
-    margin-bottom: 2.5rem;
-    font-size: 1rem;
+.dashboard-header-content {
+    max-width: 1400px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
 }
 
-/* Menú de navegación */
-.dashboard-menu {
-    margin: 2.5rem 0;
+.dashboard-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
-.menu-grid {
+/* Contenido con padding superior para el navbar */
+.dashboard-content {
+    margin-top: 80px;
+    padding-top: 2rem;
+}
+
+/* Cards con funcionalidades */
+.dashboard-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.5rem;
-    margin-top: 2rem;
 }
 
+.dashboard-card {
+    background: var(--bg-card);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: var(--box-shadow);
+    position: relative;
+    min-height: 280px;
+}
+
+.dashboard-card:hover {
+    box-shadow: var(--box-shadow-md);
+    transform: translateY(-2px);
+}
+
+.dashboard-card:active {
+    transform: translateY(0);
+}
+
+.dashboard-card h3 {
+    color: var(--text-dark);
+    font-size: 1.25rem;
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.dashboard-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.card-description {
+    text-align: left !important;
+    text-align-last: left;
+}
+
+/* Mantener compatibilidad con clases anteriores */
 .menu-card {
     background: var(--bg-card);
-    border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     padding: 2rem;
     text-align: center;
@@ -49,7 +109,6 @@ h1 {
 
 .menu-card:hover {
     box-shadow: var(--box-shadow-md);
-    border-color: var(--primary-color);
     transform: translateY(-2px);
 }
 
@@ -58,9 +117,18 @@ h1 {
 }
 
 .menu-icon {
-    font-size: 3rem;
+    width: 64px;
+    height: 64px;
     margin-bottom: 0.25rem;
-    opacity: 0.9;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-icon svg {
+    width: 100%;
+    height: 100%;
 }
 
 .menu-card h3 {
@@ -94,34 +162,68 @@ hr {
 
 /* Responsive */
 @media (max-width: 768px) {
-    .menu-grid {
+    .dashboard-header {
+        padding: 1rem;
+    }
+    
+    .dashboard-header-content {
+        gap: 1rem;
+        flex-shrink: 1;
+    }
+    
+    .dashboard-title {
+        font-size: 1.3rem;
+        white-space: nowrap;
+    }
+    
+    .dashboard-content {
+        margin-top: 120px;
+    }
+    
+    .dashboard-cards {
         grid-template-columns: 1fr;
         gap: 1rem;
     }
     
-    .menu-card {
+    .dashboard-card {
         padding: 1.5rem;
     }
     
     .menu-icon {
-        font-size: 2.5rem;
+        width: 56px;
+        height: 56px;
     }
-
-    h1 {
-        font-size: 1.75rem;
+    
+    /* Botones más pequeños en tablet */
+    .dashboard-header .btn {
+        padding: 10px 18px;
+        font-size: 14px;
     }
 }
 
 @media (max-width: 480px) {
-    .menu-card {
+    .dashboard-card {
         padding: 1.25rem;
     }
     
     .menu-icon {
-        font-size: 2rem;
+        width: 48px;
+        height: 48px;
     }
-
-    h1 {
-        font-size: 1.5rem;
+    
+    /* Botones aún más pequeños en smartphone */
+    .dashboard-header .btn {
+        padding: 8px 16px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+    
+    .dashboard-title {
+        font-size: 1.2rem;
+        white-space: nowrap;
+    }
+    
+    .dashboard-header-content {
+        gap: 0.75rem;
     }
 }

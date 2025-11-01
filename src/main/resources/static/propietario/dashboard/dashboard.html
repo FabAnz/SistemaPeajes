@@ -12,14 +12,21 @@
     <link rel="stylesheet" href="dashboard.css">
 </head>
 <body class="layout-centered">
-    <div class="container-lg">
-        <div class="card">
-            <h1 class="text-center">🚗 Panel de Propietario</h1>
-            
-            <!-- HU 2.1: Información Personal -->
-            <section id="seccion-info-personal">
-                <h2>Mi Información Personal</h2>
-                <div class="info-grid">
+    <!-- Header navbar fijo en la parte superior -->
+    <header class="dashboard-header">
+        <div class="dashboard-header-content">
+            <h1 class="dashboard-title">Panel propietario</h1>
+            <button onclick="cerrarSesion()" class="btn btn-primary">Cerrar sesion</button>
+        </div>
+    </header>
+
+    <div class="container-lg dashboard-content">
+        <!-- Cards con funcionalidades -->
+        <div class="dashboard-cards">
+            <!-- Card 1: Información Personal -->
+            <div class="dashboard-card">
+                <h2>Información Personal</h2>
+                <div class="info-grid-compact">
                     <div class="info-item">
                         <label>Nombre Completo:</label>
                         <span id="nombre" class="info-value">Cargando...</span>
@@ -33,36 +40,10 @@
                         <span id="saldo" class="info-value saldo">Cargando...</span>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <hr>
-
-            <!-- HU 2.2 - Bonificaciones asignadas -->
-            <section id="seccion-bonificaciones">
-                <h2>Mis Bonificaciones</h2>
-                <div id="contenedor-bonificaciones">
-                    <table class="table" id="tabla-bonificaciones-container">
-                        <thead>
-                            <tr>
-                                <th>Bonificación</th>
-                                <th>Puesto</th>
-                                <th>Fecha de Asignación</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-bonificaciones">
-                            <!-- Las bonificaciones se cargarán dinámicamente aquí -->
-                        </tbody>
-                    </table>
-                    <p id="mensaje-sin-bonificaciones" class="text-muted">
-                        No tienes bonificaciones asignadas.
-                    </p>
-                </div>
-            </section>
-
-            <hr>
-
-            <!-- HU 2.3 - Vehículos registrados -->
-            <section id="seccion-vehiculos">
+            <!-- Card 2: Vehículos -->
+            <div class="dashboard-card">
                 <h2>Mis Vehículos</h2>
                 <div id="contenedor-vehiculos">
                     <table class="table" id="tabla-vehiculos-container">
@@ -83,10 +64,33 @@
                         No tienes vehículos registrados.
                     </p>
                 </div>
-            </section>
+            </div>
 
-            <hr>
+            <!-- Card 3: Bonificaciones -->
+            <div class="dashboard-card">
+                <h2>Mis Bonificaciones</h2>
+                <div id="contenedor-bonificaciones">
+                    <table class="table" id="tabla-bonificaciones-container">
+                        <thead>
+                            <tr>
+                                <th>Bonificación</th>
+                                <th>Puesto</th>
+                                <th>Fecha de Asignación</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-bonificaciones">
+                            <!-- Las bonificaciones se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                    <p id="mensaje-sin-bonificaciones" class="text-muted">
+                        No tienes bonificaciones asignadas.
+                    </p>
+                </div>
+            </div>
+        </div>
 
+        <!-- Secciones adicionales -->
+        <div class="dashboard-additional">
             <!-- HU 2.4 - Historial de tránsitos -->
             <section id="seccion-transitos">
                 <h2>Historial de Tránsitos</h2>
@@ -143,13 +147,6 @@
                     </p>
                 </div>
             </section>
-
-            <hr>
-
-            <!-- Acciones -->
-            <div class="text-center">
-                <button onclick="cerrarSesion()" class="btn btn-secondary">Cerrar Sesión</button>
-            </div>
         </div>
     </div>
 

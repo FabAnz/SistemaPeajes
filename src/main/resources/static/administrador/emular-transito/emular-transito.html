@@ -16,58 +16,55 @@
 <body class="layout-centered">
     <div class="container-lg">
         <div class="card">
-            <!-- Navegación -->
-            <div class="page-navigation">
-                <button onclick="window.location.href='../dashboard/dashboard.html'" class="btn btn-secondary">
-                    ← Volver al Dashboard
+            <!-- Header con botón volver y título -->
+            <div class="page-header-with-back">
+                <button onclick="window.location.href='../dashboard/dashboard.html'" class="btn btn-link">
+                    ← Volver
                 </button>
+                <h1 class="page-title-centered">Emular Tránsito</h1>
             </div>
-
-            <h1 class="text-center">🚗 Emular Tránsito</h1>
 
             <hr>
 
             <!-- HU 5: Emular un tránsito -->
             <section id="seccion-emular-transito">
-                <div id="formEmularTransito" class="form-admin">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="puestoTransito">Puesto de Peaje</label>
-                            <select id="puestoTransito" name="puestoTransito" required>
-                                <option value="">Seleccione un puesto</option>
-                                <!-- Se cargarán dinámicamente -->
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="matriculaTransito">Matrícula</label>
-                            <input type="text" id="matriculaTransito" name="matriculaTransito" placeholder="Ej: ABC1234"
-                                required>
-                        </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="puestoTransito">Puesto de Peaje</label>
+                        <select id="puestoTransito" name="puestoTransito" required>
+                            <option value="">Seleccione un puesto</option>
+                            <!-- Se cargarán dinámicamente -->
+                        </select>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="fechaTransito">Fecha</label>
-                            <input type="date" id="fechaTransito" name="fechaTransito" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="horaTransito">Hora</label>
-                            <input type="time" id="horaTransito" name="horaTransito" required>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" onclick="emularTransito()" class="btn btn-primary">
-                            ▶️ Emular Tránsito
-                        </button>
+                    <div class="form-group">
+                        <label for="matriculaTransito">Matrícula</label>
+                        <input type="text" id="matriculaTransito" name="matriculaTransito" placeholder="Ej: ABC1234"
+                            required>
                     </div>
                 </div>
 
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fechaTransito">Fecha</label>
+                        <input type="date" id="fechaTransito" name="fechaTransito" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="horaTransito">Hora</label>
+                        <input type="time" id="horaTransito" name="horaTransito" required>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" onclick="emularTransito()" class="btn btn-primary">
+                        Emular Tránsito
+                    </button>
+                </div>
+
                 <!-- Sección de tarifas del puesto -->
-                <div id="seccion-tarifas-puesto" style="display: none; margin-top: 20px;">
-                    <h3>💰 Tarifas del puesto</h3>
+                <div id="seccion-tarifas-puesto" style="margin-top: 20px;">
+                    <h3>Tarifas del puesto</h3>
                     <table class="table" id="tabla-tarifas-puesto">
                         <thead>
                             <tr>
@@ -86,7 +83,7 @@
 
                 <!-- Sección de resultado del tránsito emulado -->
                 <div id="seccion-resultado-transito" style="display: none; margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
-                    <h3>📋 Resultado</h3>
+                    <h3>Resultado</h3>
                     <div id="contenido-resultado-transito">
                         <!-- El contenido se cargará dinámicamente aquí -->
                     </div>

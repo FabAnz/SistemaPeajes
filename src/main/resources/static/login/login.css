@@ -5,7 +5,7 @@
 
 /* Override del body solo para la página de login */
 body {
-    background: var(--bg-body) !important;
+    background: linear-gradient(135deg, #ebebeb 0%, #d0def3 100%) !important;
     min-height: 100vh !important;
     display: flex !important;
     justify-content: center !important;
@@ -112,8 +112,12 @@ body {
     font-size: 13px;
     color: var(--error-color);
     margin-left: 4px;
-    min-height: 18px;
+    min-height: 0;
     display: block;
+}
+
+.login-form .error-message:empty {
+    display: none;
 }
 
 .login-form .error-message:not(:empty) {

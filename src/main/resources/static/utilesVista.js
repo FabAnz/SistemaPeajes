@@ -15,7 +15,7 @@
       <div class="contenido-dialogo">
         <p id="textoMensaje">Mensaje aquí</p>
         <div class="botones">
-          <button id="botonAceptar" onclick="cerrarMensajeDlg()">Aceptar</button>
+          <button id="botonAceptar" class="btn btn-primary" onclick="cerrarMensajeDlg()">Aceptar</button>
         </div>
       </div>
     </div>
@@ -57,7 +57,7 @@
       justify-content: space-evenly;
       gap: 15px;
     }
-    .botones button {
+    .botones button:not(.btn) {
       padding: 12px 25px;
       background-color: #4d94ff;
       color: white;
@@ -67,11 +67,11 @@
       cursor: pointer;
       transition: background-color 0.3s, transform 0.2s;
     }
-    .botones button:hover {
+    .botones button:not(.btn):hover {
       background-color: #337ab7;
       transform: scale(1.05);
     }
-    .botones button:active {
+    .botones button:not(.btn):active {
       transform: scale(0.98);
     }
     @keyframes fadeIn {

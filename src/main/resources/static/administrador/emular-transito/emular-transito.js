@@ -65,17 +65,16 @@ function mostrar_resultado(resultado) {
     
     contenidoResultado.innerHTML = html;
     
-    // Limpiar el formulario
-    document.getElementById('formEmularTransito').reset();
+    // Limpiar el formulario (excepto el puesto)
+    // document.getElementById('puestoTransito').value = ''; // No limpiar el puesto
+    document.getElementById('matriculaTransito').value = '';
+    document.getElementById('fechaTransito').value = '';
+    document.getElementById('horaTransito').value = '';
     
     // Restablecer fecha y hora
     primerSubmitFinalizado();
     
-    // Ocultar las tarifas si estaban visibles
-    const seccionTarifas = document.getElementById('seccion-tarifas-puesto');
-    if (seccionTarifas) {
-        seccionTarifas.style.display = 'none';
-    }
+    // Las tarifas se mantienen visibles (no se limpian)
     
     console.log('✅ Resultado mostrado correctamente');
 }
@@ -209,17 +208,17 @@ function mostrar_tarifas(tarifas) {
     const seccionTarifas = document.getElementById('seccion-tarifas-puesto');
     const tbodyTarifas = document.getElementById('tbody-tarifas-puesto');
     
+    // La sección siempre está visible, solo limpiamos o llenamos la tabla
+    if (!seccionTarifas) return;
+    
+    // Limpiar tabla siempre
+    if (tbodyTarifas) tbodyTarifas.innerHTML = '';
+    
     if (!tarifas || tarifas.length === 0) {
-        // Si no hay tarifas, ocultar la sección
-        if (seccionTarifas) seccionTarifas.style.display = 'none';
+        // Si no hay tarifas, dejar la tabla vacía (pero visible)
+        console.log('ℹ️ No hay tarifas para mostrar');
         return;
     }
-    
-    // Mostrar la sección
-    if (seccionTarifas) seccionTarifas.style.display = 'block';
-    
-    // Limpiar tabla
-    if (tbodyTarifas) tbodyTarifas.innerHTML = '';
     
     // Agregar cada tarifa a la tabla
     tarifas.forEach(tarifa => {
@@ -246,10 +245,10 @@ function mostrar_tarifas(tarifas) {
  */
 function cargarTarifasPuesto(puestoId) {
     if (!puestoId || puestoId === '') {
-        // Si no hay puesto seleccionado, ocultar la sección de tarifas
-        const seccionTarifas = document.getElementById('seccion-tarifas-puesto');
-        if (seccionTarifas) {
-            seccionTarifas.style.display = 'none';
+        // Si no hay puesto seleccionado, limpiar la tabla (pero mantenerla visible)
+        const tbodyTarifas = document.getElementById('tbody-tarifas-puesto');
+        if (tbodyTarifas) {
+            tbodyTarifas.innerHTML = '';
         }
         return;
     }

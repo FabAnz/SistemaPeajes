@@ -20,7 +20,7 @@ public class ResultadoEmulacionTransitoDTO {
 		this.nombrePropietario = propietario.getNombreCompleto();
 		this.estadoPropietario = propietario.getEstado().getNombre();
 		this.categoriaVehiculo = transito.getVehiculo().getCategoria().getNombre();
-		this.bonificacion = propietario.aplicanBonificaciones() ? transito.getBonificacion().getBonificacion().getNombre() : "No aplica";
+		this.bonificacion = transito.seAplicoBonificacion() ? transito.getBonificacion().getBonificacion().getNombre() : "No aplica";
 		this.costoTransito = transito.getCobro();
 		this.saldoLuegoTransito = propietario.getSaldo();
 	}

@@ -73,6 +73,7 @@ public class AdminController extends BaseController {
         @RequestParam int pPuesto,
         @RequestParam(required = false) String pFecha,
         @RequestParam(required = false) String pHora) throws UnauthorizedException, AppException {
+            
         Integer usuarioId = validarSesion(session);
         fachada.validarPermiso(usuarioId, Permiso.EMULAR_TRANSITO);
         

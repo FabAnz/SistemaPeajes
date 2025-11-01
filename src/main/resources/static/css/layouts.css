@@ -156,3 +156,44 @@
     }
 }
 
+/* ========================================
+   HEADER CON BOTÓN VOLVER Y TÍTULO CENTRADO
+   ======================================== */
+.page-header-with-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 1.5rem;
+    padding: 0;
+    width: 100%;
+}
+
+.page-header-with-back .btn-link {
+    position: absolute;
+    left: 0;
+    white-space: nowrap;
+    padding: 0;
+}
+
+.page-title-centered {
+    text-align: center;
+    margin: 0;
+    width: 100%;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Responsive para el header */
+@media (max-width: 768px) {
+    .page-title-centered {
+        font-size: 1.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title-centered {
+        font-size: 1.2rem;
+    }
+}
+
