@@ -16,6 +16,7 @@ import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
 import ort.da.obligatorio339182.model.valueObjects.Matricula;
 import ort.da.obligatorio339182.model.domain.bonifiaciones.Bonificacion;
 import ort.da.obligatorio339182.model.domain.estados.Estado;
+import ort.da.obligatorio339182.model.domain.Categoria;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -152,6 +153,10 @@ public class Fachada {
 
 	public void borrarSesionAdministrador(Administrador administrador) {
 		su.borrarSesionAdministrador(administrador);
+	}
+
+	public void agregarCategoria(Categoria categoria) throws AppException {
+		sv.agregarCategoria(categoria);
 	}
 
 }

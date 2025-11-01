@@ -20,16 +20,9 @@ class SistemaVehiculos {
 		this.vehiculos = new ArrayList<Vehiculo>();
 	}
 
-	void crearCategoria(String nombre) {
-
-	}
-
-	Categoria getCategoriaPorNombre(String nombre) {
-		return null;
-	}
-
-	boolean validarNombreUnicoCategoria(String nombre) {
-		return false;
+	void agregarCategoria(Categoria categoria) throws AppException {
+		categoria.validar();
+		this.categorias.add(categoria);
 	}
 
 	void agregarVehiculoConPropietario(Vehiculo vehiculo, Propietario propietario) throws AppException {

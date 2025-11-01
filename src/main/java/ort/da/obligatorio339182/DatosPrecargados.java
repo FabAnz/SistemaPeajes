@@ -96,25 +96,14 @@ public class DatosPrecargados {
         private Categoria moto;
         private Categoria camioneta;
 
-        /**
-         * Carga todos los datos precargados en el sistema.
-         * Este método es llamado desde Obligatorio339182Application mediante
-         * CommandLineRunner.
-         */
         public void cargarDatos() throws AppException {
                 cargarPropietarios(); // Cargar propietarios primero para que tengan IDs 1-4
                 cargarAdministradores(); // Luego administradores
                 cargarPuestos();
                 cargarBonificaciones();
                 cargarVehiculos();
-                // TODO: Agregar aquí la carga de otros datos precargados si es necesario
         }
 
-        /**
-         * Carga los administradores iniciales del sistema.
-         * Estos administradores pueden gestionar usuarios, puestos, tránsitos y
-         * bonificaciones.
-         */
         private void cargarAdministradores() throws AppException {
                 // Administrador 1: Admin Principal
                 // Tiene acceso completo a todas las funcionalidades de administración
@@ -135,10 +124,6 @@ public class DatosPrecargados {
                 fachada.agregarUsuario(adminSecundario);
         }
 
-        /**
-         * Carga los propietarios iniciales del sistema.
-         * Estos propietarios permiten probar todas las funcionalidades del sistema.
-         */
         private void cargarPropietarios() throws AppException {
                 // Propietario 1: Habilitado
                 // Puede: Ingresar al sistema, realizar tránsitos, recibir bonificaciones
@@ -188,14 +173,14 @@ public class DatosPrecargados {
                 fachada.agregarUsuario(anaRodriguez);
         }
 
-        /**
-         * Carga los puestos de peaje iniciales del sistema.
-         */
-        private void cargarPuestos() {
+        private void cargarPuestos() throws AppException {
                 // Crear categorías compartidas para puestos y vehículos
                 this.auto = new Categoria("Auto");
                 this.moto = new Categoria("Moto");
                 this.camioneta = new Categoria("Camioneta");
+                fachada.agregarCategoria(this.auto);
+                fachada.agregarCategoria(this.moto);
+                fachada.agregarCategoria(this.camioneta);
 
                 // Puesto 1: Ruta 1 con tarifas
                 this.puesto1 = new Puesto("Peaje Ruta 1", "Km 45, Ruta 1");
@@ -219,10 +204,6 @@ public class DatosPrecargados {
                 fachada.agregarPuesto(this.puesto3);
         }
 
-        /**
-         * Carga las bonificaciones asignadas a los propietarios.
-         * Se asignan bonificaciones al propietario "Juan Pérez" para pruebas.
-         */
         private void cargarBonificaciones() throws AppException {
                 // Usar la referencia estática a Juan Pérez (ya cargado)
                 // Asignar bonificación "Trabajador" en Ruta 1
@@ -240,10 +221,6 @@ public class DatosPrecargados {
                 fachada.agregarBonificacionAsignada(bonif2);
         }
 
-        /**
-         * Carga los vehículos y tránsitos iniciales del sistema.
-         * Se asignan vehículos a Juan Pérez con tránsitos para pruebas de HU 2.3
-         */
         private void cargarVehiculos() throws AppException {
                 // Usar la referencia estática a Juan Pérez (ya cargado)
                 // Usar categorías compartidas (ya creadas en cargarPuestos)
@@ -341,9 +318,4 @@ public class DatosPrecargados {
 		fachada.agregarTransito(usuarioPropietario, this.puesto2, vehiculo3, jueves20Mar18pm);
 	}
 
-
-        // TODO: Agregar métodos para cargar otros datos:
-        // private void cargarAdministradores() { ... }
-        // private void cargarCategorias() { ... }
-        // private void cargarTarifas() { ... }
 }
