@@ -52,10 +52,7 @@ function mostrar_propietario(propietario) {
     
     document.getElementById('nombrePropietarioBonificacion').textContent = propietario.nombreCompleto;
     document.getElementById('estadoPropietarioBonificacion').textContent = propietario.estado;
-    const badgeEstado = document.getElementById('estadoPropietarioBonificacion');
-    badgeEstado.className = 'info-value badge badge-' + propietario.estado.toLowerCase();
     document.getElementById('infoPropietarioBonificacion').style.display = 'block';
-    document.getElementById('formAsignarBonificacion').style.display = 'block';
     const selectBon = document.getElementById('bonificacion');
     const selectPue = document.getElementById('puestoBonificacion');
     const btnAsignar = document.getElementById('btnAsignarBonificacion');
@@ -77,18 +74,20 @@ function mostrar_bonificacionesAsignadas(bonificaciones) {
     }
     
     const contenedor = document.getElementById('tabla-bonificaciones-asignadas');
-    const contenedorPrincipal = document.getElementById('contenedorBonificacionesAsignadas');
     const mensaje = document.getElementById('mensaje-sin-bonificaciones-asignadas');
     const tabla = document.getElementById('tabla-bonificaciones-asignadas-container');
     
-    // Mostrar el contenedor principal
-    if (contenedorPrincipal) contenedorPrincipal.style.display = 'block';
+    // La sección siempre está visible, solo limpiamos o llenamos la tabla
+    if (!contenedor) return;
     
-    // Verificar si hay bonificaciones
+    // Limpiar tabla siempre
+    contenedor.innerHTML = '';
+    
     if (!bonificaciones || bonificaciones.length === 0) {
-        // No hay bonificaciones, mostrar mensaje
+        // Si no hay bonificaciones, mostrar mensaje y ocultar tabla
         if (mensaje) mensaje.style.display = 'block';
         if (tabla) tabla.style.display = 'none';
+        console.log('ℹ️ No hay bonificaciones para mostrar');
         return;
     }
     
@@ -97,7 +96,18 @@ function mostrar_bonificacionesAsignadas(bonificaciones) {
     if (tabla) tabla.style.display = 'table';
     
     // Usar utilesVista.js para generar la tabla automáticamente
-    if (contenedor) contenedor.innerHTML = crearTablaDesdeJson(bonificaciones);
+    // Extraer solo las filas del tbody para evitar duplicar el thead
+    const tablaCompleta = crearTablaDesdeJson(bonificaciones);
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = tablaCompleta;
+    const tbodyGenerado = tempDiv.querySelector('tbody');
+    if (tbodyGenerado) {
+        contenedor.innerHTML = tbodyGenerado.innerHTML;
+    } else {
+        contenedor.innerHTML = tablaCompleta;
+    }
+    
+    console.log(`✅ ${bonificaciones.length} bonificaciones cargadas en la tabla`);
 }
 
 function mostrar_mensaje(mensaje) {
@@ -131,26 +141,19 @@ function mostrar_mensaje(mensaje) {
         const nombreBonificacion = document.getElementById('nombrePropietarioBonificacion');
         const estadoBonificacion = document.getElementById('estadoPropietarioBonificacion');
         if (nombreBonificacion) nombreBonificacion.textContent = '-';
-        if (estadoBonificacion) {
-            estadoBonificacion.textContent = '-';
-            estadoBonificacion.className = 'info-value badge';
-        }
+        if (estadoBonificacion) estadoBonificacion.textContent = '-';
         
-        // Limpiar contenido de la tabla de bonificaciones
+        // Limpiar contenido de la tabla de bonificaciones (pero mantener la sección visible)
         const tablaBonificaciones = document.getElementById('tabla-bonificaciones-asignadas');
         const tablaContainer = document.getElementById('tabla-bonificaciones-asignadas-container');
         const mensajeSinBonificaciones = document.getElementById('mensaje-sin-bonificaciones-asignadas');
         if (tablaBonificaciones) tablaBonificaciones.innerHTML = '';
         if (tablaContainer) tablaContainer.style.display = 'none';
-        if (mensajeSinBonificaciones) mensajeSinBonificaciones.style.display = 'none';
+        if (mensajeSinBonificaciones) mensajeSinBonificaciones.style.display = 'block';
         
-        // Ocultar secciones
+        // Ocultar sección de información del propietario
         const infoBonificacionBox = document.getElementById('infoPropietarioBonificacion');
-        const formAsignarBonificacion = document.getElementById('formAsignarBonificacion');
-        const contenedorBonificaciones = document.getElementById('contenedorBonificacionesAsignadas');
         if (infoBonificacionBox) infoBonificacionBox.style.display = 'none';
-        if (formAsignarBonificacion) formAsignarBonificacion.style.display = 'none';
-        if (contenedorBonificaciones) contenedorBonificaciones.style.display = 'none';
         
         // Resetear flag después de un breve delay para permitir que se procese el resto de la respuesta
         setTimeout(() => {
@@ -282,20 +285,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (selectPue) selectPue.disabled = true;
     if (btnAsignar) btnAsignar.disabled = true;
 
-    // Buscar propietario por cédula
-    const formBuscarPropietario = document.getElementById('formBuscarPropietario');
-    if (formBuscarPropietario) {
-        formBuscarPropietario.addEventListener('submit', function(e) {
-            e.preventDefault();
-            buscarPropietario();
-        });
-    }
-    
-    const formAsignarBonificacion = document.getElementById('formAsignarBonificacion');
-    if (formAsignarBonificacion) {
-        formAsignarBonificacion.addEventListener('submit', function(e) {
-            e.preventDefault();
-            asignarBonificacion();
+    // Permitir buscar con Enter en el campo de cédula
+    const cedulaInput = document.getElementById('cedulaBonificacion');
+    if (cedulaInput) {
+        cedulaInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                buscarPropietario();
+            }
         });
     }
 });
