@@ -11,16 +11,18 @@
 }
 
 .info-item {
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    border-left: 4px solid var(--primary-color, #007bff);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-card);
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid var(--primary-color);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow);
 }
 
 .info-item label {
     display: block;
     font-weight: 600;
-    color: #6c757d;
+    color: var(--text-muted);
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
 }
@@ -29,12 +31,12 @@
     display: block;
     font-size: 1.25rem;
     font-weight: 500;
-    color: #212529;
+    color: var(--text-dark);
 }
 
 /* Estilo para el saldo */
 .info-value.saldo {
-    color: #28a745;
+    color: var(--success-color);
     font-weight: 700;
     font-size: 1.5rem;
 }
@@ -54,22 +56,22 @@
 
 .badge-success {
     color: #fff;
-    background-color: #28a745;
+    background-color: var(--success-color);
 }
 
 .badge-warning {
-    color: #212529;
-    background-color: #ffc107;
+    color: var(--text-dark);
+    background-color: var(--warning-color);
 }
 
 .badge-danger {
     color: #fff;
-    background-color: #dc3545;
+    background-color: var(--error-color);
 }
 
 .badge-secondary {
     color: #fff;
-    background-color: #6c757d;
+    background-color: var(--secondary-color);
 }
 
 /* Secciones del dashboard */
@@ -79,14 +81,14 @@ section {
 
 section h2 {
     margin-bottom: 1rem;
-    color: #495057;
-    border-bottom: 2px solid #e9ecef;
+    color: var(--text-dark);
+    border-bottom: 2px solid var(--border-color);
     padding-bottom: 0.5rem;
 }
 
 /* Texto muted para secciones en construcción */
 .text-muted {
-    color: #6c757d;
+    color: var(--text-muted);
     font-style: italic;
 }
 
@@ -103,27 +105,27 @@ section h2 {
 }
 
 #contenedor-bonificaciones .table th {
-    background-color: #f8f9fa;
+    background-color: var(--bg-card);
     font-weight: 600;
     padding: 0.75rem;
     text-align: left;
-    border-bottom: 2px solid #dee2e6;
+    border-bottom: 2px solid var(--border-color);
 }
 
 #contenedor-bonificaciones .table td {
     padding: 0.75rem;
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 1px solid var(--border-color);
 }
 
 #contenedor-bonificaciones .table tbody tr:hover {
-    background-color: #f8f9fa;
+    background-color: var(--bg-body);
 }
 
 /* Separador horizontal */
 hr {
     margin: 2rem 0;
     border: 0;
-    border-top: 1px solid #dee2e6;
+    border-top: 1px solid var(--border-color);
 }
 
 /* Responsive */

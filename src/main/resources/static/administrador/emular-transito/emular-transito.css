@@ -13,7 +13,7 @@ section {
 }
 
 section h3 {
-    color: var(--text-color);
+    color: var(--text-dark);
     font-size: 1.2rem;
     margin-top: 1.5rem;
     margin-bottom: 1rem;
@@ -21,10 +21,12 @@ section h3 {
 
 /* Formularios del Administrador */
 .form-admin {
-    background-color: var(--background-light);
-    padding: 1.5rem;
-    border-radius: 8px;
+    background-color: var(--bg-card);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-sm);
     margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow);
 }
 
 /* Filas de formulario */
@@ -45,7 +47,7 @@ section h3 {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: var(--text-color);
+    color: var(--text-dark);
 }
 
 .form-group input[type="text"],
@@ -53,11 +55,12 @@ section h3 {
 .form-group input[type="time"],
 .form-group select {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
     font-size: 1rem;
-    transition: border-color 0.3s ease;
+    transition: var(--transition);
+    background: var(--bg-input);
 }
 
 .form-group input:focus,
