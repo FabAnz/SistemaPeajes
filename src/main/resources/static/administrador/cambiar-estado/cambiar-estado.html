@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambiar Estado de Propietario - Sistema de Peajes</title>
+
+    <!-- CSS Compartido -->
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/layouts.css">
+    <link rel="stylesheet" href="cambiar-estado.css">
+</head>
+
+<body class="layout-centered">
+    <div class="container-lg">
+        <div class="card">
+            <!-- Navegación -->
+            <div class="page-navigation">
+                <button onclick="window.location.href='../dashboard/dashboard.html'" class="btn btn-secondary">
+                    ← Volver al Dashboard
+                </button>
+            </div>
+
+            <h1 class="text-center">🔄 Cambiar Estado de Propietario</h1>
+
+            <hr>
+
+            <!-- HU 7: Cambiar estado de propietario -->
+            <section id="seccion-cambiar-estado">
+                <!-- Buscar propietario -->
+                <form id="formBuscarPropietarioEstado" class="form-admin">
+                    <div class="form-row-inline">
+                        <div class="form-group flex-grow">
+                            <label for="cedulaEstado">Cédula del Propietario</label>
+                            <input type="text" id="cedulaEstado" name="cedulaEstado" placeholder="Ej: 12345678"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button type="submit" class="btn btn-secondary">
+                                🔍 Buscar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Información del propietario (oculta inicialmente) -->
+                <div id="infoPropietarioEstado" class="info-box" style="display: none;">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Propietario:</label>
+                            <span id="nombrePropietarioEstado" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Estado Actual:</label>
+                            <span id="estadoActualPropietario" class="info-value badge">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulario de cambio de estado (oculto inicialmente) -->
+                <form id="formCambiarEstado" class="form-admin" style="display: none;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nuevoEstado">Nuevo Estado</label>
+                            <select id="nuevoEstado" name="nuevoEstado" required>
+                                <option value="">Seleccione un estado</option>
+                                <!-- Se cargarán dinámicamente -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            🔄 Cambiar Estado
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <!-- Librerías JavaScript -->
+    <script src="../../vistaWeb.js"></script>
+    <script src="../../utilesVista.js"></script>
+    <script src="../../utils/cierreSesion.js"></script>
+    <script src="cambiar-estado.js"></script>
+</body>
+
+</html>
+

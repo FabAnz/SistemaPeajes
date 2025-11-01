@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asignar Bonificaciones - Sistema de Peajes</title>
+
+    <!-- CSS Compartido -->
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/layouts.css">
+    <link rel="stylesheet" href="asignar-bonificacion.css">
+</head>
+
+<body class="layout-centered">
+    <div class="container-lg">
+        <div class="card">
+            <!-- Navegación -->
+            <div class="page-navigation">
+                <button onclick="window.location.href='../dashboard/dashboard.html'" class="btn btn-secondary">
+                    ← Volver al Dashboard
+                </button>
+            </div>
+
+            <h1 class="text-center">🎁 Asignar Bonificaciones</h1>
+
+            <hr>
+
+            <!-- HU 6: Asignar bonificaciones -->
+            <section id="seccion-asignar-bonificacion">
+                <!-- Buscar propietario -->
+                <form id="formBuscarPropietario" class="form-admin">
+                    <div class="form-row-inline">
+                        <div class="form-group flex-grow">
+                            <label for="cedulaBonificacion">Cédula del Propietario</label>
+                            <input type="text" id="cedulaBonificacion" name="cedulaBonificacion"
+                                placeholder="Ej: 12345678" required>
+                        </div>
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button type="submit" class="btn btn-secondary">
+                                🔍 Buscar Propietario
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Información del propietario (oculta inicialmente) -->
+                <div id="infoPropietarioBonificacion" class="info-box" style="display: none;">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Propietario:</label>
+                            <span id="nombrePropietarioBonificacion" class="info-value">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Estado:</label>
+                            <span id="estadoPropietarioBonificacion" class="info-value badge">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulario de asignación (visible para elegir puesto y bonificación) -->
+                <form id="formAsignarBonificacion" class="form-admin">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bonificacion">Bonificación</label>
+                            <select id="bonificacion" name="bonificacion" required disabled>
+                                <option value="">Seleccione una bonificación</option>
+                                <!-- Se cargarán dinámicamente -->
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="puestoBonificacion">Puesto</label>
+                            <select id="puestoBonificacion" name="puestoBonificacion" required disabled>
+                                <option value="">Seleccione un puesto</option>
+                                <!-- Se cargarán dinámicamente -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="btnAsignarBonificacion" class="btn btn-primary" disabled>
+                            ➕ Asignar Bonificación
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Tabla de bonificaciones asignadas (oculta inicialmente) -->
+                <div id="contenedorBonificacionesAsignadas" style="display: none;">
+                    <h3>Bonificaciones Asignadas</h3>
+                    <table class="table" id="tabla-bonificaciones-asignadas-container">
+                        <thead>
+                            <tr>
+                                <th>Bonificación</th>
+                                <th>Puesto</th>
+                                <th>Fecha Asignación</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-bonificaciones-asignadas">
+                            <!-- Las bonificaciones se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                    <p id="mensaje-sin-bonificaciones-asignadas" class="text-muted">
+                        Este propietario no tiene bonificaciones asignadas.
+                    </p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Librerías JavaScript -->
+    <script src="../../vistaWeb.js"></script>
+    <script src="../../utilesVista.js"></script>
+    <script src="../../utils/cierreSesion.js"></script>
+    <script src="asignar-bonificacion.js"></script>
+</body>
+
+</html>
+

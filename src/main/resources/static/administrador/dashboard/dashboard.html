@@ -24,214 +24,31 @@
 
             <hr>
 
-            <!-- HU 5: Emular un tránsito -->
-            <section id="seccion-emular-transito">
-                <h2>🚗 Emular Tránsito</h2>
-                <div id="formEmularTransito" class="form-admin">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="puestoTransito">Puesto de Peaje</label>
-                            <select id="puestoTransito" name="puestoTransito" required>
-                                <option value="">Seleccione un puesto</option>
-                                <!-- Se cargarán dinámicamente -->
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="matriculaTransito">Matrícula</label>
-                            <input type="text" id="matriculaTransito" name="matriculaTransito" placeholder="Ej: ABC1234"
-                                required>
-                        </div>
+            <!-- Menú de Navegación -->
+            <div class="dashboard-menu">
+                <div class="menu-grid">
+                    <!-- HU 5: Emular Tránsito -->
+                    <div class="menu-card" onclick="window.location.href='../emular-transito/emular-transito.html'">
+                        <div class="menu-icon">🚗</div>
+                        <h3>Emular Tránsito</h3>
+                        <p>Simular el paso de un vehículo por un puesto de peaje</p>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="fechaTransito">Fecha</label>
-                            <input type="date" id="fechaTransito" name="fechaTransito" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="horaTransito">Hora</label>
-                            <input type="time" id="horaTransito" name="horaTransito" required>
-                        </div>
+                    <!-- HU 6: Asignar Bonificaciones -->
+                    <div class="menu-card" onclick="window.location.href='../asignar-bonificacion/asignar-bonificacion.html'">
+                        <div class="menu-icon">🎁</div>
+                        <h3>Asignar Bonificaciones</h3>
+                        <p>Asignar bonificaciones a propietarios por puesto</p>
                     </div>
 
-                    <div class="form-actions">
-                        <button type="button" onclick="emularTransito()" class="btn btn-primary">
-                            ▶️ Emular Tránsito
-                        </button>
+                    <!-- HU 7: Cambiar Estado -->
+                    <div class="menu-card" onclick="window.location.href='../cambiar-estado/cambiar-estado.html'">
+                        <div class="menu-icon">🔄</div>
+                        <h3>Cambiar Estado de Propietario</h3>
+                        <p>Modificar el estado de un propietario en el sistema</p>
                     </div>
                 </div>
-
-                <!-- Sección de tarifas del puesto -->
-                <div id="seccion-tarifas-puesto" style="display: none; margin-top: 20px;">
-                    <h3>💰 Tarifas del puesto</h3>
-                    <table class="table" id="tabla-tarifas-puesto">
-                        <thead>
-                            <tr>
-                                <th>Categoría</th>
-                                <th>Monto</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody-tarifas-puesto">
-                            <!-- Las tarifas se cargarán dinámicamente aquí -->
-                        </tbody>
-                    </table>
-                    <p class="text-muted" style="font-size: 0.9em; margin-top: 10px;">
-                        Se muestran categoría y monto actuales del puesto seleccionado.
-                    </p>
-                </div>
-
-                <!-- Sección de resultado del tránsito emulado -->
-                <div id="seccion-resultado-transito" style="display: none; margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
-                    <h3>📋 Resultado</h3>
-                    <div id="contenido-resultado-transito">
-                        <!-- El contenido se cargará dinámicamente aquí -->
-                    </div>
-                </div>
-            </section>
-
-            <hr>
-
-            <!-- HU 6: Asignar bonificaciones -->
-            <section id="seccion-asignar-bonificacion">
-                <h2>🎁 Asignar Bonificaciones</h2>
-
-                <!-- Buscar propietario -->
-                <form id="formBuscarPropietario" class="form-admin">
-                    <div class="form-row-inline">
-                        <div class="form-group flex-grow">
-                            <label for="cedulaBonificacion">Cédula del Propietario</label>
-                            <input type="text" id="cedulaBonificacion" name="cedulaBonificacion"
-                                placeholder="Ej: 12345678" required>
-                        </div>
-                        <div class="form-group">
-                            <label>&nbsp;</label>
-                            <button type="submit" class="btn btn-secondary">
-                                🔍 Buscar Propietario
-                            </button>
-                        </div>
-                    </div>
-                </form>
-
-                <!-- Información del propietario (oculta inicialmente) -->
-                <div id="infoPropietarioBonificacion" class="info-box" style="display: none;">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>Propietario:</label>
-                            <span id="nombrePropietarioBonificacion" class="info-value">-</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Estado:</label>
-                            <span id="estadoPropietarioBonificacion" class="info-value badge">-</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Formulario de asignación (visible para elegir puesto y bonificación) -->
-                <form id="formAsignarBonificacion" class="form-admin">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="bonificacion">Bonificación</label>
-                            <select id="bonificacion" name="bonificacion" required disabled>
-                                <option value="">Seleccione una bonificación</option>
-                                <!-- Se cargarán dinámicamente -->
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="puestoBonificacion">Puesto</label>
-                            <select id="puestoBonificacion" name="puestoBonificacion" required disabled>
-                                <option value="">Seleccione un puesto</option>
-                                <!-- Se cargarán dinámicamente -->
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" id="btnAsignarBonificacion" class="btn btn-primary" disabled>
-                            ➕ Asignar Bonificación
-                        </button>
-                    </div>
-                </form>
-
-                <!-- Tabla de bonificaciones asignadas (oculta inicialmente) -->
-                <div id="contenedorBonificacionesAsignadas" style="display: none;">
-                    <h3>Bonificaciones Asignadas</h3>
-                    <table class="table" id="tabla-bonificaciones-asignadas-container">
-                        <thead>
-                            <tr>
-                                <th>Bonificación</th>
-                                <th>Puesto</th>
-                                <th>Fecha Asignación</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-bonificaciones-asignadas">
-                            <!-- Las bonificaciones se cargarán dinámicamente aquí -->
-                        </tbody>
-                    </table>
-                    <p id="mensaje-sin-bonificaciones-asignadas" class="text-muted">
-                        Este propietario no tiene bonificaciones asignadas.
-                    </p>
-                </div>
-            </section>
-
-            <hr>
-
-            <!-- HU 7: Cambiar estado de propietario -->
-            <section id="seccion-cambiar-estado">
-                <h2>🔄 Cambiar Estado de Propietario</h2>
-
-                <!-- Buscar propietario -->
-                <form id="formBuscarPropietarioEstado" class="form-admin">
-                    <div class="form-row-inline">
-                        <div class="form-group flex-grow">
-                            <label for="cedulaEstado">Cédula del Propietario</label>
-                            <input type="text" id="cedulaEstado" name="cedulaEstado" placeholder="Ej: 12345678"
-                                required>
-                        </div>
-                        <div class="form-group">
-                            <label>&nbsp;</label>
-                            <button type="submit" class="btn btn-secondary">
-                                🔍 Buscar
-                            </button>
-                        </div>
-                    </div>
-                </form>
-
-                <!-- Información del propietario (oculta inicialmente) -->
-                <div id="infoPropietarioEstado" class="info-box" style="display: none;">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>Propietario:</label>
-                            <span id="nombrePropietarioEstado" class="info-value">-</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Estado Actual:</label>
-                            <span id="estadoActualPropietario" class="info-value badge">-</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Formulario de cambio de estado (oculto inicialmente) -->
-                <form id="formCambiarEstado" class="form-admin" style="display: none;">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nuevoEstado">Nuevo Estado</label>
-                            <select id="nuevoEstado" name="nuevoEstado" required>
-                                <option value="">Seleccione un estado</option>
-                                <!-- Se cargarán dinámicamente -->
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
-                            🔄 Cambiar Estado
-                        </button>
-                    </div>
-                </form>
-            </section>
+            </div>
 
             <hr>
 
