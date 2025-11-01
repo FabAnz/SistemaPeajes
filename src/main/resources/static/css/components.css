@@ -12,11 +12,11 @@
     box-shadow: var(--box-shadow-md);
     padding: var(--spacing-xxl);
     transition: var(--transition-smooth);
+    border: none;
 }
 
 .card:hover {
     box-shadow: var(--box-shadow-lg);
-    transform: translateY(-5px);
 }
 
 .card-simple {
@@ -64,6 +64,7 @@
     transition: var(--transition-smooth);
     text-decoration: none;
     line-height: 1;
+    letter-spacing: 0.01em;
 }
 
 .btn:disabled {
@@ -75,26 +76,31 @@
     transform: none;
 }
 
-/* Variantes de botones */
+/* Variantes de botones - Estilo SugarCRM moderno */
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: var(--primary-color);
     color: white;
-    box-shadow: 0 4px 15px rgba(77, 148, 255, 0.3);
+    box-shadow: var(--box-shadow-sm);
+    border: none;
+    letter-spacing: 0.01em;
 }
 
 .btn-primary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(77, 148, 255, 0.4);
+    background: var(--primary-dark);
+    box-shadow: var(--box-shadow-md);
+    transform: translateY(-1px);
 }
 
 .btn-secondary {
     background: var(--secondary-color);
     color: white;
+    border: none;
 }
 
 .btn-secondary:hover:not(:disabled) {
-    background: #5a6268;
-    transform: translateY(-2px);
+    background: var(--secondary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--box-shadow-md);
 }
 
 .btn-success {
@@ -103,18 +109,19 @@
 }
 
 .btn-success:hover:not(:disabled) {
-    background: #218838;
-    transform: translateY(-2px);
+    background: #059669;
+    transform: none;
 }
 
 .btn-danger {
     background: var(--error-color);
     color: white;
+    border: none;
 }
 
 .btn-danger:hover:not(:disabled) {
-    background: #c82333;
-    transform: translateY(-2px);
+    background: #dc2626;
+    transform: none;
 }
 
 .btn-outline {
@@ -163,10 +170,10 @@
 
 .form-control {
     width: 100%;
-    padding: 12px 16px;
+    padding: 14px 16px;
     font-size: 15px;
     font-family: inherit;
-    border: 2px solid var(--border-color);
+    border: 1.5px solid var(--border-color);
     border-radius: var(--border-radius-sm);
     background: var(--bg-input);
     transition: var(--transition);
@@ -357,9 +364,35 @@ textarea.form-control {
     color: white;
 }
 
+.badge-danger {
+    background: var(--error-color);
+    color: white;
+}
+
 .badge-warning {
     background: var(--warning-color);
-    color: var(--text-dark);
+    color: white;
+}
+
+.badge-secondary {
+    background: var(--secondary-color);
+    color: white;
+}
+
+/* Badges con colores de acento para visualizaciones */
+.badge-info {
+    background: var(--accent-blue);
+    color: white;
+}
+
+.badge-executed {
+    background: var(--accent-blue);
+    color: white;
+}
+
+.badge-active {
+    background: var(--secondary-color);
+    color: white;
 }
 
 /* ========================================
@@ -377,6 +410,13 @@ textarea.form-control {
 .table thead {
     background: var(--primary-color);
     color: white;
+}
+
+.table thead th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.5px;
 }
 
 .table th,
