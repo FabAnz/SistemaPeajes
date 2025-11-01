@@ -23,12 +23,7 @@ class SistemaTransitos {
 		this.fachada = fachada;
 	}
 
-	/**
-	 * Cuenta la cantidad de tránsitos realizados por un propietario en un vehículo específico
-	 * @param propietario El propietario
-	 * @param vehiculo El vehículo
-	 * @return Cantidad de tránsitos
-	 */
+
 	int cantidadTransitosPorPropietarioYVehiculo(Propietario propietario, Vehiculo vehiculo) {
 		return (int) transitos.stream()
 			.filter(t -> t.getPropietario().equals(propietario))
@@ -36,12 +31,7 @@ class SistemaTransitos {
 			.count();
 	}
 
-	/**
-	 * Calcula el monto total gastado por un propietario en un vehículo específico
-	 * @param propietario El propietario
-	 * @param vehiculo El vehículo
-	 * @return Monto total gastado
-	 */
+
 	int montoTotalPorPropietarioYVehiculo(Propietario propietario, Vehiculo vehiculo) {
 		return transitos.stream()
 			.filter(t -> t.getPropietario().equals(propietario))
@@ -50,18 +40,13 @@ class SistemaTransitos {
 			.sum();
 	}
 
-	/**
-	 * Agrega un tránsito al sistema con la fecha actual
-	 */
-	void agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo) throws AppException {
-		agregarTransito(propietario, puesto, vehiculo, LocalDateTime.now());
+
+	Transito agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo) throws AppException {
+		return agregarTransito(propietario, puesto, vehiculo, LocalDateTime.now());
 	}
 
-	/**
-	 * Agrega un tránsito al sistema con una fecha específica
-	 * Útil para cargar datos de prueba
-	 */
-	void agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo, LocalDateTime fechaHora) throws AppException {
+
+	Transito agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo, LocalDateTime fechaHora) throws AppException {
 		BonificacionAsignada bonificacion = fachada.getBonificacionEnPuesto(propietario, puesto);
 		boolean esPrimerTransitoDelDia = esPrimerTransitoDelDia(puesto, vehiculo, fechaHora.toLocalDate());
 
@@ -76,6 +61,8 @@ class SistemaTransitos {
 			Notificacion notificacion = new Notificacion(mensajeTransito, fechaHora);
 			propietario.agregarNotificacion(notificacion);
 		}
+		
+		return transito;
 	}
 
 	// Verifica si es el primer tránsito del día para un vehículo en un puesto

@@ -2,6 +2,7 @@ package ort.da.obligatorio339182.services;
 
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import ort.da.obligatorio339182.model.domain.Vehiculo;
+import ort.da.obligatorio339182.model.domain.Transito;
 import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
 import ort.da.obligatorio339182.model.domain.usuarios.Administrador;
@@ -105,12 +106,12 @@ public class Fachada {
 		sv.agregarVehiculoConPropietario(vehiculo, propietario);
 	}
 
-	public void agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo) throws AppException {
-		st.agregarTransito(propietario, puesto, vehiculo);
+	public Transito agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo) throws AppException {
+		return st.agregarTransito(propietario, puesto, vehiculo);
 	}
 
-	public void agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo, LocalDateTime fechaHora) throws AppException {
-		st.agregarTransito(propietario, puesto, vehiculo, fechaHora);
+	public Transito agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo, LocalDateTime fechaHora) throws AppException {
+		return st.agregarTransito(propietario, puesto, vehiculo, fechaHora);
 	}
 
 	public Puesto getPuestoPorId(int id) throws AppException {

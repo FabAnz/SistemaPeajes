@@ -34,10 +34,57 @@ function mostrar_puestos(puestos) {
     console.log(`✅ ${puestos.length} puestos cargados`);
 }
 
-function mostrar_nuevoSaldo(nuevoSaldo) {
-    mostrarMensaje(`Tránsito emulado correctamente.\n\nNuevo saldo del propietario: $${nuevoSaldo}`);
+/**
+ * Función que muestra el resultado completo de la emulación de tránsito
+ */
+function mostrar_resultado(resultado) {
+    console.log('📋 Mostrando resultado de emulación:', resultado);
+    
+    const seccionResultado = document.getElementById('seccion-resultado-transito');
+    const contenidoResultado = document.getElementById('contenido-resultado-transito');
+    
+    if (!resultado) {
+        seccionResultado.style.display = 'none';
+        return;
+    }
+    
+    // Mostrar la sección
+    seccionResultado.style.display = 'block';
+    
+    // Construir el HTML del resultado
+    let html = '<div style="display: grid; gap: 12px;">';
+    
+    // Propietario
+    html += `<div><strong>Propietario:</strong> ${resultado.nombrePropietario} (${resultado.estadoPropietario})</div>`;
+    
+    // Categoría
+    html += `<div><strong>Categoría:</strong> ${resultado.categoriaVehiculo}</div>`;
+    
+    // Bonificación (si existe)
+    if (resultado.bonificacion) {
+        html += `<div><strong>Bonificación:</strong> ${resultado.bonificacion}</div>`;
+    }
+    
+    // Costo del tránsito
+    html += `<div><strong>Costo del tránsito:</strong> $ ${resultado.costoTransito.toFixed(2)}</div>`;
+    
+    // Saldo luego del tránsito
+    html += `<div><strong>Saldo luego del tránsito:</strong> $ ${resultado.saldoLuegoTransito.toFixed(2)}</div>`;
+    
+    html += '</div>';
+    
+    contenidoResultado.innerHTML = html;
+    
     // Limpiar el formulario
     document.getElementById('formEmularTransito').reset();
+    
+    // Ocultar las tarifas si estaban visibles
+    const seccionTarifas = document.getElementById('seccion-tarifas-puesto');
+    if (seccionTarifas) {
+        seccionTarifas.style.display = 'none';
+    }
+    
+    console.log('✅ Resultado mostrado correctamente');
 }
 
 function mostrar_mensaje(mensaje) {
@@ -359,6 +406,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (selectPue) selectPue.disabled = true;
     if (btnAsignar) btnAsignar.disabled = true;
 
+    // Event listener para cargar tarifas cuando se selecciona un puesto
+    const selectPuestoTransito = document.getElementById('puestoTransito');
+    if (selectPuestoTransito) {
+        selectPuestoTransito.addEventListener('change', function(e) {
+            const puestoId = e.target.value;
+            cargarTarifasPuesto(puestoId);
+        });
+    }
+
     // Buscar propietario por cédula
     const formBuscarPropietario = document.getElementById('formBuscarPropietario');
     if (formBuscarPropietario) {
@@ -561,4 +617,65 @@ function primerSubmitFinalizado() {
     document.getElementById('horaTransito').value = `${hours}:${minutes}`;
     
     console.log('✅ Fecha y hora inicializadas');
+}
+
+/**
+ * Función que muestra las tarifas de un puesto
+ */
+function mostrar_tarifas(tarifas) {
+    console.log('💰 Mostrando tarifas del puesto:', tarifas);
+    
+    const seccionTarifas = document.getElementById('seccion-tarifas-puesto');
+    const tbodyTarifas = document.getElementById('tbody-tarifas-puesto');
+    
+    if (!tarifas || tarifas.length === 0) {
+        // Si no hay tarifas, ocultar la sección
+        seccionTarifas.style.display = 'none';
+        return;
+    }
+    
+    // Mostrar la sección
+    seccionTarifas.style.display = 'block';
+    
+    // Limpiar tabla
+    tbodyTarifas.innerHTML = '';
+    
+    // Agregar cada tarifa a la tabla
+    tarifas.forEach(tarifa => {
+        const row = document.createElement('tr');
+        
+        // Columna de categoría
+        const cellCategoria = document.createElement('td');
+        cellCategoria.textContent = tarifa.categoria;
+        row.appendChild(cellCategoria);
+        
+        // Columna de monto (formateado como moneda)
+        const cellMonto = document.createElement('td');
+        cellMonto.textContent = `$ ${tarifa.monto.toFixed(2)}`;
+        row.appendChild(cellMonto);
+        
+        tbodyTarifas.appendChild(row);
+    });
+    
+    console.log(`✅ ${tarifas.length} tarifas cargadas en la tabla`);
+}
+
+/**
+ * Función que carga las tarifas de un puesto seleccionado
+ */
+function cargarTarifasPuesto(puestoId) {
+    if (!puestoId || puestoId === '') {
+        // Si no hay puesto seleccionado, ocultar la sección de tarifas
+        const seccionTarifas = document.getElementById('seccion-tarifas-puesto');
+        if (seccionTarifas) {
+            seccionTarifas.style.display = 'none';
+        }
+        return;
+    }
+    
+    console.log('📡 Cargando tarifas para puesto:', puestoId);
+    
+    // Hacer petición GET al endpoint
+    const params = `puestoId=${encodeURIComponent(puestoId)}`;
+    submit('/administrador/tarifas-puesto', params, 'GET');
 }

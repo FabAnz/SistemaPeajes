@@ -120,6 +120,11 @@ public class Propietario extends Usuario {
 			throw new AppException("Saldo insuficiente: " + this.saldo);
 		}
 		this.saldo -= monto;
+		if (this.saldo < this.saldoMinimo && this.recibeNotificaciones()) {
+			String mensaje = "Tu saldo actual es $ " + this.saldo + " te recomendamos hacer una recarga";
+			Notificacion notificacion = new Notificacion(mensaje);
+			this.agregarNotificacion(notificacion);
+		}
 	}
 
 	public List<Notificacion> getNotificacionesOrdenadas() {
@@ -147,6 +152,12 @@ public class Propietario extends Usuario {
 		if (estado.equals(this.estado)) {
 			throw new AppException("El propietario ya esta en estado " + estado.getNombre());
 		}
+
+		//Notificar al propietario
+		String mensaje = "Se te ha cambiado el estado en el sistema. Tu estado actual es " + estado.getNombre();
+		Notificacion notificacion = new Notificacion(mensaje);
+		this.agregarNotificacion(notificacion);
+		
 		this.estado = estado;
 	}
 }

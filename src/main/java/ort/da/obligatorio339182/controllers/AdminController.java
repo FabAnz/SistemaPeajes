@@ -32,6 +32,9 @@ import ort.da.obligatorio339182.dtos.PropietarioResumenDTO;
 import ort.da.obligatorio339182.model.domain.estados.Estado;
 import ort.da.obligatorio339182.dtos.EstadoDTO;
 import ort.da.obligatorio339182.dtos.CambiarEstadoDTO;
+import ort.da.obligatorio339182.dtos.TarifaDTO;
+import ort.da.obligatorio339182.dtos.ResultadoEmulacionTransitoDTO;
+import ort.da.obligatorio339182.model.domain.Transito;
 
 @RestController
 @RequestMapping("/administrador")
@@ -99,15 +102,19 @@ public class AdminController extends BaseController {
         }
 
         // Agregar tránsito con fecha específica o actual
+        Transito transito;
         if(fechaHora != null) {
-            fachada.agregarTransito(propietario, puesto, vehiculo, fechaHora);
+            transito = fachada.agregarTransito(propietario, puesto, vehiculo, fechaHora);
         } else {
-            fachada.agregarTransito(propietario, puesto, vehiculo);
+            transito = fachada.agregarTransito(propietario, puesto, vehiculo);
         }
+        
+        // Crear DTO con el resultado completo
+        ResultadoEmulacionTransitoDTO resultado = new ResultadoEmulacionTransitoDTO(transito, propietario);
         
         return RespuestaDTO.lista(
             new RespuestaDTO("mensaje", "Transito emulado correctamente"),
-            new RespuestaDTO("nuevoSaldo", propietario.getSaldo())
+            new RespuestaDTO("resultado", resultado)
         );
     }
 
@@ -182,6 +189,25 @@ public class AdminController extends BaseController {
 
         return RespuestaDTO.lista(
             new RespuestaDTO("mensaje", "Estado cambiado correctamente")
+        );
+    }
+
+    @GetMapping("/tarifas-puesto")
+    public List<RespuestaDTO> obtenerTarifasPuesto(
+        HttpSession session,
+        @RequestParam int puestoId
+    ) throws UnauthorizedException, AppException {
+        Integer usuarioId = validarSesion(session);
+        fachada.validarPermiso(usuarioId, Permiso.ADMIN_DASHBOARD);
+
+        // Obtener puesto por id
+        Puesto puesto = fachada.getPuestoPorId(puestoId);
+
+        // Convertir tarifas a DTO
+        List<TarifaDTO> tarifasDTO = TarifaDTO.list(puesto.getTarifas());
+
+        return RespuestaDTO.lista(
+            new RespuestaDTO("tarifas", tarifasDTO)
         );
     }
 }

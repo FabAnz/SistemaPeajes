@@ -14,7 +14,7 @@ import lombok.AccessLevel;
 @NoArgsConstructor
 public class BonificacionAsignada {
 	private static int nextId = 0;
-	
+
 	@Setter(AccessLevel.PRIVATE)
 	private int id;
 	private LocalDateTime fechaAsignacion;
@@ -46,11 +46,10 @@ public class BonificacionAsignada {
 		if (this.bonificacion == null) {
 			throw new AppException("La bonificación no puede ser null");
 		}
-		// Validar que el propietario pueda recibir bonificaciones (no puede estar deshabilitado)
-		try {
-			this.propietario.getEstado().validarAccesoAlSistema();
-		} catch (AppException e) {
-			throw new AppException("El propietario no puede recibir bonificaciones");
+		// Validar que el propietario pueda recibir bonificaciones (no puede estar
+		// deshabilitado)
+		if (!propietario.aplicanBonificaciones()) {
+			throw new AppException("El propietario esta deshabilitado. No se pueden asignar bonificaciones");
 		}
 	}
 
