@@ -14,10 +14,12 @@ section {
 
 /* Formularios del Administrador */
 .form-admin {
-    background-color: var(--background-light);
-    padding: 1.5rem;
-    border-radius: 8px;
+    background-color: var(--bg-card);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-sm);
     margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow);
 }
 
 /* Filas de formulario */
@@ -48,17 +50,18 @@ section {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: var(--text-color);
+    color: var(--text-dark);
 }
 
 .form-group input[type="text"],
 .form-group select {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
     font-size: 1rem;
-    transition: border-color 0.3s ease;
+    transition: var(--transition);
+    background: var(--bg-input);
 }
 
 .form-group input:focus,
@@ -77,11 +80,12 @@ section {
 
 /* Caja de información del propietario */
 .info-box {
-    background-color: var(--background-light);
+    background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1rem;
-    margin: 1rem 0;
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-lg);
+    margin: var(--spacing-md) 0;
+    box-shadow: var(--box-shadow);
 }
 
 /* Grid de información */
@@ -104,7 +108,7 @@ section {
 }
 
 .info-value {
-    color: var(--text-color);
+    color: var(--text-dark);
     font-size: 1.1rem;
 }
 

@@ -12,7 +12,7 @@
     justify-content: center;
     align-items: center;
     padding: var(--spacing-lg);
-    background: var(--bg-gradient);
+    background: var(--bg-body);
 }
 
 /* ========================================
@@ -47,29 +47,28 @@
    ======================================== */
 .redirect-page {
     text-align: center;
-    color: white;
+    color: var(--text-dark);
 }
 
 .redirect-message {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    background: var(--bg-card);
     padding: var(--spacing-xxl);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow-lg);
 }
 
 .redirect-message h1 {
-    color: white;
+    color: var(--text-dark);
     margin-bottom: var(--spacing-md);
 }
 
 .redirect-message p {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-muted);
     margin-bottom: var(--spacing-sm);
 }
 
 .redirect-message a {
-    color: white;
+    color: var(--primary-color);
     text-decoration: underline;
 }
 

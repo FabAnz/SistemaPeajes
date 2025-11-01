@@ -1,62 +1,95 @@
 /**
  * Estilos específicos del Dashboard del Administrador (Menú Principal)
+ * Inspirado en diseño CRM moderno y limpio
  */
+
+/* Título principal */
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
 
 /* Mensaje de bienvenida */
 .welcome-message {
     color: var(--text-muted);
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    font-size: 1rem;
 }
 
 /* Menú de navegación */
 .dashboard-menu {
-    margin: 2rem 0;
+    margin: 2.5rem 0;
 }
 
 .menu-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 1.5rem;
     margin-top: 2rem;
 }
 
 .menu-card {
-    background: var(--background-light);
-    border: 2px solid var(--border-color);
-    border-radius: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
     padding: 2rem;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: var(--transition-smooth);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    box-shadow: var(--box-shadow);
+    position: relative;
 }
 
 .menu-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--box-shadow-md);
     border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.menu-card:active {
+    transform: translateY(0);
 }
 
 .menu-icon {
-    font-size: 3.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 3rem;
+    margin-bottom: 0.25rem;
+    opacity: 0.9;
 }
 
 .menu-card h3 {
-    color: var(--primary-color);
-    font-size: 1.5rem;
+    color: var(--text-dark);
+    font-size: 1.25rem;
     margin: 0;
     font-weight: 600;
+    letter-spacing: -0.01em;
 }
 
 .menu-card p {
     color: var(--text-muted);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     margin: 0;
-    line-height: 1.5;
+    line-height: 1.6;
+}
+
+/* Línea divisoria */
+hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 2rem 0;
+}
+
+/* Botón de cerrar sesión */
+.btn-secondary {
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 8px;
 }
 
 /* Responsive */
@@ -72,5 +105,23 @@
     
     .menu-icon {
         font-size: 2.5rem;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .menu-card {
+        padding: 1.25rem;
+    }
+    
+    .menu-icon {
+        font-size: 2rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
     }
 }
