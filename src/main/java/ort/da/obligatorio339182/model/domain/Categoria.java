@@ -1,0 +1,31 @@
+package ort.da.obligatorio339182.model.domain;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.AccessLevel;
+import ort.da.obligatorio339182.exceptions.AppException;
+
+@Data
+@NoArgsConstructor
+public class Categoria {
+	private static int nextId = 0;
+
+	@Setter(AccessLevel.PRIVATE)
+	private int id;
+	private String nombre;
+
+	public Categoria(String nombre) {
+		this.id = ++nextId;
+		this.nombre = nombre;
+	}
+
+	public void validar() throws AppException {
+		if (nombre == null || nombre.isBlank()) {
+			throw new AppException("El nombre de la categoría no puede estar vacío");
+		}
+		if (id <= 0) {
+			throw new AppException("El id de la categoría debe ser mayor a 0");
+		}
+	}
+}

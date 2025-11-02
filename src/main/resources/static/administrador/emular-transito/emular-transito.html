@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emular Tránsito - Sistema de Peajes</title>
+
+    <!-- CSS Compartido -->
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/layouts.css">
+    <link rel="stylesheet" href="emular-transito.css">
+</head>
+
+<body class="layout-centered">
+    <div class="container-lg">
+        <div class="card">
+            <!-- Header con botón volver y título -->
+            <div class="page-header-with-back">
+                <button onclick="window.location.href='../dashboard/dashboard.html'" class="btn btn-link">
+                    ← Volver
+                </button>
+                <h1 class="page-title-centered">Emular Tránsito</h1>
+            </div>
+
+            <hr>
+
+            <!-- HU 5: Emular un tránsito -->
+            <section id="seccion-emular-transito">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="puestoTransito">Puesto de Peaje</label>
+                        <select id="puestoTransito" name="puestoTransito" required>
+                            <option value="">Seleccione un puesto</option>
+                            <!-- Se cargarán dinámicamente -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="matriculaTransito">Matrícula</label>
+                        <input type="text" id="matriculaTransito" name="matriculaTransito" placeholder="Ej: ABC1234"
+                            required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fechaTransito">Fecha</label>
+                        <input type="date" id="fechaTransito" name="fechaTransito" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="horaTransito">Hora</label>
+                        <input type="time" id="horaTransito" name="horaTransito" required>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" onclick="emularTransito()" class="btn btn-primary">
+                        Emular Tránsito
+                    </button>
+                </div>
+
+                <!-- Sección de tarifas del puesto -->
+                <div id="seccion-tarifas-puesto" style="margin-top: 20px;">
+                    <h3>Tarifas del puesto</h3>
+                    <table class="table" id="tabla-tarifas-puesto">
+                        <thead>
+                            <tr>
+                                <th>Categoría</th>
+                                <th>Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-tarifas-puesto">
+                            <!-- Las tarifas se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                    <p class="text-muted" style="font-size: 0.9em; margin-top: 10px;">
+                        Se muestran categoría y monto actuales del puesto seleccionado.
+                    </p>
+                </div>
+
+                <!-- Sección de resultado del tránsito emulado -->
+                <div id="seccion-resultado-transito" style="display: none; margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+                    <h3>Resultado</h3>
+                    <div id="contenido-resultado-transito">
+                        <!-- El contenido se cargará dinámicamente aquí -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Librerías JavaScript -->
+    <script src="../../vistaWeb.js"></script>
+    <script src="../../utilesVista.js"></script>
+    <script src="../../utils/cierreSesion.js"></script>
+    <script src="emular-transito.js"></script>
+</body>
+
+</html>
+

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrador - Sistema de Peajes</title>
+
+    <!-- CSS Compartido -->
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/layouts.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+
+<body class="layout-centered">
+    <!-- Header navbar fijo en la parte superior -->
+    <header class="dashboard-header">
+        <div class="dashboard-header-content">
+            <h1 class="dashboard-title">Panel administrador</h1>
+            <button onclick="cerrarSesion()" class="btn btn-primary">Cerrar sesion</button>
+        </div>
+    </header>
+
+    <div class="container-lg dashboard-content">
+        <!-- Cards con funcionalidades -->
+        <div class="dashboard-cards">
+            <!-- HU 5: Emular Tránsito -->
+            <div class="dashboard-card" onclick="window.location.href='../emular-transito/emular-transito.html'">
+                <div class="menu-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 17H4C2.89543 17 2 16.1046 2 15V11C2 9.89543 2.89543 9 4 9H5M5 17H19M5 17V18C5 19.1046 5.89543 20 7 20H8C9.10457 20 10 19.1046 10 18V17M19 17H20C21.1046 17 22 16.1046 22 15V11C22 9.89543 21.1046 9 20 9H19M19 17V18C19 19.1046 18.1046 20 17 20H16C14.8954 20 14 19.1046 14 18V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M7 13H9M15 13H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3>Emular Tránsito</h3>
+                <p class="card-description">Simula el paso de un vehículo por un puesto de peaje para realizar pruebas y verificar el funcionamiento correcto del sistema de cobro automático de tarifas.</p>
+            </div>
+
+            <!-- HU 6: Asignar Bonificaciones -->
+            <div class="dashboard-card" onclick="window.location.href='../asignar-bonificacion/asignar-bonificacion.html'">
+                <div class="menu-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3>Asignar Bonificaciones</h3>
+                <p class="card-description">Asigna bonificaciones especiales a propietarios específicos para que puedan beneficiarse de descuentos en determinados puestos de peaje del sistema.</p>
+            </div>
+
+            <!-- HU 7: Cambiar Estado -->
+            <div class="dashboard-card" onclick="window.location.href='../cambiar-estado/cambiar-estado.html'">
+                <div class="menu-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3>Cambiar Estado de Propietario</h3>
+                <p class="card-description">Modifica el estado de un propietario en el sistema, permitiendo cambiar entre estados como habilitado, suspendido, penalizado o deshabilitado según sea necesario.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Librerías JavaScript -->
+    <script src="../../vistaWeb.js"></script>
+    <script src="../../utilesVista.js"></script>
+    <script src="../../utils/cierreSesion.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+
+</html>

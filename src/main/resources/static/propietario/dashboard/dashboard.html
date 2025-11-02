@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Propietario - Sistema de Peajes</title>
+    
+    <!-- CSS Compartido -->
+    <link rel="stylesheet" href="../../css/base.css">
+    <link rel="stylesheet" href="../../css/components.css">
+    <link rel="stylesheet" href="../../css/layouts.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body class="layout-centered">
+    <!-- Header navbar fijo en la parte superior -->
+    <header class="dashboard-header">
+        <div class="dashboard-header-content">
+            <h1 class="dashboard-title">Panel propietario</h1>
+            <button onclick="cerrarSesion()" class="btn btn-primary">Cerrar sesion</button>
+        </div>
+    </header>
+
+    <div class="container-lg dashboard-content">
+        <!-- Cards con funcionalidades -->
+        <div class="dashboard-cards">
+            <!-- Card 1: Información Personal -->
+            <div class="dashboard-card">
+                <h2>Información Personal</h2>
+                <div class="info-grid-compact">
+                    <div class="info-item">
+                        <label>Nombre Completo:</label>
+                        <span id="nombre" class="info-value">Cargando...</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Estado:</label>
+                        <span id="estado" class="info-value badge">Cargando...</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Saldo Disponible:</label>
+                        <span id="saldo" class="info-value saldo">Cargando...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Vehículos -->
+            <div class="dashboard-card">
+                <h2>Mis Vehículos</h2>
+                <div id="contenedor-vehiculos">
+                    <table class="table" id="tabla-vehiculos-container">
+                        <thead>
+                            <tr>
+                                <th>Matrícula</th>
+                                <th>Modelo</th>
+                                <th>Color</th>
+                                <th>Tránsitos</th>
+                                <th>Monto Gastado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-vehiculos">
+                            <!-- Los vehículos se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                    <p id="mensaje-sin-vehiculos" class="text-muted">
+                        No tienes vehículos registrados.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 3: Bonificaciones -->
+            <div class="dashboard-card">
+                <h2>Mis Bonificaciones</h2>
+                <div id="contenedor-bonificaciones">
+                    <table class="table" id="tabla-bonificaciones-container">
+                        <thead>
+                            <tr>
+                                <th>Bonificación</th>
+                                <th>Puesto</th>
+                                <th>Fecha de Asignación</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-bonificaciones">
+                            <!-- Las bonificaciones se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                    <p id="mensaje-sin-bonificaciones" class="text-muted">
+                        No tienes bonificaciones asignadas.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secciones adicionales -->
+        <div class="dashboard-additional">
+            <!-- HU 2.4 - Historial de tránsitos -->
+            <section id="seccion-transitos">
+                <h2>Historial de Tránsitos</h2>
+                <div id="contenedor-transitos">
+                    <table class="table" id="tabla-transitos-container">
+                        <thead>
+                            <tr>
+                                <th>Puesto</th>
+                                <th>Matrícula</th>
+                                <th>Categoría</th>
+                                <th>Tarifa</th>
+                                <th>Bonificación</th>
+                                <th>Descuento</th>
+                                <th>Pagado</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-transitos">
+                            <!-- Los tránsitos se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                    <p id="mensaje-sin-transitos" class="text-muted">
+                        No tienes tránsitos registrados.
+                    </p>
+                </div>
+            </section>
+
+            <hr>
+
+            <!-- HU 2.5 - Notificaciones -->
+            <section id="seccion-notificaciones">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h2 style="margin: 0;">Notificaciones</h2>
+                    <button id="btn-borrar-notificaciones" onclick="borrarNotificaciones()" class="btn btn-danger btn-sm">
+                        Borrar Todas
+                    </button>
+                </div>
+                <div id="contenedor-notificaciones">
+                    <table class="table" id="tabla-notificaciones-container">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Mensaje</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-notificaciones">
+                            <!-- Las notificaciones se cargarán dinámicamente aquí -->
+                        </tbody>
+                    </table>
+                    <p id="mensaje-sin-notificaciones" class="text-muted">
+                        No tienes notificaciones.
+                    </p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Librerías JavaScript -->
+    <script src="../../vistaWeb.js"></script>
+    <script src="../../utilesVista.js"></script>
+    <script src="../../utils/cierreSesion.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
+

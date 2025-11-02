@@ -1,0 +1,389 @@
+/**
+ * Estilos específicos para el Dashboard del Propietario
+ */
+
+/* Prevenir desbordamiento horizontal en toda la página */
+body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+/* Header navbar fijo en la parte superior */
+.dashboard-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: var(--bg-body);
+    box-shadow: var(--box-shadow-md);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 1000;
+}
+
+.dashboard-header-content {
+    max-width: 1400px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.dashboard-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Contenido con padding superior para el navbar */
+.dashboard-content {
+    margin-top: 80px;
+    padding-top: 2rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+/* Cards con funcionalidades */
+.dashboard-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+    overflow-x: hidden;
+    align-items: stretch;
+}
+
+/* Asegurar que el card de Información Personal esté siempre primero */
+.dashboard-card:first-child {
+    order: -1;
+    background: linear-gradient(135deg, #ebebeb 0%, #d0def3 100%);
+}
+
+.dashboard-card {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #ebebeb 0%, #d0def3 100%);
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--box-shadow);
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.dashboard-card h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+/* Grid compacto para información personal */
+.info-grid-compact {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.75rem 1.5rem;
+    align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.info-grid-compact label {
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.info-grid-compact .info-value {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    flex: 1;
+    min-width: 0;
+}
+
+.info-item {
+    padding: var(--spacing-lg);
+    background-color: #f5f5f5;
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid var(--primary-color);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow);
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+}
+
+.info-item label {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+.info-item .info-value {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    width: 100%;
+}
+
+.info-item .info-value.badge,
+.info-item .badge.info-value {
+    width: auto !important;
+    display: inline-block !important;
+    flex-shrink: 0;
+    align-self: flex-start;
+    max-width: none;
+}
+
+.info-value {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    max-width: 100%;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Estilo para el saldo */
+.info-value.saldo {
+    color: var(--success-color);
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+/* Badges para estados */
+.badge {
+    display: inline-block;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.375rem;
+}
+
+.badge-success {
+    color: #fff;
+    background-color: var(--success-color);
+}
+
+.badge-warning {
+    color: var(--text-dark);
+    background-color: var(--warning-color);
+}
+
+.badge-danger {
+    color: #fff;
+    background-color: var(--error-color);
+}
+
+.badge-secondary {
+    color: #fff;
+    background-color: var(--secondary-color);
+}
+
+/* Secciones del dashboard */
+section {
+    margin: 2rem 0;
+}
+
+section h2 {
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+/* Texto muted para secciones en construcción */
+.text-muted {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Tabla de bonificaciones - oculta por defecto */
+#tabla-bonificaciones-container {
+    display: none;
+}
+
+/* Estilos para la tabla de bonificaciones */
+#contenedor-bonificaciones .table {
+    width: 100%;
+    margin-top: 1rem;
+    border-collapse: collapse;
+}
+
+#contenedor-bonificaciones .table th {
+    background-color: var(--bg-card);
+    font-weight: 600;
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 2px solid var(--border-color);
+}
+
+#contenedor-bonificaciones .table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#contenedor-bonificaciones .table tbody tr:hover {
+    background-color: var(--bg-body);
+}
+
+/* Separador horizontal */
+hr {
+    margin: 2rem 0;
+    border: 0;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Secciones adicionales */
+.dashboard-additional {
+    margin-top: 2rem;
+}
+
+/* Responsive */
+/* Asegurar que información personal esté siempre primero */
+.dashboard-card:first-child {
+    order: -1;
+}
+
+/* Desktop y Tablet: horizontal */
+@media (min-width: 769px) {
+    /* Información personal en horizontal para desktop y tablets */
+    .info-grid-compact {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 0.75rem 1.5rem;
+        align-items: stretch;
+    }
+    
+    .info-item {
+        flex: 1 1 0;
+        min-width: 0;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-self: stretch;
+        height: 100%;
+    }
+}
+
+/* Smartphone: vertical */
+@media (max-width: 768px) {
+    .info-grid-compact {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .dashboard-header {
+        padding: 1rem;
+    }
+    
+    .dashboard-header-content {
+        gap: 1rem;
+        flex-shrink: 1;
+    }
+    
+    .dashboard-title {
+        font-size: 1.3rem;
+        white-space: nowrap;
+    }
+    
+    .dashboard-content {
+        margin-top: 120px;
+    }
+    
+    .dashboard-card {
+        padding: 1rem;
+    }
+    
+    .info-item {
+        padding: 0.75rem;
+    }
+    
+    .info-value {
+        font-size: 1.1rem;
+    }
+    
+    .info-value.saldo {
+        font-size: 1.3rem;
+    }
+    
+    /* Botones más pequeños en tablet */
+    .dashboard-header .btn {
+        padding: 10px 18px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Botones aún más pequeños en smartphone */
+    .dashboard-header .btn {
+        padding: 8px 16px;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+    
+    .dashboard-title {
+        font-size: 1.2rem;
+        white-space: nowrap;
+    }
+    
+    .dashboard-header-content {
+        gap: 0.75rem;
+    }
+    
+    .dashboard-card {
+        padding: 0.75rem;
+    }
+    
+    .info-item {
+        padding: 0.5rem;
+    }
+    
+    .info-grid-compact {
+        gap: 0.5rem 1rem;
+    }
+    
+    .info-grid-compact label {
+        font-size: 0.8rem;
+    }
+    
+    .info-value {
+        font-size: 1rem;
+    }
+    
+    .info-value.saldo {
+        font-size: 1.1rem;
+    }
+}
+
