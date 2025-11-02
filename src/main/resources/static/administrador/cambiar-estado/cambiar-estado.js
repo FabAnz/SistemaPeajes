@@ -44,15 +44,10 @@ function mostrar_propietario(propietario) {
     const nombreEstado = document.getElementById('nombrePropietarioEstado');
     const estadoActual = document.getElementById('estadoActualPropietario');
     const infoEstadoBox = document.getElementById('infoPropietarioEstado');
-    const formCambiarEstado = document.getElementById('formCambiarEstado');
     
     if (nombreEstado) nombreEstado.textContent = propietario.nombreCompleto;
-    if (estadoActual) {
-        estadoActual.textContent = propietario.estado;
-        estadoActual.className = 'info-value badge badge-' + propietario.estado.toLowerCase();
-    }
+    if (estadoActual) estadoActual.textContent = propietario.estado;
     if (infoEstadoBox) infoEstadoBox.style.display = 'block';
-    if (formCambiarEstado) formCambiarEstado.style.display = 'block';
 }
 
 function mostrar_mensaje(mensaje) {
@@ -76,11 +71,9 @@ function mostrar_mensaje(mensaje) {
             estadoActual.className = 'info-value badge';
         }
         
-        // Ocultar secciones
+        // Ocultar sección de información del propietario
         const infoEstadoBox = document.getElementById('infoPropietarioEstado');
-        const formCambiarEstado = document.getElementById('formCambiarEstado');
         if (infoEstadoBox) infoEstadoBox.style.display = 'none';
-        if (formCambiarEstado) formCambiarEstado.style.display = 'none';
     }
 }
 
@@ -221,30 +214,28 @@ function buscarPropietarioEstado() {
 
     // Limpia visualmente la sección HU7 antes de cargar
     const infoEstadoBox = document.getElementById('infoPropietarioEstado');
-    const formCambiarEstado = document.getElementById('formCambiarEstado');
+    const selectEstado = document.getElementById('nuevoEstado');
+    
     if (infoEstadoBox) infoEstadoBox.style.display = 'none';
-    if (formCambiarEstado) formCambiarEstado.style.display = 'none';
+    
+    // Limpiar select mientras busca
+    if (selectEstado) {
+        selectEstado.value = '';
+    }
 
     const params = `cedula=${encodeURIComponent(cedula)}`;
     submit('/administrador/buscar-propietario', params, 'GET');
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // HU 7: Buscar propietario para cambiar estado
-    const formBuscarPropietarioEstado = document.getElementById('formBuscarPropietarioEstado');
-    if (formBuscarPropietarioEstado) {
-        formBuscarPropietarioEstado.addEventListener('submit', function(e) {
-            e.preventDefault();
-            buscarPropietarioEstado();
-        });
-    }
-
-    // HU 7: Cambiar estado submit
-    const formCambiarEstado = document.getElementById('formCambiarEstado');
-    if (formCambiarEstado) {
-        formCambiarEstado.addEventListener('submit', function(e) {
-            e.preventDefault();
-            cambiarEstadoPropietario();
+    // Permitir buscar con Enter en el campo de cédula
+    const cedulaInput = document.getElementById('cedulaEstado');
+    if (cedulaInput) {
+        cedulaInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                buscarPropietarioEstado();
+            }
         });
     }
 });

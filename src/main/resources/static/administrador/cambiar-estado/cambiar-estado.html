@@ -28,55 +28,44 @@
 
             <!-- HU 7: Cambiar estado de propietario -->
             <section id="seccion-cambiar-estado">
-                <!-- Buscar propietario -->
-                <form id="formBuscarPropietarioEstado" class="form-admin">
-                    <div class="form-row-inline">
-                        <div class="form-group flex-grow">
-                            <label for="cedulaEstado">Cédula del Propietario</label>
-                            <input type="text" id="cedulaEstado" name="cedulaEstado" placeholder="Ej: 12345678"
-                                required>
-                        </div>
-                        <div class="form-group">
-                            <label>&nbsp;</label>
-                            <button type="submit" class="btn btn-secondary">
-                                🔍 Buscar
-                            </button>
-                        </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cedulaEstado">Cédula del Propietario</label>
+                        <input type="text" id="cedulaEstado" name="cedulaEstado" placeholder="Ej: 12345678" required>
                     </div>
-                </form>
 
-                <!-- Información del propietario (oculta inicialmente) -->
-                <div id="infoPropietarioEstado" class="info-box" style="display: none;">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>Propietario:</label>
-                            <span id="nombrePropietarioEstado" class="info-value">-</span>
-                        </div>
-                        <div class="info-item">
-                            <label>Estado Actual:</label>
-                            <span id="estadoActualPropietario" class="info-value badge">-</span>
-                        </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button type="button" onclick="buscarPropietarioEstado()" class="btn btn-outline" style="width: 100%;">
+                            Buscar Propietario
+                        </button>
                     </div>
                 </div>
 
-                <!-- Formulario de cambio de estado (oculto inicialmente) -->
-                <form id="formCambiarEstado" class="form-admin" style="display: none;">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nuevoEstado">Nuevo Estado</label>
-                            <select id="nuevoEstado" name="nuevoEstado" required>
-                                <option value="">Seleccione un estado</option>
-                                <!-- Se cargarán dinámicamente -->
-                            </select>
-                        </div>
+                <!-- Información del propietario (oculta inicialmente) -->
+                <div id="infoPropietarioEstado" style="display: none; margin-top: 20px; margin-bottom: 20px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+                    <div style="display: grid; gap: 12px;">
+                        <div><strong>Propietario:</strong> <span id="nombrePropietarioEstado">-</span></div>
+                        <div><strong>Estado Actual:</strong> <span id="estadoActualPropietario">-</span></div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nuevoEstado">Nuevo Estado</label>
+                        <select id="nuevoEstado" name="nuevoEstado" required>
+                            <option value="">Seleccione un estado</option>
+                            <!-- Se cargarán dinámicamente -->
+                        </select>
                     </div>
 
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">
-                            🔄 Cambiar Estado
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <button type="button" onclick="cambiarEstadoPropietario()" id="btnCambiarEstado" class="btn btn-primary" style="width: 100%;">
+                            Cambiar Estado
                         </button>
                     </div>
-                </form>
+                </div>
             </section>
         </div>
     </div>

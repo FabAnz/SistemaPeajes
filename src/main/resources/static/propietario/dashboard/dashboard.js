@@ -51,7 +51,16 @@ function mostrar_bonificaciones(listaBonificaciones) {
     tabla.style.display = 'table';
     
     // Usar utilesVista.js para generar la tabla automáticamente
-    contenedor.innerHTML = crearTablaDesdeJson(listaBonificaciones);
+    // Extraer solo las filas del tbody para evitar duplicar el thead
+    const tablaCompleta = crearTablaDesdeJson(listaBonificaciones);
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = tablaCompleta;
+    const tbodyGenerado = tempDiv.querySelector('tbody');
+    if (tbodyGenerado) {
+        contenedor.innerHTML = tbodyGenerado.innerHTML;
+    } else {
+        contenedor.innerHTML = tablaCompleta;
+    }
 }
 
 /**
@@ -84,7 +93,16 @@ function mostrar_vehiculos(listaVehiculos) {
     }));
     
     // Usar utilesVista.js para generar la tabla automáticamente
-    contenedor.innerHTML = crearTablaDesdeJson(vehiculosFormateados);
+    // Extraer solo las filas del tbody para evitar duplicar el thead
+    const tablaCompleta = crearTablaDesdeJson(vehiculosFormateados);
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = tablaCompleta;
+    const tbodyGenerado = tempDiv.querySelector('tbody');
+    if (tbodyGenerado) {
+        contenedor.innerHTML = tbodyGenerado.innerHTML;
+    } else {
+        contenedor.innerHTML = tablaCompleta;
+    }
 }
 
 /**
@@ -119,7 +137,16 @@ function mostrar_transitos(listaTransitos) {
     }));
     
     // Usar utilesVista.js para generar la tabla automáticamente
-    contenedor.innerHTML = crearTablaDesdeJson(transitosFormateados);
+    // Extraer solo las filas del tbody para evitar duplicar el thead
+    const tablaCompleta = crearTablaDesdeJson(transitosFormateados);
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = tablaCompleta;
+    const tbodyGenerado = tempDiv.querySelector('tbody');
+    if (tbodyGenerado) {
+        contenedor.innerHTML = tbodyGenerado.innerHTML;
+    } else {
+        contenedor.innerHTML = tablaCompleta;
+    }
 }
 
 /**
@@ -184,7 +211,16 @@ function mostrar_notificaciones(listaNotificaciones) {
     }));
     
     // Usar utilesVista.js para generar la tabla automáticamente
-    contenedor.innerHTML = crearTablaDesdeJson(notificacionesSinId);
+    // Extraer solo las filas del tbody para evitar duplicar el thead
+    const tablaCompleta = crearTablaDesdeJson(notificacionesSinId);
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = tablaCompleta;
+    const tbodyGenerado = tempDiv.querySelector('tbody');
+    if (tbodyGenerado) {
+        contenedor.innerHTML = tbodyGenerado.innerHTML;
+    } else {
+        contenedor.innerHTML = tablaCompleta;
+    }
 }
 
 /**

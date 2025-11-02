@@ -35,6 +35,9 @@
 
 .container-lg {
     max-width: 1400px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
 }
 
 .container-fluid {
@@ -160,40 +163,40 @@
    HEADER CON BOTÓN VOLVER Y TÍTULO CENTRADO
    ======================================== */
 .page-header-with-back {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    justify-content: center;
-    position: relative;
     margin-bottom: 1.5rem;
     padding: 0;
     width: 100%;
+    gap: var(--spacing-md);
 }
 
 .page-header-with-back .btn-link {
-    position: absolute;
-    left: 0;
+    flex-shrink: 0;
     white-space: nowrap;
     padding: 0;
+    justify-self: start;
 }
 
 .page-title-centered {
     text-align: center;
     margin: 0;
-    width: 100%;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
+    grid-column: 2;
 }
 
 /* Responsive para el header */
 @media (max-width: 768px) {
     .page-title-centered {
-        font-size: 1.3rem;
+        font-size: 1.125rem;
     }
 }
 
 @media (max-width: 480px) {
     .page-title-centered {
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
 }
 

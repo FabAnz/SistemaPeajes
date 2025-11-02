@@ -5,8 +5,8 @@
       <div class="contenido-dialogo">
         <p id="textoPregunta">Pregunta aquí</p>
         <div class="botones">
-          <button id="botonSi">Sí</button>
-          <button id="botonNo">No</button>
+          <button id="botonSi" class="btn btn-primary">Sí</button>
+          <button id="botonNo" class="btn btn-primary">No</button>
         </div>
       </div>
     </div>

@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Ocultar loading overlay al iniciar la página
     ocultarLoading();
     
+    // Verificar si ya hay una sesión activa al cargar la página
+    verificarSesionActiva();
+    
     inicializarEventos();
     configurarValidacionEnTiempoReal();
     
@@ -259,7 +262,7 @@ function togglearVisibilidadContrasenia() {
 
 function mostrarAyuda(event) {
     event.preventDefault();
-    mostrarMensaje('Para soporte técnico, contacta al administrador del sistema.');
+    mostrarMensaje('Para soporte técnico, comunicate con Fabián Antúnez.');
 }
 
 function capitalizar(str) {
@@ -278,4 +281,16 @@ function verificarMensajePendiente() {
         // Limpiar el mensaje del sessionStorage
         sessionStorage.removeItem('mensajeLogin');
     }
+}
+
+// ========================================
+// VERIFICACIÓN DE SESIÓN ACTIVA
+// ========================================
+
+/**
+ * Verifica si hay una sesión activa al cargar la página de login
+ * Si existe, redirige automáticamente al dashboard correspondiente
+ */
+function verificarSesionActiva() {
+    submit('/acceso/login', '', 'GET');
 }
