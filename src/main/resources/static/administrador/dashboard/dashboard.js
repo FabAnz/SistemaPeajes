@@ -1,10 +1,3 @@
-/**
- * Dashboard del Administrador - Menú Principal
- */
-
-// Configuración de vistaWeb.js
-// Esta URL se llama automáticamente cuando se carga la página (DOMContentLoaded)
-// Valida la sesión y permisos del administrador
 var urlIniciarVista = "/administrador/dashboard";
 var parametrosInicioVista = ""; // No necesita parámetros, usa la sesión HTTP
 

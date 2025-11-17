@@ -3,7 +3,7 @@
  */
 
 // Configuración de vistaWeb.js
-var urlIniciarVista = "/administrador/dashboard";
+var urlIniciarVista = "/administrador/asignar-bonificacion";
 var parametrosInicioVista = ""; // No necesita parámetros, usa la sesión HTTP
 
 // Estado interno
@@ -53,6 +53,7 @@ function mostrar_propietario(propietario) {
     document.getElementById('nombrePropietarioBonificacion').textContent = propietario.nombreCompleto;
     document.getElementById('estadoPropietarioBonificacion').textContent = propietario.estado;
     document.getElementById('infoPropietarioBonificacion').style.display = 'block';
+    document.getElementById('cedulaBonificacion').value = propietario.cedula;
     const selectBon = document.getElementById('bonificacion');
     const selectPue = document.getElementById('puestoBonificacion');
     const btnAsignar = document.getElementById('btnAsignarBonificacion');
