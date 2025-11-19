@@ -14,6 +14,7 @@ import ort.da.obligatorio339182.exceptions.AppException;
 import ort.da.obligatorio339182.exceptions.UnauthorizedException;
 import ort.da.obligatorio339182.model.domain.usuarios.Permiso;
 import ort.da.obligatorio339182.model.valueObjects.Matricula;
+import ort.da.obligatorio339182.observer.ObservableAbstracto;
 import ort.da.obligatorio339182.model.domain.bonifiaciones.Bonificacion;
 import ort.da.obligatorio339182.model.domain.estados.Estado;
 import ort.da.obligatorio339182.model.domain.Categoria;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class Fachada {
+public class Fachada extends ObservableAbstracto {
 
 	private final SistemaUsuarios su;
 	private final SistemaPuestos sp;
@@ -31,13 +32,17 @@ public class Fachada {
 	private final SistemaBonificaciones sb;
 	private final SistemaEstados se;
 
+	public enum Evento {
+		BONIFICACION_ASIGNADA
+	}
+
 	public Fachada(
-		SistemaUsuarios su, 
-	SistemaPuestos sp, 
-	SistemaVehiculos sv, 
-	SistemaTransitos st, 
-	SistemaBonificaciones sb,
-	SistemaEstados se) {
+			SistemaUsuarios su,
+			SistemaPuestos sp,
+			SistemaVehiculos sv,
+			SistemaTransitos st,
+			SistemaBonificaciones sb,
+			SistemaEstados se) {
 		this.su = su;
 		this.sp = sp;
 		this.sv = sv;
@@ -46,12 +51,11 @@ public class Fachada {
 		this.se = se;
 	}
 
-
 	public Usuario login(String cedula, String contrasenia) throws AppException {
 		return su.login(cedula, contrasenia);
 	}
 
-	public void agregarUsuario(Usuario usuario) throws AppException{
+	public void agregarUsuario(Usuario usuario) throws AppException {
 		su.agregarUsuario(usuario);
 	}
 
@@ -111,7 +115,8 @@ public class Fachada {
 		return st.agregarTransito(propietario, puesto, vehiculo);
 	}
 
-	public Transito agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo, LocalDateTime fechaHora) throws AppException {
+	public Transito agregarTransito(Propietario propietario, Puesto puesto, Vehiculo vehiculo, LocalDateTime fechaHora)
+			throws AppException {
 		return st.agregarTransito(propietario, puesto, vehiculo, fechaHora);
 	}
 

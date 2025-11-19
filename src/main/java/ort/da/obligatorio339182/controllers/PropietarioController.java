@@ -23,6 +23,7 @@ import ort.da.obligatorio339182.dtos.BonificacionAsignadaDTO;
 import ort.da.obligatorio339182.dtos.VehiculoPropietarioDTO;
 import ort.da.obligatorio339182.dtos.TransitoPropietarioDTO;
 import ort.da.obligatorio339182.model.domain.Transito;
+import jakarta.annotation.PreDestroy;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import ort.da.obligatorio339182.model.domain.Notificacion;
@@ -38,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class PropietarioController extends BaseController implements Observador {
 
 	private Propietario propietario;
+	private List<BonificacionAsignada> bonificaciones = new ArrayList<>();
 	private final ConexionNavegador conexionNavegador;
 
 	public PropietarioController(Fachada fachada, @Autowired ConexionNavegador conexionNavegador) {
@@ -51,9 +53,9 @@ public class PropietarioController extends BaseController implements Observador 
 		// Validar sesión y permisos
 		Usuario usuario = fachada.validarPermiso(usuarioId, Permiso.PROPIETARIO_DASHBOARD);
 
+		fachada.agregarObservador(this);
+
 		// Castear a Propietario (ya sabemos que tiene el permiso PROPIETARIO_DASHBOARD)
-		if (propietario != null)
-			propietario.quitarObservador(this);
 		propietario = (Propietario) usuario;
 		propietario.agregarObservador(this);
 
@@ -61,7 +63,7 @@ public class PropietarioController extends BaseController implements Observador 
 		PropietarioInfoDTO infoDTO = new PropietarioInfoDTO(propietario);
 
 		// HU 2.2: Obtener bonificaciones asignadas al propietario
-		List<BonificacionAsignada> bonificaciones = fachada.getBonificacionesPorPropietario(propietario);
+		bonificaciones = fachada.getBonificacionesPorPropietario(propietario);
 
 		// HU 2.3: Obtener vehículos del propietario con cálculos
 		List<Vehiculo> vehiculos = propietario.getVehiculos();
@@ -96,6 +98,14 @@ public class PropietarioController extends BaseController implements Observador 
 				new RespuestaDTO("notificaciones", NotificacionDTO.list(notificaciones)));
 	}
 
+	@PreDestroy
+	public void preDestroy() {
+		if (this.propietario != null)
+			this.propietario.quitarObservador(this);
+		fachada.quitarObservador(this);
+		this.conexionNavegador.cerrarConexion();
+	}
+
 	@DeleteMapping("/notificaciones")
 	public List<RespuestaDTO> borrarNotificaciones(HttpSession session) throws UnauthorizedException, AppException {
 		Integer usuarioId = validarSesion(session);
@@ -112,14 +122,18 @@ public class PropietarioController extends BaseController implements Observador 
 
 	@Override
 	public void actualizar(Object evento, Observable origen) {
-		Propietario propietarioActualizado = (Propietario) origen;
-		propietario = propietarioActualizado;
+
 		if (Evento.ESTADO_CAMBIADO.equals(evento)) {
+			Propietario propietarioActualizado = (Propietario) origen;
+			propietario = propietarioActualizado;
 			List<RespuestaDTO> respuesta = RespuestaDTO.lista(
 					new RespuestaDTO("propietario", new PropietarioInfoDTO(propietario)));
 			conexionNavegador.enviarJSON(respuesta);
 		}
+
 		if (Evento.TRANSITO_AGREGADO.equals(evento)) {
+			Propietario propietarioActualizado = (Propietario) origen;
+			propietario = propietarioActualizado;
 			List<TransitoPropietarioDTO> transitosDTO = new ArrayList<>();
 
 			// Construir cada TransitoDTO con información de bonificación aplicada
@@ -131,6 +145,13 @@ public class PropietarioController extends BaseController implements Observador 
 			List<RespuestaDTO> respuesta = RespuestaDTO.lista(
 					new RespuestaDTO("propietario", new PropietarioInfoDTO(propietario)),
 					new RespuestaDTO("transitos", transitosDTO));
+			conexionNavegador.enviarJSON(respuesta);
+		}
+
+		if (Fachada.Evento.BONIFICACION_ASIGNADA.equals(evento)) {
+			bonificaciones = fachada.getBonificacionesPorPropietario(propietario);
+			List<RespuestaDTO> respuesta = RespuestaDTO.lista(
+					new RespuestaDTO("bonificaciones", BonificacionAsignadaDTO.list(bonificaciones)));
 			conexionNavegador.enviarJSON(respuesta);
 		}
 	}
