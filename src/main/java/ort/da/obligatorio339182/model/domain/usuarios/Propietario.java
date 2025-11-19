@@ -10,6 +10,9 @@ import ort.da.obligatorio339182.model.domain.estados.Habilitado;
 import ort.da.obligatorio339182.model.domain.Notificacion;
 import ort.da.obligatorio339182.model.domain.Transito;
 import ort.da.obligatorio339182.model.valueObjects.Contrasenia;
+import ort.da.obligatorio339182.observer.Observable;
+import ort.da.obligatorio339182.observer.ObservableImpl;
+import ort.da.obligatorio339182.observer.Observador;
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -19,7 +22,7 @@ import ort.da.obligatorio339182.model.domain.estados.Estado;
 
 @Getter
 @Setter
-public class Propietario extends Usuario {
+public class Propietario extends Usuario implements Observable {
 
 	private static final Set<Permiso> permisoPropietario = Set.of(
 			Permiso.PROPIETARIO_DASHBOARD,
@@ -32,6 +35,7 @@ public class Propietario extends Usuario {
 	private Estado estado;
 	@Getter(AccessLevel.PRIVATE)
 	private List<Notificacion> notificaciones;
+	private ObservableImpl observable;
 
 	public Propietario(String nombreCompleto, Contrasenia contrasenia, Cedula cedula) {
 		super(nombreCompleto, contrasenia, cedula);
@@ -41,6 +45,12 @@ public class Propietario extends Usuario {
 		this.vehiculos = new ArrayList<>();
 		this.estado = new Habilitado();
 		this.notificaciones = new ArrayList<>();
+		this.observable = new ObservableImpl();
+	}
+
+	public enum Evento {
+		ESTADO_CAMBIADO,
+		TRANSITO_AGREGADO
 	}
 
 	@Override
@@ -108,6 +118,7 @@ public class Propietario extends Usuario {
 	public void agregarTransito(Transito transito) throws AppException {
 		transito.validar();
 		this.transitos.add(transito);
+		this.avisar(Evento.TRANSITO_AGREGADO);
 	}
 
 	public void agregarNotificacion(Notificacion notificacion) throws AppException {
@@ -153,11 +164,26 @@ public class Propietario extends Usuario {
 			throw new AppException("El propietario ya esta en estado " + estado.getNombre());
 		}
 
-		//Notificar al propietario
+		// Notificar al propietario
 		String mensaje = "Se te ha cambiado el estado en el sistema. Tu estado actual es " + estado.getNombre();
 		Notificacion notificacion = new Notificacion(mensaje);
 		this.agregarNotificacion(notificacion);
-		
+
 		this.estado = estado;
+		this.avisar(Evento.ESTADO_CAMBIADO);
+	}
+
+	@Override
+	public void agregarObservador(Observador obs) {
+		this.observable.agregarObservador(obs);
+	}
+
+	@Override
+	public void quitarObservador(Observador obs) {
+		this.observable.quitarObservador(obs);
+	}
+
+	public void avisar(Object evento) {
+		this.observable.avisar(evento, this);
 	}
 }
