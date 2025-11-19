@@ -149,6 +149,8 @@ public class PropietarioController extends BaseController implements Observador 
 		}
 
 		if (Evento.NOTIFICACION_AGREGADA.equals(evento)) {
+			Propietario propietarioActualizado = (Propietario) origen;
+			propietario = propietarioActualizado;
 			List<Notificacion> notificaciones = propietario.getNotificacionesOrdenadas();
 			List<RespuestaDTO> respuesta = RespuestaDTO.lista(
 					new RespuestaDTO("notificaciones", NotificacionDTO.list(notificaciones)));
