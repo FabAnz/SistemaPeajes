@@ -50,7 +50,8 @@ public class Propietario extends Usuario implements Observable {
 
 	public enum Evento {
 		ESTADO_CAMBIADO,
-		TRANSITO_AGREGADO
+		TRANSITO_AGREGADO,
+		NOTIFICACION_AGREGADA
 	}
 
 	@Override
@@ -124,6 +125,7 @@ public class Propietario extends Usuario implements Observable {
 	public void agregarNotificacion(Notificacion notificacion) throws AppException {
 		notificacion.validar();
 		this.notificaciones.add(notificacion);
+		this.avisar(Evento.NOTIFICACION_AGREGADA);
 	}
 
 	public void restarSaldo(int monto) throws AppException {

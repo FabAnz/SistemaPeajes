@@ -148,6 +148,13 @@ public class PropietarioController extends BaseController implements Observador 
 			conexionNavegador.enviarJSON(respuesta);
 		}
 
+		if (Evento.NOTIFICACION_AGREGADA.equals(evento)) {
+			List<Notificacion> notificaciones = propietario.getNotificacionesOrdenadas();
+			List<RespuestaDTO> respuesta = RespuestaDTO.lista(
+					new RespuestaDTO("notificaciones", NotificacionDTO.list(notificaciones)));
+			conexionNavegador.enviarJSON(respuesta);
+		}
+
 		if (Fachada.Evento.BONIFICACION_ASIGNADA.equals(evento)) {
 			bonificaciones = fachada.getBonificacionesPorPropietario(propietario);
 			List<RespuestaDTO> respuesta = RespuestaDTO.lista(
