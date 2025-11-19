@@ -4,10 +4,10 @@ import jakarta.servlet.http.HttpSession;
 import ort.da.obligatorio339182.exceptions.UnauthorizedException;
 import ort.da.obligatorio339182.services.Fachada;
 
-public abstract class BaseController {
+abstract class BaseController {
     protected final Fachada fachada;
 
-    public BaseController(Fachada fachada) {
+    protected BaseController(Fachada fachada) {
         this.fachada = fachada;
     }
 

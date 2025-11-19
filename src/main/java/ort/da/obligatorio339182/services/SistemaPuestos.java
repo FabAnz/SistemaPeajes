@@ -2,23 +2,29 @@ package ort.da.obligatorio339182.services;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import ort.da.obligatorio339182.model.domain.Puesto;
 import ort.da.obligatorio339182.model.domain.usuarios.Propietario;
+import ort.da.obligatorio339182.observer.ObservableAbstracto;
+import ort.da.obligatorio339182.services.Fachada.Evento;
 import ort.da.obligatorio339182.model.domain.Tarifa;
 import ort.da.obligatorio339182.model.domain.bonifiaciones.BonificacionAsignada;
 import ort.da.obligatorio339182.exceptions.AppException;
 
 @Service
-class SistemaPuestos {
+class SistemaPuestos extends ObservableAbstracto {
 	private List<Puesto> puestos;
 	private List<Tarifa> tarifas;
 	private List<BonificacionAsignada> bonificacionesAsignadas;
+	private final Fachada fachada;
 
-	SistemaPuestos() {
+	SistemaPuestos(@Lazy Fachada fachada) {
 		this.puestos = new ArrayList<Puesto>();
 		this.tarifas = new ArrayList<Tarifa>();
 		this.bonificacionesAsignadas = new ArrayList<BonificacionAsignada>();
+		this.fachada = fachada;
 	}
 
 	// Agrega un puesto al sistema
@@ -40,6 +46,7 @@ class SistemaPuestos {
 		}
 		bonificacionAsignada.validar();
 		this.bonificacionesAsignadas.add(bonificacionAsignada);
+		fachada.avisar(Evento.BONIFICACION_ASIGNADA);
 	}
 
 	// Obtiene las bonificaciones asignadas a un propietario

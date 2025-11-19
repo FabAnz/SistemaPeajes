@@ -1,14 +1,7 @@
-/**
- * Página: Cambiar Estado de Propietario
- */
-
 // Configuración de vistaWeb.js
-var urlIniciarVista = "/administrador/dashboard";
+var urlIniciarVista = "/administrador/cambiar-estado-propietario";
 var parametrosInicioVista = ""; // No necesita parámetros, usa la sesión HTTP
 
-/**
- * Función que carga los estados disponibles en el select (HU 7)
- */
 function mostrar_estados(estados) {
     const selectEstado = document.getElementById('nuevoEstado');
     if (!selectEstado) return;
@@ -35,15 +28,17 @@ function mostrar_estados(estados) {
     console.log(`✅ ${estados.length} estados cargados`);
 }
 
-/**
- * Función que muestra información del propietario buscado
- */
+function mostrar_estado(estado) {
+    document.getElementById('estadoActualPropietario').textContent = estado.nombre;
+}
+
 function mostrar_propietario(propietario) {
     console.log('📋 Mostrando información del propietario:', propietario);
     
     const nombreEstado = document.getElementById('nombrePropietarioEstado');
     const estadoActual = document.getElementById('estadoActualPropietario');
     const infoEstadoBox = document.getElementById('infoPropietarioEstado');
+    document.getElementById('cedulaEstado').value = propietario.cedula;
     
     if (nombreEstado) nombreEstado.textContent = propietario.nombreCompleto;
     if (estadoActual) estadoActual.textContent = propietario.estado;
@@ -52,38 +47,12 @@ function mostrar_propietario(propietario) {
 
 function mostrar_mensaje(mensaje) {
     mostrarMensaje(mensaje);
-    // Si es mensaje de cambio de estado exitoso, limpiar formulario y ocultar información
-    if(mensaje.includes('Estado cambiado correctamente')) {
-        // Limpiar campo de cédula
-        const cedulaInput = document.getElementById('cedulaEstado');
-        if (cedulaInput) cedulaInput.value = '';
-        
-        // Limpiar select de nuevo estado
-        const selectEstado = document.getElementById('nuevoEstado');
-        if (selectEstado) selectEstado.value = '';
-        
-        // Limpiar información del propietario
-        const nombreEstado = document.getElementById('nombrePropietarioEstado');
-        const estadoActual = document.getElementById('estadoActualPropietario');
-        if (nombreEstado) nombreEstado.textContent = '-';
-        if (estadoActual) {
-            estadoActual.textContent = '-';
-            estadoActual.className = 'info-value badge';
-        }
-        
-        // Ocultar sección de información del propietario
-        const infoEstadoBox = document.getElementById('infoPropietarioEstado');
-        if (infoEstadoBox) infoEstadoBox.style.display = 'none';
-    }
 }
 
 function mostrar_redirigir(paginaUrl) {
     window.location.href = paginaUrl;
 }
 
-/**
- * Función que maneja las excepciones de aplicación (status 299)
- */
 function excepcionDeAplicacion(mensaje) {
     try {
         const respuestas = JSON.parse(mensaje);
@@ -133,7 +102,6 @@ function procesarErrorSubmit(status, text) {
     mostrarMensaje(mensajeUsuario);
 }
 
-// ========== HU 7: Cambiar Estado ==========
 function cambiarEstadoPropietario() {
     const cedula = document.getElementById('cedulaEstado')
         ? document.getElementById('cedulaEstado').value.trim()
@@ -203,7 +171,6 @@ function cambiarEstadoPropietario() {
  * Búsqueda de propietario desde la sección de estado
  */
 function buscarPropietarioEstado() {
-    console.log('🔎 [HU7] Buscando propietario por cédula (cambiar estado)');
     const cedula = document.getElementById('cedulaEstado')
         ? document.getElementById('cedulaEstado').value.trim()
         : '';

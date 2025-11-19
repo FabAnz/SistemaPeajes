@@ -1,19 +1,11 @@
-/**
- * Dashboard del Propietario
- * Historia de Usuario 2.1: Visualización de información personal
- */
-
-// Configuración de vistaWeb.js
-// Esta URL se llama automáticamente cuando se carga la página (DOMContentLoaded)
 var urlIniciarVista = "/propietario/dashboard";
-var parametrosInicioVista = ""; // No necesita parámetros, usa la sesión HTTP
+var parametrosInicioVista = "";
+var urlRegistroSSE = "/propietario/registrarSSE";
 
-/**
- * Función que procesa la información del propietario
- * Convención de vistaWeb.js: mostrar_{id} donde id es el que viene en RespuestaDTO
- * 
- * @param {Object} dto - PropietarioInfoDTO con {nombreCompleto, estado, saldo}
- */
+function procesarMensajeSSE(mensaje) {
+    procesarResultadosSubmit(mensaje);
+}
+
 function mostrar_propietario(dto) {
     // Actualizar nombre
     document.getElementById('nombre').textContent = dto.nombreCompleto;
@@ -27,12 +19,6 @@ function mostrar_propietario(dto) {
     document.getElementById('saldo').textContent = formatearSaldo(dto.saldo);
 }
 
-/**
- * Función que procesa TODAS las bonificaciones asignadas (HU 2.2)
- * Convención de vistaWeb.js: mostrar_{id} donde id es el que viene en RespuestaDTO
- * 
- * @param {Array} listaBonificaciones - Array de BonificacionAsignadaDTO con {nombreBonificacion, puesto, fechaAsignacion}
- */
 function mostrar_bonificaciones(listaBonificaciones) {
     const contenedor = document.getElementById('tabla-bonificaciones');
     const mensaje = document.getElementById('mensaje-sin-bonificaciones');
@@ -63,12 +49,6 @@ function mostrar_bonificaciones(listaBonificaciones) {
     }
 }
 
-/**
- * Función que procesa TODOS los vehículos del propietario (HU 2.3)
- * Convención de vistaWeb.js: mostrar_{id} donde id es el que viene en RespuestaDTO
- * 
- * @param {Array} listaVehiculos - Array de VehiculoPropietarioDTO con {matricula, modelo, color, cantidadTransitos, montoTotalGastado}
- */
 function mostrar_vehiculos(listaVehiculos) {
     const contenedor = document.getElementById('tabla-vehiculos');
     const mensaje = document.getElementById('mensaje-sin-vehiculos');
@@ -105,12 +85,6 @@ function mostrar_vehiculos(listaVehiculos) {
     }
 }
 
-/**
- * Función que procesa TODOS los tránsitos del propietario (HU 2.4)
- * Convención de vistaWeb.js: mostrar_{id} donde id es el que viene en RespuestaDTO
- * 
- * @param {Array} listaTransitos - Array de TransitoPropietarioDTO
- */
 function mostrar_transitos(listaTransitos) {
     const contenedor = document.getElementById('tabla-transitos');
     const mensaje = document.getElementById('mensaje-sin-transitos');
@@ -149,11 +123,6 @@ function mostrar_transitos(listaTransitos) {
     }
 }
 
-/**
- * Retorna la clase CSS según el estado del propietario
- * @param {string} estado - El estado del propietario
- * @returns {string} La clase CSS a aplicar
- */
 function obtenerClaseEstado(estado) {
     switch(estado) {
         case 'Habilitado':
@@ -169,19 +138,10 @@ function obtenerClaseEstado(estado) {
     }
 }
 
-/**
- * Formatea el saldo como moneda
- * @param {number} saldo - El saldo a formatear
- * @returns {string} El saldo formateado
- */
 function formatearSaldo(saldo) {
     return '$' + saldo.toLocaleString('es-UY');
 }
 
-/**
- * Función que maneja las excepciones de aplicación (status 299)
- * vistaWeb.js llama automáticamente a esta función cuando recibe errores del backend
- */
 function excepcionDeAplicacion(mensaje) {
     sessionException(mensaje);
 }
@@ -223,19 +183,10 @@ function mostrar_notificaciones(listaNotificaciones) {
     }
 }
 
-/**
- * Función que procesa la redirección
- * Se ejecuta cuando el backend retorna {id: "redirigir", parametro: "/url"}
- * @param {string} paginaUrl - URL a la que redirigir
- */
 function mostrar_redirigir(paginaUrl) {
     window.location.href = paginaUrl;
 }
 
-/**
- * Función que borra todas las notificaciones del propietario
- * Muestra un diálogo de confirmación antes de borrar
- */
 async function borrarNotificaciones() {
     // Verificar si hay notificaciones antes de mostrar confirmación
     const tabla = document.getElementById('tabla-notificaciones-container');
@@ -270,10 +221,6 @@ async function borrarNotificaciones() {
     }, 500);
 }
 
-/**
- * Función llamada automáticamente por vistaWeb.js cuando se borran notificaciones exitosamente
- * Convención: mostrar_{id} donde id='mensaje' viene en RespuestaDTO del backend
- */
 function mostrar_mensaje(mensaje) {
     // Mostrar mensaje de éxito usando utilesVista.js
     mostrarMensaje(mensaje);

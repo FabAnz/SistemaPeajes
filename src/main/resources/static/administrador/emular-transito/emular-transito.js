@@ -1,14 +1,7 @@
-/**
- * Página: Emular Tránsito
- */
-
 // Configuración de vistaWeb.js
-var urlIniciarVista = "/administrador/dashboard";
+var urlIniciarVista = "/administrador/emular-transito";
 var parametrosInicioVista = ""; // No necesita parámetros, usa la sesión HTTP
 
-/**
- * Función que carga los puestos disponibles
- */
 function mostrar_puestos(puestos) {
     // Cargar puestos en el select de emular tránsito
     const selectPuestoTransito = document.getElementById('puestoTransito');
@@ -24,9 +17,13 @@ function mostrar_puestos(puestos) {
     console.log(`✅ ${puestos.length} puestos cargados`);
 }
 
-/**
- * Función que muestra el resultado completo de la emulación de tránsito
- */
+function mostrar_puesto(puesto) {
+    const selectPuestoTransito = document.getElementById('puestoTransito');
+    if (!selectPuestoTransito) return;
+    
+    selectPuestoTransito.selectedIndex = puesto.id;
+}
+
 function mostrar_resultado(resultado) {
     console.log('📋 Mostrando resultado de emulación:', resultado);
     
