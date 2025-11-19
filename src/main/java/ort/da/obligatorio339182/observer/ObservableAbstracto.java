@@ -2,8 +2,8 @@ package ort.da.obligatorio339182.observer;
 
 import java.util.ArrayList;
 
-public class ObservableImpl implements Observable {
-    private ArrayList<Observador> observadores = new ArrayList<>();
+public abstract class ObservableAbstracto implements Observable {
+    protected ArrayList<Observador> observadores = new ArrayList<>();
 
     @Override
     public void agregarObservador(Observador obs) {
@@ -17,10 +17,10 @@ public class ObservableImpl implements Observable {
         observadores.remove(obs);
     }
 
-    public void avisar(Object evento, Observable origen) {
+    protected void avisar(Object evento) {
         ArrayList<Observador> copia = new ArrayList<>(observadores);
         for (Observador obs : copia) {
-            obs.actualizar(evento, origen);
+            obs.actualizar(evento, this);
         }
     }
 

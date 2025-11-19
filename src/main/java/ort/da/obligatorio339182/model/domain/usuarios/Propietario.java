@@ -11,7 +11,7 @@ import ort.da.obligatorio339182.model.domain.Notificacion;
 import ort.da.obligatorio339182.model.domain.Transito;
 import ort.da.obligatorio339182.model.valueObjects.Contrasenia;
 import ort.da.obligatorio339182.observer.Observable;
-import ort.da.obligatorio339182.observer.ObservableImpl;
+import ort.da.obligatorio339182.observer.ObservableConcreto;
 import ort.da.obligatorio339182.observer.Observador;
 import ort.da.obligatorio339182.model.valueObjects.Cedula;
 import lombok.AccessLevel;
@@ -35,7 +35,7 @@ public class Propietario extends Usuario implements Observable {
 	private Estado estado;
 	@Getter(AccessLevel.PRIVATE)
 	private List<Notificacion> notificaciones;
-	private ObservableImpl observable;
+	private ObservableConcreto observable;
 
 	public Propietario(String nombreCompleto, Contrasenia contrasenia, Cedula cedula) {
 		super(nombreCompleto, contrasenia, cedula);
@@ -45,7 +45,7 @@ public class Propietario extends Usuario implements Observable {
 		this.vehiculos = new ArrayList<>();
 		this.estado = new Habilitado();
 		this.notificaciones = new ArrayList<>();
-		this.observable = new ObservableImpl();
+		this.observable = new ObservableConcreto();
 	}
 
 	public enum Evento {
